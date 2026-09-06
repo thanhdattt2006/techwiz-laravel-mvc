@@ -1,4 +1,7 @@
-FROM php:8.3-apache
+FROM php:8.4-apache
+
+# Set environment variables
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 # Install system dependencies and required PHP development libraries
 RUN apt-get update && apt-get install -y \
@@ -34,8 +37,9 @@ RUN a2enmod rewrite
 # Copy project files
 COPY . .
 
-# Install PHP composer dependencies for production
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+# Install PHP composer dependencies without running scripts (scripts will run at container startup)
+RUN composer install --no-interaction --prefer-dist --no-dev --no-scripts
+RUN composer dump-autoload --optimize --no-dev
 
 # Install frontend dependencies and build assets
 RUN npm install && npm run build
