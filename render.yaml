@@ -1,38 +1,36 @@
 services:
   - type: web
     name: techwiz-laravel-app
-    env: php
+    runtime: docker
     plan: free
-    # Lệnh build sẽ chạy trên server của Render
-    buildCommand: |
-      composer install -n --prefer-dist --no-dev
-      npm install
-      npm run build
-      php artisan key:generate --force
-      php artisan optimize:clear
-      php artisan optimize
-      php artisan migrate --force
-    # Lệnh start web server
-    startCommand: "apache2-foreground"
+    region: singapore
+    dockerfilePath: ./Dockerfile
     envVars:
+      - key: APP_NAME
+        value: "TechWiz Laravel App"
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
         value: "false"
+      - key: APP_KEY
+        value: "base64:9/HXrPLF/Bn+3Gn1Oa8OBRsK/i8U4hoF2iim9qJVLuQ="
       - key: APP_URL
-        # Điền URL của Render vào đây sau khi tạo service
-        value: "https://your-app-name.onrender.com"
+        value: "https://techwiz-laravel-app.onrender.com"
       - key: DB_CONNECTION
         value: mysql
       - key: DB_HOST
-        # Lấy từ Aiven Dashboard
-        value: "aiven-db-host.aivencloud.com" 
+        value: "mysql-18c62662-thanhdattt2006-laravel-store-database.g.aivencloud.com"
       - key: DB_PORT
-        # Lấy từ Aiven Dashboard (VD: 25060)
-        value: "3306"
+        value: "12459"
       - key: DB_DATABASE
         value: "defaultdb"
       - key: DB_USERNAME
         value: "avnadmin"
       - key: DB_PASSWORD
-        sync: false # Set trực tiếp trên Render Dashboard vì lý do bảo mật
+        sync: false # Nhập trực tiếp trên Render Dashboard (Environment Variables) để bảo mật
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
