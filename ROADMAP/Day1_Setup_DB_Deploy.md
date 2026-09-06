@@ -67,7 +67,7 @@ TẠM ẨN: Đã được User tự hoàn thành
 - `[ ]` Click vào đường link `xxxx.onrender.com`.
 - `[ ]` Kiểm tra xem có ra màn hình welcome của Laravel không.
 - `[ ]` Nếu màn hình báo lỗi 500, xem lại log trên Render (thường do quên cấu hình `.env` trên Render hoặc chưa chạy key:generate).
-- `[ ]` Cập nhật file `render.yaml` (đã cung cấp) sửa lại các value cho đúng.
+- [x] Cập nhật file `render.yaml` (đã cung cấp) sửa lại các value cho đúng.
 - `[ ]` Push file `render.yaml` lên Github để áp dụng Infrastructure as Code.
 
 <!-- 
