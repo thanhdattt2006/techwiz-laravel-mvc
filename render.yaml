@@ -28,6 +28,8 @@ services:
         sync: false
       - key: DB_PASSWORD
         sync: false
+      - key: DATABASE_REFRESH_MIGRATE_PASSWORD
+        sync: false
       - key: LOG_CHANNEL
         value: stderr
       - key: SESSION_DRIVER
