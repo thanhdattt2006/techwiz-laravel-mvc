@@ -33,6 +33,6 @@ services:
       - key: LOG_CHANNEL
         value: stderr
       - key: SESSION_DRIVER
-        value: database
+        value: cookie
       - key: CACHE_STORE
-        value: database
+        value: file

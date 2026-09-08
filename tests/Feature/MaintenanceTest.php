@@ -29,7 +29,7 @@ class MaintenanceTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('Database Maintenance Console');
-        $response->assertSee('Chạy Migrate mới');
+        $response->assertSee('Run Migrations');
         $response->assertSee('migrate:fresh');
         $response->assertSee('Rollback');
     }
