@@ -32,7 +32,7 @@ class DatabaseMaintenanceController extends Controller
         if (! $this->authorizePassword((string) $request->validated('password'))) {
             return back()
                 ->withInput()
-                ->with('error', 'Mật khẩu xác thực không chính xác hoặc chưa được cấu hình trên server!');
+                ->with('error', 'Authentication failed: Incorrect maintenance password or secret not configured on server!');
         }
 
         try {
@@ -40,25 +40,25 @@ class DatabaseMaintenanceController extends Controller
                 '--force' => true,
             ]);
 
-            $output = Artisan::output();
+            $output = $this->formatOutput(Artisan::output(), 'No pending migrations to run. All database tables are already up to date.');
 
             if ($exitCode === 0) {
                 return back()->with([
-                    'success' => 'Thực thi php artisan migrate thành công!',
+                    'success' => 'Command [php artisan migrate --force] executed successfully!',
                     'output' => $output,
                     'command' => 'php artisan migrate --force',
                 ]);
             }
 
             return back()->with([
-                'error' => 'Lệnh migrate kết thúc với mã lỗi: ' . $exitCode,
+                'error' => 'Command [migrate] exited with error code: ' . $exitCode,
                 'output' => $output,
                 'command' => 'php artisan migrate --force',
             ]);
         } catch (Throwable $e) {
             return back()->with([
-                'error' => 'Đã xảy ra ngoại lệ: ' . $e->getMessage(),
-                'output' => $e->getTraceAsString(),
+                'error' => 'Migration Exception: ' . $e->getMessage(),
+                'output' => $this->formatOutput($e->getMessage() . "\n\n" . $e->getTraceAsString()),
             ]);
         }
     }
@@ -72,7 +72,7 @@ class DatabaseMaintenanceController extends Controller
         if (! $this->authorizePassword((string) $request->validated('password'))) {
             return back()
                 ->withInput()
-                ->with('error', 'Mật khẩu xác thực không chính xác hoặc chưa được cấu hình trên server!');
+                ->with('error', 'Authentication failed: Incorrect maintenance password or secret not configured on server!');
         }
 
         try {
@@ -85,25 +85,25 @@ class DatabaseMaintenanceController extends Controller
             }
 
             $exitCode = Artisan::call('migrate:fresh', $params);
-            $output = Artisan::output();
+            $output = $this->formatOutput(Artisan::output(), 'Database refreshed successfully.');
 
             if ($exitCode === 0) {
                 return back()->with([
-                    'success' => 'Thực thi migrate:fresh thành công (Đã xóa trắng và chạy lại toàn bộ migrations)!',
+                    'success' => 'Database successfully reset and re-migrated (migrate:fresh)!',
                     'output' => $output,
                     'command' => 'php artisan migrate:fresh' . ($request->boolean('seed') ? ' --seed' : '') . ' --force',
                 ]);
             }
 
             return back()->with([
-                'error' => 'Lệnh migrate:fresh kết thúc với mã lỗi: ' . $exitCode,
+                'error' => 'Command [migrate:fresh] exited with error code: ' . $exitCode,
                 'output' => $output,
                 'command' => 'php artisan migrate:fresh',
             ]);
         } catch (Throwable $e) {
             return back()->with([
-                'error' => 'Đã xảy ra ngoại lệ: ' . $e->getMessage(),
-                'output' => $e->getTraceAsString(),
+                'error' => 'Migration Exception: ' . $e->getMessage(),
+                'output' => $this->formatOutput($e->getMessage() . "\n\n" . $e->getTraceAsString()),
             ]);
         }
     }
@@ -116,7 +116,7 @@ class DatabaseMaintenanceController extends Controller
         if (! $this->authorizePassword((string) $request->validated('password'))) {
             return back()
                 ->withInput()
-                ->with('error', 'Mật khẩu xác thực không chính xác hoặc chưa được cấu hình trên server!');
+                ->with('error', 'Authentication failed: Incorrect maintenance password or secret not configured on server!');
         }
 
         try {
@@ -127,27 +127,41 @@ class DatabaseMaintenanceController extends Controller
                 '--step' => $step,
             ]);
 
-            $output = Artisan::output();
+            $output = $this->formatOutput(Artisan::output(), 'Rollback completed.');
 
             if ($exitCode === 0) {
                 return back()->with([
-                    'success' => 'Thực thi migrate:rollback thành công!',
+                    'success' => 'Command [migrate:rollback] executed successfully!',
                     'output' => $output,
                     'command' => 'php artisan migrate:rollback --step=' . $step . ' --force',
                 ]);
             }
 
             return back()->with([
-                'error' => 'Lệnh migrate:rollback kết thúc với mã lỗi: ' . $exitCode,
+                'error' => 'Command [migrate:rollback] exited with error code: ' . $exitCode,
                 'output' => $output,
                 'command' => 'php artisan migrate:rollback',
             ]);
         } catch (Throwable $e) {
             return back()->with([
-                'error' => 'Đã xảy ra ngoại lệ: ' . $e->getMessage(),
-                'output' => $e->getTraceAsString(),
+                'error' => 'Migration Exception: ' . $e->getMessage(),
+                'output' => $this->formatOutput($e->getMessage() . "\n\n" . $e->getTraceAsString()),
             ]);
         }
+    }
+
+    /**
+     * Format and trim output to prevent oversized session payloads.
+     */
+    private function formatOutput(string $output, ?string $fallback = null): string
+    {
+        $trimmed = trim($output);
+
+        if ($trimmed === '' && $fallback !== null) {
+            return $fallback;
+        }
+
+        return mb_substr($trimmed, 0, 6000);
     }
 
     /**
