@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: techwiz-laravel-app
+    name: techwiz-laravel-mvc
     runtime: docker
     plan: free
     region: singapore
@@ -15,7 +15,7 @@ services:
       - key: APP_KEY
         sync: false
       - key: APP_URL
-        value: "https://techwiz-laravel-app.onrender.com"
+        value: "https://techwiz-laravel-mvc.onrender.com"
       - key: DB_CONNECTION
         value: mysql
       - key: DB_HOST
