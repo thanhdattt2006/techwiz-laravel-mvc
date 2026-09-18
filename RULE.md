@@ -24,7 +24,7 @@ Do làm chung dự án gấp, conflict Git là nỗi ác mộng làm tốn cả 
     - `feat:` Thêm tính năng mới (VD: `feat: add Google login`)
     - `fix:` Sửa lỗi/bug (VD: `fix: resolve mobile button alignment`)
     - `docs:` Viết/Cập nhật tài liệu (VD: `docs: update README with setup instructions`)
-    - `style:` Chỉnh sửa format, khoảng trắng, dấu phẩy... KHÔNG ảnh hưởng logic code (VD: `style: format blade templates`)
+    - `style:` Chỉnh sửa format, khoảng trắng, dấu phẩy... KHÔNG ảnh hưởng logic code (VD: `style: format react components and tailwind classes`)
     - `refactor:` Viết lại code cho sạch/tối ưu hơn nhưng KHÔNG thay đổi chức năng (VD: `refactor: clean up user controller`)
     - `perf:` Sửa code để tăng hiệu năng/tốc độ (VD: `perf: optimize database query for products`)
     - `test:` Thêm test case hoặc sửa test (VD: `test: add unit test for login logic`)

@@ -1,94 +1,73 @@
-# DAY 0: KHỞI TẠO NỀN TẢNG, DATABASE, DEPLOY RENDER & KHUNG SƯỜN FRONTEND
+# DAY 0: SETUP NỀN TẢNG API, REACT VITE FRONTEND & HẠ TẦNG DEPLOY
 
-**Mục tiêu**: Chuẩn bị 100% "vũ khí" và nền tảng hạ tầng trước khi bước vào cuộc thi. Hoàn tất setup server, database, deploy CI/CD Render và dựng sẵn toàn bộ khung sườn giao diện (Master Layout, Header, Footer, SweetAlert2, AJAX) để khi có đề bài chỉ việc bắt tay vào làm tính năng.
+**Mục tiêu**: Chuẩn bị 100% nền tảng công nghệ trước khi bước vào cuộc thi. Hoàn tất cấu hình Backend Laravel Web API (Sanctum, CORS, Render CI/CD) và bộ khung dự án Frontend React JS + Vite (TailwindCSS, Axios Interceptors, AuthContext, ProtectedRoute cho 3 roles), sẵn sàng kết nối và deploy tức thì khi có đề bài.
 
 ---
 
-## Phase 0.1: Khởi tạo Project Laravel
-
+## Phase 0.1: Cấu Hình Backend Laravel Web API
 - `[x]` Cài đặt PHP 8.4 và Composer.
-- `[x]` Chạy lệnh `composer create-project laravel/laravel .` trong thư mục gốc.
-- `[x]` Cấu hình `.env` ban đầu.
-- `[x]` Chạy `php artisan serve` kiểm tra trang mặc định.
+- `[x]` Khởi tạo project Laravel & cấu hình `.env`.
+- `[ ]` Cài đặt & cấu hình **Laravel Sanctum** (`composer require laravel/sanctum`, `php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"`).
+- `[ ]` Cấu hình CORS (`config/cors.php`): Cho phép headers, methods `*`, origins chấp nhận `localhost:5173`, `localhost:3000` và Vercel domains (`*.vercel.app`).
+- `[ ]` Tạo Controller kiểm tra sức khỏe API: `GET /api/v1/health` trả về `{ "status": "ok", "timestamp": "...", "database": "connected" }`.
 
-## Phase 0.2: Cấu hình Kết Nối Database (Local & Aiven)
+## Phase 0.2: Cấu hình Kết Nối Database (Local & Aiven MySQL)
+- `[x]` Cấu hình kết nối MySQL trong `.env` (hỗ trợ cả Local DB và Aiven Cloud SSL).
+- `[x]` Chạy `php artisan migrate` kiểm tra kết nối DB thành công.
+- `[x]` Tạo `DatabaseMaintenanceController` cho phép migrate/fresh qua endpoint an toàn (kèm secret token).
 
-- `[x]` Cấu hình thông tin DB trong `.env`.
-- `[x]` Chạy `php artisan migrate` để test kết nối database.
-
-## Phase 0.3: Chuẩn bị Deploy Render (IaC)
-
-- `[x]` Đăng nhập Render.com và kết nối GitHub repo.
-- `[x]` Cấu hình file `render.yaml` (Infrastructure as Code).
-- `[x]` Thiết lập các biến môi trường trên Render (`APP_KEY`, DB, `APP_ENV=production`).
-
-## Phase 0.4: Kiểm tra Deploy CI/CD
-
-- `[x]` Theo dõi log build và deploy trên Render.
-- `[x]` Kiểm tra link live `xxxx.onrender.com`.
-- `[x]` Tinh chỉnh reverse proxy, HTTPS trust và Session driver trên Render.
-
-## Phase 0.5: Tạo Demo Code MVC & Maintenance Controller
-
-- `[x]` Tạo `DemoController` và view `demo.blade.php`.
-- `[x]` Tạo `DatabaseMaintenanceController` cho phép migrate/fresh/rollback an toàn.
-- `[x]` Tạo test case kiểm tra chức năng maintenance (`MaintenanceTest.php`).
+## Phase 0.3: Chuẩn Bị Hạ Tầng Deploy Backend (Render)
+- `[x]` Kết nối GitHub repository với Render.com.
+- `[x]` Cấu hình file `render.yaml` (IaC - Web Service PHP, build command, start command Nginx/Apache).
+- `[x]` Thiết lập biến môi trường trên Render (`APP_KEY`, `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`, `APP_ENV=production`, `APP_DEBUG=false`).
+- `[x]` Test URL live backend trên Render (`https://xxxx.onrender.com/api/v1/health`).
 
 ---
 
-## Phase 0.6: Cài Đặt Thư Viện Frontend Core
+## Phase 0.4: Khởi Tạo Dự Án Frontend React JS (Vite)
+- `[ ]` Khởi tạo dự án React Vite bằng JavaScript: `npm create vite@latest frontend -- --template react`.
+- `[ ]` Cài đặt các thư viện Frontend cốt lõi:
+  - `npm install react-router-dom axios lucide-react sweetalert2`
+  - `npm install -D tailwindcss @tailwindcss/vite` (hoặc PostCSS Tailwind v4)
+- `[ ]` Cấu hình biến môi trường Frontend `.env`:
+  ```env
+  VITE_API_BASE_URL=http://127.0.0.1:8000/api/v1
+  ```
+  (Khi deploy Vercel cấu hình biến này trỏ về link live Render: `https://xxxx.onrender.com/api/v1`).
 
-- `[ ]` Cài đặt SweetAlert2 qua npm: `npm install sweetalert2`
-- `[ ]` Cài đặt Axios qua npm: `npm install axios`
-- `[ ]` Cài đặt Alpine.js qua npm: `npm install alpinejs` (hỗ trợ dropdown, mobile menu nhẹ mượt)
-- `[ ]` Cài đặt NProgress qua npm: `npm install nprogress` (thanh loading bar chạy trên đỉnh khi gọi AJAX)
-- `[ ]` Kiểm tra `package.json` đảm bảo cài đặt thành công.
+## Phase 0.5: Xây Dựng Kiến Trúc Axios & Auth Context
+- `[ ]` Tạo `src/api/axiosClient.js`:
+  - Cấu hình `baseURL: import.meta.env.VITE_API_BASE_URL`.
+  - Request Interceptor: Tự động đính `Authorization: Bearer <token>` từ `localStorage`.
+  - Response Interceptor: Bắt lỗi toàn cục, tự động redirect về `/login` nếu gặp HTTP `401 Unauthorized`.
+- `[ ]` Tạo `src/context/AuthContext.jsx`:
+  - Quản lý state: `user`, `token`, `role`, `isAuthenticated`, `isLoading`.
+  - Hàm `login(credentials)`: Gọi API, lưu token & user info vào `localStorage`, cập nhật state.
+  - Hàm `logout()`: Xóa token, gọi API revoke token (nếu cần), reset state và chuyển hướng về trang đăng nhập.
 
-## Phase 0.7: Xây Dựng JavaScript Core & Modules
+## Phase 0.6: Xây Dựng Khung Phân Quyền Router (3 Roles)
+- `[ ]` Tạo `src/routes/ProtectedRoute.jsx`:
+  - Nhận prop `allowedRoles={['admin', 'operator', 'user']}`.
+  - Nếu chưa đăng nhập -> Chuyển hướng tới `/login`.
+  - Nếu đã đăng nhập nhưng role không khớp -> Chuyển hướng tới trang thông báo `/unauthorized` hoặc dashboard tương ứng.
+- `[ ]` Tạo layout khung cho 3 vai trò:
+  - `AdminLayout.jsx`: Sidebar quản trị, Header, content container.
+  - `OperatorLayout.jsx`: Giao diện tối ưu cho điều phối phòng trực (Control Room layout), thanh thông báo SOS khẩn cấp.
+  - `UserLayout.jsx`: Navbar người dùng, nút khẩn cấp SOS nổi bật, mobile-first responsive.
 
-- `[ ]` Tạo `resources/js/bootstrap.js`: Cấu hình Axios (tự động gắn CSRF token, header AJAX, NProgress loading interceptor).
-- `[ ]` Tạo `resources/js/modules/alerts.js`:
-  - `window.Toast`: Toast notification SweetAlert2 góc màn hình (tự tắt sau 3s).
-  - `window.confirmAction`: Popup confirm SweetAlert2.
-  - Global Event Handler: Tự động bắt mọi form/button có `data-confirm="..."` để hỏi xác nhận trước khi submit.
-- `[ ]` Cập nhật `resources/js/app.js`: Khởi tạo Alpine.js và liên kết toàn bộ module.
-
-## Phase 0.8: Xây Dựng Master Layout & Partials
-
-- `[ ]` Tạo `resources/views/layouts/app.blade.php`:
-  - Khung HTML5, meta CSRF token, nhúng Vite bundle.
-  * Cấu trúc flexbox giữ Footer luôn nằm ở đáy trang (`min-h-screen flex flex-col`).
-  - `@yield('title')`, `@yield('content')`, `@stack('styles')`, `@stack('scripts')`.
-- `[ ]` Tạo `resources/views/partials/header.blade.php`:
-  - Thanh Navbar responsive chuẩn TailwindCSS v4.
-  - Logo thương hiệu, menu điều hướng, nút hành động.
-  - Hamburger toggle menu trên thiết bị di động (sử dụng Alpine.js).
-- `[ ]` Tạo `resources/views/partials/footer.blade.php`:
-  - Footer thông tin dự án, bản quyền, tech stack badges.
-- `[ ]` Tạo `resources/views/partials/alerts.blade.php`:
-  - Cầu nối tự động đọc `session('success')`, `session('error')`, `session('warning')`, `$errors->all()` và kích hoạt SweetAlert2 tương ứng.
-
-## Phase 0.9: Xây Dựng Trang Demo Test Khung Sườn & AJAX
-
-- `[ ]` Tạo `resources/views/home.blade.php` kế thừa `layouts/app.blade.php`.
-- `[ ]` Thiết kế các nút bấm test:
-  - Nút test SweetAlert2 Alert & Toast.
-  - Nút test Confirm Dialog (thử nghiệm form xoá giả lập).
-  - Nút test AJAX: Gửi request tới route backend và nhận JSON phản hồi + Toast thông báo.
-- `[ ]` Khai báo route test trong `routes/web.php` (`/` trỏ tới `home`, `POST /api/demo-ajax` để test).
-
-## Phase 0.10: Kiểm Tra Build & Nghiệm Thu Day 0
-
-- `[ ]` Chạy `npm run build` kiểm tra Vite biên dịch không có lỗi.
-- `[ ]` Mở trình duyệt kiểm tra:
-  - Header & Footer hiển thị chuẩn, responsive tốt trên mobile.
-  - SweetAlert2 bật mượt mà (Alert, Toast, Confirm).
-  - AJAX gửi và nhận dữ liệu trơn tru kèm thanh loading NProgress.
-- `[ ]` Kiểm tra `git status` và `git diff` sạch sẽ, chuẩn bị commit.
+## Phase 0.7: Chuẩn Bị Cấu Hình Deploy Frontend Lên Vercel
+- `[ ]` Tạo file `vercel.json` trong thư mục frontend để xử lý Single Page Application (SPA) routing:
+  ```json
+  {
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/index.html" }
+    ]
+  }
+  ```
+- `[ ]` Kết nối repo với Vercel và test build thử nghiệm `npm run build`.
 
 ---
 
 ## Tổng Kết Day 0
-
-- `[ ]` Cả team pull code mới nhất về máy cá nhân và chạy `npm install && npm run build`.
-- `[ ]` Toàn bộ hạ tầng và khung sườn UI đã sẵn sàng cho Day 1.
+- `[ ]` Backend Render API và Frontend Vercel React Vite đều hoạt động và ping thông nhau.
+- `[ ]` Sẵn sàng 100% hạ tầng cho Day 1 khi có đề thi chính thức.
