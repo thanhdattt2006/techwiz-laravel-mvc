@@ -79,6 +79,17 @@ npm run dev
 - Backend Health Check: `http://127.0.0.1:8000/api/v1/health`
 - Frontend App: `http://localhost:5173`
 
+### 4. Hướng Dẫn Deploy Lên Vercel (Frontend)
+1. Đăng nhập [Vercel Dashboard](https://vercel.com/new) và kết nối với GitHub Repository của team.
+2. Tại mục **Configure Project**:
+   - **Root Directory**: Bấm *Edit* và chọn thư mục `frontend` *(bắt buộc vì dự án dạng Monorepo)*.
+   - **Framework Preset**: Chọn `Vite` (Vercel tự nhận diện).
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+3. Thêm biến môi trường (**Environment Variables**):
+   - `VITE_API_BASE_URL`: Điền URL live của backend trên Render (VD: `https://techwiz-laravel-mvc.onrender.com/api/v1`).
+4. Bấm **Deploy**. Nhờ có file `frontend/vercel.json`, toàn bộ routing SPA sẽ hoạt động mượt mà, không bao giờ bị lỗi 404 khi tải lại trang!
+
 ---
 
 ## 📝 Quy Tắc Làm Việc Của Team

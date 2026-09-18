@@ -57,15 +57,17 @@
   - `UserLayout.jsx`: Navbar người dùng, nút khẩn cấp SOS nổi bật, mobile-first responsive.
 
 ## Phase 0.7: Chuẩn Bị Cấu Hình Deploy Frontend Lên Vercel
-- `[ ]` Tạo file `vercel.json` trong thư mục frontend để xử lý Single Page Application (SPA) routing:
+- `[x]` Tạo file `vercel.json` trong thư mục frontend để xử lý Single Page Application (SPA) routing:
   ```json
   {
+    "framework": "vite",
     "rewrites": [
       { "source": "/(.*)", "destination": "/index.html" }
     ]
   }
   ```
-- `[ ]` Kết nối repo với Vercel và test build thử nghiệm `npm run build`.
+- `[x]` Kiểm tra và cấu hình Root Directory `frontend` cho Vercel.
+- `[x]` Test build thử nghiệm `npm run build` thành công (biên dịch hoàn tất trong 684ms).
 
 ---
 
