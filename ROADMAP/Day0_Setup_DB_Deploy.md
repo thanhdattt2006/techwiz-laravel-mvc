@@ -36,13 +36,14 @@
   (Khi deploy Vercel cấu hình biến này trỏ về link live Render: `https://xxxx.onrender.com/api/v1`).
 
 ## Phase 0.5: Xây Dựng Kiến Trúc Axios & Auth Context
-- `[ ]` Tạo `src/api/axiosClient.js`:
+- `[x]` Tạo `src/api/axiosClient.js`:
   - Cấu hình `baseURL: import.meta.env.VITE_API_BASE_URL`.
   - Request Interceptor: Tự động đính `Authorization: Bearer <token>` từ `localStorage`.
   - Response Interceptor: Bắt lỗi toàn cục, tự động redirect về `/login` nếu gặp HTTP `401 Unauthorized`.
-- `[ ]` Tạo `src/context/AuthContext.jsx`:
+- `[x]` Tạo `src/context/AuthContext.jsx`:
   - Quản lý state: `user`, `token`, `role`, `isAuthenticated`, `isLoading`.
-  - Hàm `login(credentials)`: Gọi API, lưu token & user info vào `localStorage`, cập nhật state.
+  - Hàm `login(credentials)`: Cho phép đăng nhập bằng cả Gmail hoặc Username.
+  - Hàm `quickDemoLogin(role)`: Đăng nhập nhanh 1-chạm cho 3 roles (Admin, Operator, User).
   - Hàm `logout()`: Xóa token, gọi API revoke token (nếu cần), reset state và chuyển hướng về trang đăng nhập.
 
 ## Phase 0.6: Xây Dựng Khung Phân Quyền Router (3 Roles)
