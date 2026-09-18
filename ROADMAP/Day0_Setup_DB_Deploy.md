@@ -25,11 +25,11 @@
 ---
 
 ## Phase 0.4: Khởi Tạo Dự Án Frontend React JS (Vite)
-- `[ ]` Khởi tạo dự án React Vite bằng JavaScript: `npm create vite@latest frontend -- --template react`.
-- `[ ]` Cài đặt các thư viện Frontend cốt lõi:
+- `[x]` Khởi tạo dự án React Vite bằng JavaScript: `npm create vite@latest frontend -- --template react`.
+- `[x]` Cài đặt các thư viện Frontend cốt lõi:
   - `npm install react-router-dom axios lucide-react sweetalert2`
   - `npm install -D tailwindcss @tailwindcss/vite` (hoặc PostCSS Tailwind v4)
-- `[ ]` Cấu hình biến môi trường Frontend `.env`:
+- `[x]` Cấu hình biến môi trường Frontend `.env`:
   ```env
   VITE_API_BASE_URL=http://127.0.0.1:8000/api/v1
   ```

@@ -1,52 +1,48 @@
 *.log
 .DS_Store
-.env
-.env.backup
-.env.production
-.phpactor.json
-.phpunit.result.cache
-/.codex
-/.cursor/
-/.idea
-/.nova
-/.phpunit.cache
-/.vscode
-/.zed
-/auth.json
-/node_modules
-/public/build
-/public/fonts-manifest.dev.json
-/public/hot
-/public/storage
-/storage/*.key
-/storage/pail
-/vendor
-_ide_helper.php
-Homestead.json
-Homestead.yaml
 Thumbs.db
-
-# --- Additional Ignore Patterns ---
-
-# Local Database (SQLite)
-/database/*.sqlite
-/database/*.sqlite3
-/database/*.sqlite-journal
-
-# Editor & OS temporary files
 *~
 *.swp
 *.swo
 *.tmp
 *.bak
 
-# IDE Helper files
+# Environment variables
+.env
+.env.backup
+.env.production
+.env.local
+.env.*.local
+
+# Backend dependencies & cache
+backend/vendor/
+backend/node_modules/
+backend/public/build/
+backend/public/hot/
+backend/public/storage/
+backend/storage/*.key
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/storage/logs/*
+backend/.phpunit.result.cache
+
+# Frontend dependencies & build outputs
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# Generic vendor & node_modules fallbacks
+vendor/
+node_modules/
+dist/
+
+# IDE & Editor files
+.idea/
+.vscode/
+.zed/
+.codex/
+.cursor/
+_ide_helper.php
 _ide_helper_models.php
 .phpstorm.meta.php
-
-# Test Coverage
-/coverage/
-
-# Temp folders
-/temp/
-/tmp/

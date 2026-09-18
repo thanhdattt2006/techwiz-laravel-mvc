@@ -17,7 +17,7 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] Khởi tạo Laravel & Cấu hình môi trường PHP 8.4
 - [x] Kết nối DB (Local & Aiven Cloud) & Cấu hình Deploy Render (IaC `render.yaml`)
 - [x] Cài đặt Laravel Sanctum, cấu hình CORS (`config/cors.php`) cho phép Frontend Vercel
-- [x] Khởi tạo khung dự án Frontend: React.js (JavaScript) + Vite + TailwindCSS
+- [x] Khởi tạo khung dự án Frontend: React.js (JavaScript) + Vite + TailwindCSS + Core packages
 - `[/]` Xây dựng `axiosClient.js` (Bearer token interceptor, BaseURL) & `AuthContext.jsx`
 - `[/]` Xây dựng `ProtectedRoute.jsx` hỗ trợ 3 roles: `admin`, `operator`, `user`
 - `[/]` Tạo trang demo kết nối API <-> React Frontend thành công
