@@ -38,9 +38,9 @@ class DatabaseMaintenanceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'password.required' => 'Vui lòng nhập mật khẩu xác thực bảo trì CSDL.',
-            'step.integer' => 'Số bước rollback phải là số nguyên.',
-            'step.min' => 'Số bước rollback tối thiểu là 1.',
+            'password.required' => 'Database maintenance authorization password is required.',
+            'step.integer' => 'Rollback step must be an integer.',
+            'step.min' => 'Rollback step must be at least 1.',
         ];
     }
 }

@@ -30,10 +30,10 @@ class AuthController extends Controller
         if (! $user || ! Hash::check($validated['password'], $user->password)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Tên đăng nhập / Email hoặc mật khẩu không chính xác.',
+                'message' => 'Invalid username/email or password.',
                 'data' => null,
                 'errors' => [
-                    'login' => ['Thông tin đăng nhập không hợp lệ.'],
+                    'login' => ['The provided credentials are incorrect.'],
                 ],
             ], 422);
         }
@@ -41,7 +41,7 @@ class AuthController extends Controller
         if (! $user->isActive()) {
             return response()->json([
                 'success' => false,
-                'message' => 'Tài khoản của bạn đã bị vô hiệu hóa hoặc tạm khóa.',
+                'message' => 'Your account has been deactivated or banned.',
                 'data' => null,
                 'errors' => null,
             ], 403);
@@ -52,7 +52,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Đăng nhập thành công!',
+            'message' => 'Login successful!',
             'data' => [
                 'token' => $token,
                 'user' => [
@@ -77,7 +77,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Lấy thông tin tài khoản thành công.',
+            'message' => 'User profile retrieved successfully.',
             'data' => [
                 'user' => [
                     'id' => $user->id,
@@ -101,7 +101,7 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Đăng xuất thành công!',
+            'message' => 'Logout successful!',
             'data' => null,
         ], 200);
     }

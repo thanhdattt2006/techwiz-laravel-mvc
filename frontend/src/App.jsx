@@ -37,8 +37,8 @@ export default function App() {
     if (!loginInput || !passwordInput) {
       Swal.fire({
         icon: 'warning',
-        title: 'Thiếu thông tin',
-        text: 'Vui lòng nhập Username hoặc Email (Gmail) và Mật khẩu!',
+        title: 'Missing Information',
+        text: 'Please enter your Username or Email and Password!',
       });
       return;
     }
@@ -50,8 +50,8 @@ export default function App() {
     if (result.success) {
       Swal.fire({
         icon: 'success',
-        title: 'Đăng nhập thành công!',
-        text: `Chào mừng ${result.user.fullname} (${result.user.role})!`,
+        title: 'Login Successful!',
+        text: `Welcome ${result.user.fullname} (${result.user.role})!`,
         timer: 2000,
         showConfirmButton: false,
       });
@@ -60,8 +60,8 @@ export default function App() {
     } else {
       Swal.fire({
         icon: 'error',
-        title: 'Đăng nhập thất bại',
-        text: result.message || 'Sai thông tin đăng nhập!',
+        title: 'Login Failed',
+        text: result.message || 'Invalid login credentials!',
       });
     }
   };
@@ -74,15 +74,15 @@ export default function App() {
     if (result.success) {
       Swal.fire({
         icon: 'success',
-        title: `Đăng nhập Demo: ${targetRole.toUpperCase()}`,
-        text: `Đang thao tác dưới vai trò: ${result.user.fullname}`,
+        title: `Demo Login: ${targetRole.toUpperCase()}`,
+        text: `Operating as: ${result.user.fullname}`,
         timer: 1800,
         showConfirmButton: false,
       });
     } else {
       Swal.fire({
         icon: 'error',
-        title: 'Lỗi Demo Login',
+        title: 'Demo Login Error',
         text: result.message,
       });
     }
@@ -92,8 +92,8 @@ export default function App() {
     await logout();
     Swal.fire({
       icon: 'info',
-      title: 'Đã đăng xuất',
-      text: 'Phiên làm việc đã kết thúc an toàn.',
+      title: 'Logged Out',
+      text: 'Your session has ended safely.',
       timer: 1500,
       showConfirmButton: false,
     });
@@ -132,10 +132,10 @@ export default function App() {
           <div>
             <div className="flex items-center gap-2 mb-2 text-indigo-400">
               <KeyRound className="w-5 h-5" />
-              <h2 className="text-lg font-semibold text-white">Đăng Nhập Nhanh 3 Roles</h2>
+              <h2 className="text-lg font-semibold text-white">Quick 3-Role Demo Login</h2>
             </div>
             <p className="text-sm text-slate-400 mb-6">
-              1-Click Demo Login cho giám khảo chấm thi và các thành viên test luồng phân quyền mà không cần gõ mật khẩu.
+              1-Click Demo Login for competition judges and team members to test role-based access without typing passwords.
             </p>
 
             <div className="space-y-3">
@@ -151,8 +151,8 @@ export default function App() {
                     <ShieldCheck className="w-5 h-5" />
                   </div>
                   <div className="text-left">
-                    <div className="text-sm font-bold text-white">Quản Trị Viên (Admin)</div>
-                    <div className="text-xs text-purple-300/70">admin@gmail.com (hoặc admin)</div>
+                    <div className="text-sm font-bold text-white">System Administrator (Admin)</div>
+                    <div className="text-xs text-purple-300/70">admin@gmail.com (or admin)</div>
                   </div>
                 </div>
                 <span className="text-xs font-mono px-2 py-1 rounded bg-purple-900/60 text-purple-200">Role: admin</span>
@@ -170,8 +170,8 @@ export default function App() {
                     <Headphones className="w-5 h-5" />
                   </div>
                   <div className="text-left">
-                    <div className="text-sm font-bold text-white">Điều Phối Viên (Operator)</div>
-                    <div className="text-xs text-blue-300/70">operator@gmail.com (hoặc operator)</div>
+                    <div className="text-sm font-bold text-white">Emergency Dispatcher (Operator)</div>
+                    <div className="text-xs text-blue-300/70">operator@gmail.com (or operator)</div>
                   </div>
                 </div>
                 <span className="text-xs font-mono px-2 py-1 rounded bg-blue-900/60 text-blue-200">Role: operator</span>
@@ -189,8 +189,8 @@ export default function App() {
                     <User className="w-5 h-5" />
                   </div>
                   <div className="text-left">
-                    <div className="text-sm font-bold text-white">Người Dân / Bệnh Nhân (User)</div>
-                    <div className="text-xs text-emerald-300/70">user@gmail.com (hoặc user)</div>
+                    <div className="text-sm font-bold text-white">Citizen / Patient (User)</div>
+                    <div className="text-xs text-emerald-300/70">user@gmail.com (or user)</div>
                   </div>
                 </div>
                 <span className="text-xs font-mono px-2 py-1 rounded bg-emerald-900/60 text-emerald-200">Role: user</span>
@@ -200,7 +200,7 @@ export default function App() {
 
           <div className="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500 flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            <span>Mật khẩu mặc định: <code className="text-slate-300 font-mono">password123</code></span>
+            <span>Default credentials password: <code className="text-slate-300 font-mono">password123</code></span>
           </div>
         </section>
 
@@ -211,7 +211,7 @@ export default function App() {
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2 text-emerald-400">
                   <CheckCircle2 className="w-5 h-5" />
-                  <h2 className="text-lg font-semibold text-white">Phiên Đăng Nhập Hoạt Động</h2>
+                  <h2 className="text-lg font-semibold text-white">Active Session</h2>
                 </div>
                 <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                   Role: {role}
@@ -221,7 +221,7 @@ export default function App() {
               {/* User Profile Card */}
               <div className="bg-slate-950/80 rounded-xl p-4 border border-slate-800 space-y-2.5 text-sm mb-6">
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Họ và Tên:</span>
+                  <span className="text-slate-400">Full Name:</span>
                   <span className="font-semibold text-white">{user.fullname}</span>
                 </div>
                 <div className="flex justify-between">
@@ -229,15 +229,15 @@ export default function App() {
                   <span className="font-mono text-indigo-300">@{user.username}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Email (Gmail):</span>
+                  <span className="text-slate-400">Email:</span>
                   <span className="text-slate-200">{user.email}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Số điện thoại:</span>
-                  <span className="text-slate-200">{user.phone || 'Chưa cập nhật'}</span>
+                  <span className="text-slate-400">Phone:</span>
+                  <span className="text-slate-200">{user.phone || 'Not provided'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-400">Trạng thái:</span>
+                  <span className="text-slate-400">Status:</span>
                   <span className="text-emerald-400 capitalize">{user.status}</span>
                 </div>
               </div>
@@ -248,7 +248,7 @@ export default function App() {
                 className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-red-600/20 hover:bg-red-600/30 border border-red-500/30 text-red-300 font-medium transition cursor-pointer"
               >
                 <LogOut className="w-4 h-4" />
-                <span>Đăng Xuất Khỏi Hệ Thống</span>
+                <span>Sign Out</span>
               </button>
             </div>
           ) : (
@@ -256,22 +256,22 @@ export default function App() {
               <div>
                 <div className="flex items-center gap-2 mb-2 text-indigo-400">
                   <LogIn className="w-5 h-5" />
-                  <h2 className="text-lg font-semibold text-white">Đăng Nhập Thủ Công</h2>
+                  <h2 className="text-lg font-semibold text-white">Manual Sign In</h2>
                 </div>
                 <p className="text-sm text-slate-400 mb-6">
-                  Đăng nhập bằng <strong className="text-white">Gmail</strong> hoặc <strong className="text-white">Username</strong> tùy chọn.
+                  Sign in using either <strong className="text-white">Email</strong> or <strong className="text-white">Username</strong>.
                 </p>
 
                 <div className="space-y-4">
                   <div>
                     <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                      Username hoặc Email (Gmail)
+                      Username or Email
                     </label>
                     <div className="relative">
                       <Mail className="w-4 h-4 text-slate-500 absolute left-3 top-3.5" />
                       <input
                         type="text"
-                        placeholder="VD: admin@gmail.com hoặc admin"
+                        placeholder="e.g. admin@gmail.com or admin"
                         value={loginInput}
                         onChange={(e) => setLoginInput(e.target.value)}
                         className="w-full pl-9 pr-4 py-2.5 bg-slate-950 border border-slate-800 rounded-xl text-sm text-white focus:outline-none focus:border-indigo-500 transition"
@@ -281,7 +281,7 @@ export default function App() {
 
                   <div>
                     <label className="block text-xs font-medium text-slate-300 mb-1.5">
-                      Mật Khẩu
+                      Password
                     </label>
                     <div className="relative">
                       <KeyRound className="w-4 h-4 text-slate-500 absolute left-3 top-3.5" />
@@ -303,14 +303,14 @@ export default function App() {
                 className="w-full mt-6 flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition cursor-pointer shadow-lg shadow-indigo-600/20 disabled:opacity-50"
               >
                 <LogIn className="w-4 h-4" />
-                <span>{submitting ? 'Đang xác thực...' : 'Đăng Nhập Ngay'}</span>
+                <span>{submitting ? 'Authenticating...' : 'Sign In Now'}</span>
               </button>
             </form>
           )}
 
           <div className="mt-6 pt-4 border-t border-slate-800 text-xs text-slate-500 flex items-center gap-1.5">
             <AlertTriangle className="w-4 h-4 text-amber-500" />
-            <span>Bảo mật: Laravel Sanctum Bearer Token</span>
+            <span>Security: Laravel Sanctum Bearer Token</span>
           </div>
         </section>
       </main>

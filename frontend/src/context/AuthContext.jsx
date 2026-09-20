@@ -72,10 +72,10 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('auth_user', JSON.stringify(newUser));
         return { success: true, user: newUser };
       }
-      return { success: false, message: response.message || 'Đăng nhập thất bại' };
+      return { success: false, message: response.message || 'Login failed' };
     } catch (error) {
       const message =
-        error.response?.data?.message || 'Không thể kết nối đến máy chủ API.';
+        error.response?.data?.message || 'Unable to connect to API server.';
       const errors = error.response?.data?.errors || null;
       return { success: false, message, errors };
     }
@@ -92,7 +92,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     const cred = credentials[targetRole];
-    if (!cred) return { success: false, message: 'Role không tồn tại' };
+    if (!cred) return { success: false, message: 'Role does not exist' };
 
     return login(cred.login, cred.password);
   };
