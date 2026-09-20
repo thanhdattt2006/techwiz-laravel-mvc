@@ -119,6 +119,7 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn y tế:
   ```json
   {
     "framework": "vite",
+    "outputDirectory": "dist",
     "rewrites": [
       { "source": "/(.*)", "destination": "/index.html" }
     ]
