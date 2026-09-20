@@ -1,0 +1,74 @@
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
+// Layouts
+import PublicLayout from '../components/layout/PublicLayout';
+import AdminLayout from '../components/layout/AdminLayout';
+import OperatorLayout from '../components/layout/OperatorLayout';
+import UserLayout from '../components/layout/UserLayout';
+
+// Protection HOC
+import ProtectedRoute from './ProtectedRoute';
+
+// Public Pages
+import HomePage from '../pages/public/HomePage';
+import AboutPage from '../pages/public/AboutPage';
+import GalleryPage from '../pages/public/GalleryPage';
+import FeedbackPage from '../pages/public/FeedbackPage';
+import ContactPage from '../pages/public/ContactPage';
+import SitemapPage from '../pages/public/SitemapPage';
+
+// Auth Pages
+import LoginPage from '../pages/auth/LoginPage';
+import UnauthorizedPage from '../pages/auth/UnauthorizedPage';
+
+// Protected Dashboards
+import AdminDashboard from '../pages/admin/AdminDashboard';
+import OperatorDashboard from '../pages/operator/OperatorDashboard';
+import UserDashboard from '../pages/user/UserDashboard';
+
+export default function AppRoutes() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        {/* 1. Public Catalog & Informational Routes */}
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/gallery" element={<GalleryPage />} />
+          <Route path="/feedback" element={<FeedbackPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/sitemap" element={<SitemapPage />} />
+        </Route>
+
+        {/* 2. Authentication & Access Restriction Routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
+
+        {/* 3. Protected Admin Portal (RBAC: admin only) */}
+        <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
+          <Route element={<AdminLayout />}>
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          </Route>
+        </Route>
+
+        {/* 4. Protected Operator / Dispatcher Portal (RBAC: operator only) */}
+        <Route element={<ProtectedRoute allowedRoles={['operator']} />}>
+          <Route element={<OperatorLayout />}>
+            <Route path="/operator/dashboard" element={<OperatorDashboard />} />
+          </Route>
+        </Route>
+
+        {/* 5. Protected Patient / User Portal (RBAC: user only) */}
+        <Route element={<ProtectedRoute allowedRoles={['user']} />}>
+          <Route element={<UserLayout />}>
+            <Route path="/user/dashboard" element={<UserDashboard />} />
+          </Route>
+        </Route>
+
+        {/* Catch-all Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}

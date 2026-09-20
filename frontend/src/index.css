@@ -1,7 +1,22 @@
 @import "tailwindcss";
 
+@theme {
+  --color-medical-primary: #0B6EFD;
+  --color-medical-primary-dark: #084298;
+  --color-medical-emergency: #DC3545;
+  --color-medical-success: #198754;
+  --color-medical-warning: #FFB020;
+  --color-medical-bg: #F5F8FC;
+  --color-medical-card: #FFFFFF;
+  --color-medical-text: #1F2A37;
+  --color-medical-muted: #6B7785;
+  --color-medical-border: #E2E8F0;
+}
+
 @layer base {
   body {
-    @apply bg-slate-900 text-slate-100 antialiased min-h-screen font-sans;
+    background-color: var(--color-medical-bg);
+    color: var(--color-medical-text);
+    @apply antialiased min-h-screen font-sans;
   }
 }

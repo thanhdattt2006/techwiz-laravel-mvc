@@ -1,13 +1,17 @@
 # NHẬT KÝ TIẾN ĐỘ (PROGRESS TRACKER)
+# DỰ ÁN: LIFELINK - ONLINE EAMBULANCE PORTAL (SRS TECHWIZ 7)
 # KIẾN TRÚC: LARAVEL REST WEB API + REACT JS (VITE)
 
 File này dùng để theo dõi sát sao tiến độ thực tế so với ROADMAP cho dự án Web End-to-End.
 Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đồng bộ.
 
 ## TỔNG QUAN TIẾN ĐỘ
-- **Mô hình**: Backend Laravel API (Render) + Frontend React Vite (Vercel) + Database Aiven MySQL
+- **Đề tài**: eAmbulance Service Portal (Dự án **LifeLink**)
+- **Mô hình**: Backend Laravel 13 API (Render) + Frontend React 19 Vite (Vercel) + Database Aiven MySQL
+- **Bảng CSDL cốt lõi**: `users`, `ambulances`, `emergency_requests`, `feedbacks`, `contact_messages`, `notifications`
+- **Giao diện**: Light Medical Design System (bảng màu y tế cố định, KHÔNG DÙNG DARK/LIGHT THEME)
 - **Thời hạn**: Day 0 (Chuẩn bị hạ tầng & khung sườn) + 5 Ngày (Day 1 -> Day 5)
-- **Trạng thái chung**: `[/]` Đang hoàn thiện Day 0 (Chuẩn bị kiến trúc, API Base & React Vite Template)
+- **Trạng thái chung**: `[x]` Hoàn thành 100% Day 0 (Bao gồm Phase 0.6 Khung phân quyền ProtectedRoute & Layouts 3 Roles)
 
 ---
 
@@ -21,16 +25,18 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] Xây dựng `axiosClient.js` (Bearer token interceptor, BaseURL) & `AuthContext.jsx`
 - [x] Thiết kế chuẩn bảng `users` (fullname, username, email/gmail, phone, role, status) & Seed 3 demo roles
 - [x] Cấu hình Deploy Vercel (`frontend/vercel.json`, rewrite SPA routing, test build passed)
-- `[/]` Xây dựng `ProtectedRoute.jsx` hỗ trợ 3 roles: `admin`, `operator`, `user`
-- `[/]` Tạo trang demo kết nối API <-> React Frontend thành công
-- Tình trạng: Đang chuẩn bị khung sườn kết nối 2 repo/service cho Day 0
+- [x] Chuẩn hóa 100% tiếng Anh trong codebase (không còn chữ tiếng Việt nào trong mã nguồn & giao diện)
+- [x] Tiếp nhận đề bài chính thức LifeLink (eAmbulance), quy hoạch 6 bảng CSDL và hệ màu Light Medical Theme
+- [x] Xây dựng `ProtectedRoute.jsx` hỗ trợ 3 roles: `admin`, `operator`, `user`
+- [x] Dựng khung Layout cho 3 roles và khung các trang Public (Home, About, Gallery, Feedback, Contact, Sitemap)
+- Tình trạng: Hoàn tất 100% Day 0, sẵn sàng chuyển sang Day 1
 
 ### Day 1: Phân Tích Đề Bài, Thiết Kế ERD & Kiến Trúc 3 Roles
-- `[ ]` Đọc kỹ đề thi chính thức, xác định các Actors (Admin, Operator/Dispatcher, User/Patient)
-- `[ ]` Thiết kế sơ đồ CSDL (ERD) cho luồng cứu thương / đặt xe / tác vụ thời gian thực
-- `[ ]` Quy hoạch danh sách Endpoint REST API (`/api/v1/...`)
+- `[x]` Đọc kỹ SRS LifeLink: catalog xe, lọc khu vực/giá/loại xe, feedback sau chuyến đi, contact vãng lai, không cần thanh toán
+- `[ ]` Thiết kế sơ đồ CSDL (ERD) chi tiết cho 6 bảng cốt lõi: `users`, `ambulances`, `emergency_requests`, `feedbacks`, `contact_messages`, `notifications`
+- `[ ]` Quy hoạch danh sách Endpoint REST API (`/api/v1/...`) chuẩn Envelope
 - `[ ]` Xây dựng cấu trúc phân quyền RBAC (Role Middleware, Sanctum Abilities)
-- Tình trạng: Chờ thực hiện khi nhận đề chính thức (đã có khung sườn tham khảo từ đề TechWiz 7 Walkthrough)
+- Tình trạng: Đã có sẵn SRS chi tiết, sẵn sàng thực thi khi hoàn tất Day 0
 
 ### Day 2: Migrations, Models, Relationships & Seeders
 - `[ ]` Tạo Migrations cho `users` (3 roles), `ambulances`, `emergency_requests`, `dispatches`, v.v.

@@ -1,15 +1,71 @@
 # DAY 0: SETUP NỀN TẢNG API, REACT VITE FRONTEND & HẠ TẦNG DEPLOY
+# DỰ ÁN CHÍNH THỨC: LIFELINK - ONLINE EAMBULANCE PORTAL (SRS TECHWIZ 7)
 
 **Mục tiêu**: Chuẩn bị 100% nền tảng công nghệ trước khi bước vào cuộc thi. Hoàn tất cấu hình Backend Laravel Web API (Sanctum, CORS, Render CI/CD) và bộ khung dự án Frontend React JS + Vite (TailwindCSS, Axios Interceptors, AuthContext, ProtectedRoute cho 3 roles), sẵn sàng kết nối và deploy tức thì khi có đề bài.
+
+---
+
+## 📌 Khung Đề Bài SRS Chính Thức: LifeLink (eAmbulance Portal)
+- **Theme**: eAmbulance (Hệ thống điều phối & dịch vụ xe cứu thương điện tử)
+- **Tên dự án**: **LifeLink**
+- **Category**: Website Design and Development / Web Innovation Unleashed
+- **Phạm vi tính năng chính (SRS Functional Requirements)**:
+  1. **Landing / Home Page**: Catalog hiển thị danh sách xe cứu thương (eAmbulance listings) với thông tin chi tiết, hình ảnh, tình trạng sẵn sàng.
+  2. **eAmbulance Types & Details**: Phân loại xe (A/C, Non-A/C, ICU, ICCU), kích cỡ, trang thiết bị y tế đi kèm, bảng giá cước (VD: $12 hoặc $20).
+  3. **Search, Sort & Filter**: Tìm kiếm xe theo khu vực/thành phố (VD: "Chicago"), lọc và sắp xếp theo khoảng giá, loại xe, mức độ ưu tiên.
+  4. **Emergency Booking / SOS**: Nút "Đặt xe ngay" khẩn cấp kèm toạ độ GPS, điều phối xe tới bệnh nhân.
+  5. **About Us Page**: Giới thiệu công ty, quy mô số thành phố/khu vực phục vụ, danh sách đội xe hoạt động xuất sắc.
+  6. **Image Gallery**: Bộ sưu tập hình ảnh thực tế các dòng xe cứu thương và trang thiết bị.
+  7. **Feedback Form**: Biểu mẫu cho phép người dùng đánh giá chất lượng phục vụ sau khi hoàn thành chuyến đi.
+  8. **Contact Us Form**: Thông tin liên hệ đội ngũ hỗ trợ (email: healthcare@icu.com, phone: 030-1111-1234) kèm form gửi tin nhắn cho khách vãng lai.
+  9. **Sitemap**: Sơ đồ điều hướng trực quan luồng website đặt tại trang chủ / footer.
+- **Ràng buộc quan trọng (SRS Constraints)**:
+  - *Không yêu cầu triển khai thanh toán (Checkout / Payment functionality regarding eAmbulances are NOT required).*
+  - Thiết kế 1 theme y tế sáng (Light Medical Theme), **tuyệt đối không tốn thời gian làm dark/light theme switch**.
+
+---
+
+## 🗄️ Thiết Kế Các Bảng Cơ Sở Dữ Liệu Cốt Lõi (Core Tables)
+Các bảng CSDL chuẩn hóa để thực hành và phát triển từ Day 0 -> Day 3:
+
+1. **`users`** (Đã khởi tạo & seed):
+   - `id`, `fullname`, `username`, `email`, `phone`, `role` (`admin`, `operator`, `user`), `status` (`active`, `inactive`, `banned`), `password`, `timestamps`, `softDeletes`.
+2. **`ambulances`** (Quản lý đội xe cứu thương):
+   - `id`, `vehicle_number`, `model`, `type` (`AC`, `Non-AC`, `ICU`, `ICCU`), `size`, `equipment`, `price`, `region`, `image_url`, `status` (`available`, `busy`, `maintenance`), `timestamps`, `softDeletes`.
+3. **`emergency_requests`** (Yêu cầu cấp cứu / Đặt xe):
+   - `id`, `user_id`, `ambulance_id`, `patient_name`, `patient_phone`, `pickup_address`, `latitude`, `longitude`, `condition_summary`, `status` (`pending`, `assigned`, `arrived`, `completed`, `cancelled`), `timestamps`, `softDeletes`.
+4. **`feedbacks`** (Đánh giá sau chuyến đi):
+   - `id`, `user_id` (foreign key -> users), `request_id` (foreign key -> emergency_requests), `rating` (integer 1-5 sao), `comment` (text), `timestamps`.
+5. **`contact_messages`** (Tin nhắn liên hệ Contact Us):
+   - `id`, `name` (string), `email` (string), `message` (text), `is_read` (boolean default false), `timestamps`.
+   - *Đặc điểm*: Khách vãng lai chưa đăng nhập tài khoản vẫn gửi được tin nhắn.
+6. **`notifications`** (Thông báo hệ thống):
+   - `id`, `user_id` (foreign key -> users), `title` (string), `body` (text), `is_read` (boolean default false), `timestamps`.
+   - *Tận dụng cấu trúc notifications có sẵn của Laravel để bắn thông báo điều phối thời gian thực.*
+
+---
+
+## 🎨 Bảng Màu Chuẩn Thiết Kế (Light Medical Theme - Không Dùng Dark Mode)
+Toàn bộ dự án tuân thủ bộ màu chuẩn y tế:
+- **Primary (Xanh y tế)**: `#0B6EFD` - Nút chính, liên kết, navbar active, brand accent.
+- **Primary tối**: `#084298` - Trạng thái hover, header bar, footer.
+- **Emergency (Đỏ cấp cứu)**: `#DC3545` - Nút "Đặt xe ngay", badge SOS, cảnh báo nguy cấp.
+- **Success (Xanh lá)**: `#198754` - Xe sẵn sàng (available), ca cấp cứu hoàn tất.
+- **Warning (Vàng cam)**: `#FFB020` - Đang chờ duyệt (pending), xe đang di chuyển.
+- **Nền sáng**: `#F5F8FC` - Background chính của toàn bộ trang web.
+- **Card**: `#FFFFFF` - Nền thẻ nội dung, form nhập liệu, modal popup.
+- **Chữ chính**: `#1F2A37` - Văn bản chính, tiêu đề, số liệu.
+- **Chữ phụ**: `#6B7785` - Văn bản mô tả, placeholder, nhãn phụ.
+- **Viền (Border)**: `#E2E8F0` - Viền ô input, viền card, đường kẻ phân cách.
 
 ---
 
 ## Phase 0.1: Cấu Hình Backend Laravel Web API
 - `[x]` Cài đặt PHP 8.4 và Composer.
 - `[x]` Khởi tạo project Laravel & cấu hình `.env`.
-- `[ ]` Cài đặt & cấu hình **Laravel Sanctum** (`composer require laravel/sanctum`, `php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"`).
-- `[ ]` Cấu hình CORS (`config/cors.php`): Cho phép headers, methods `*`, origins chấp nhận `localhost:5173`, `localhost:3000` và Vercel domains (`*.vercel.app`).
-- `[ ]` Tạo Controller kiểm tra sức khỏe API: `GET /api/v1/health` trả về `{ "status": "ok", "timestamp": "...", "database": "connected" }`.
+- `[x]` Cài đặt & cấu hình **Laravel Sanctum** (`HasApiTokens`, cấp bearer token đăng nhập).
+- `[x]` Cấu hình CORS (`config/cors.php`): Cho phép headers, methods `*`, paths `api/*`.
+- `[x]` Tạo Controller kiểm tra sức khỏe API: `GET /api/v1/health` trả về `{ "success": true, "status": "ok", "timestamp": "..." }`.
 
 ## Phase 0.2: Cấu hình Kết Nối Database (Local & Aiven MySQL)
 - `[x]` Cấu hình kết nối MySQL trong `.env` (hỗ trợ cả Local DB và Aiven Cloud SSL).
@@ -28,7 +84,7 @@
 - `[x]` Khởi tạo dự án React Vite bằng JavaScript: `npm create vite@latest frontend -- --template react`.
 - `[x]` Cài đặt các thư viện Frontend cốt lõi:
   - `npm install react-router-dom axios lucide-react sweetalert2`
-  - `npm install -D tailwindcss @tailwindcss/vite` (hoặc PostCSS Tailwind v4)
+  - `npm install -D tailwindcss @tailwindcss/vite`
 - `[x]` Cấu hình biến môi trường Frontend `.env`:
   ```env
   VITE_API_BASE_URL=http://127.0.0.1:8000/api/v1
@@ -44,17 +100,19 @@
   - Quản lý state: `user`, `token`, `role`, `isAuthenticated`, `isLoading`.
   - Hàm `login(credentials)`: Cho phép đăng nhập bằng cả Gmail hoặc Username.
   - Hàm `quickDemoLogin(role)`: Đăng nhập nhanh 1-chạm cho 3 roles (Admin, Operator, User).
-  - Hàm `logout()`: Xóa token, gọi API revoke token (nếu cần), reset state và chuyển hướng về trang đăng nhập.
+  - Hàm `logout()`: Xóa token, gọi API revoke token, reset state.
+- `[x]` Tạo giao diện Demo Day 0 chuẩn hóa 100% tiếng Anh trong `App.jsx`.
 
-## Phase 0.6: Xây Dựng Khung Phân Quyền Router (3 Roles)
-- `[ ]` Tạo `src/routes/ProtectedRoute.jsx`:
+## Phase 0.6: Xây Dựng Khung Phân Quyền Router (3 Roles) & Layouts
+- `[x]` Tạo `src/routes/ProtectedRoute.jsx`:
   - Nhận prop `allowedRoles={['admin', 'operator', 'user']}`.
   - Nếu chưa đăng nhập -> Chuyển hướng tới `/login`.
   - Nếu đã đăng nhập nhưng role không khớp -> Chuyển hướng tới trang thông báo `/unauthorized` hoặc dashboard tương ứng.
-- `[ ]` Tạo layout khung cho 3 vai trò:
+- `[x]` Tạo layout khung cho 3 vai trò (áp dụng bảng màu Light Medical Theme):
   - `AdminLayout.jsx`: Sidebar quản trị, Header, content container.
   - `OperatorLayout.jsx`: Giao diện tối ưu cho điều phối phòng trực (Control Room layout), thanh thông báo SOS khẩn cấp.
   - `UserLayout.jsx`: Navbar người dùng, nút khẩn cấp SOS nổi bật, mobile-first responsive.
+- `[x]` Khởi tạo các trang Public theo SRS: `HomePage.jsx`, `AboutPage.jsx`, `GalleryPage.jsx`, `FeedbackPage.jsx`, `ContactPage.jsx`, `SitemapPage.jsx`.
 
 ## Phase 0.7: Chuẩn Bị Cấu Hình Deploy Frontend Lên Vercel
 - `[x]` Tạo file `vercel.json` trong thư mục frontend để xử lý Single Page Application (SPA) routing:
@@ -67,10 +125,11 @@
   }
   ```
 - `[x]` Kiểm tra và cấu hình Root Directory `frontend` cho Vercel.
-- `[x]` Test build thử nghiệm `npm run build` thành công (biên dịch hoàn tất trong 684ms).
+- `[x]` Test build thử nghiệm `npm run build` thành công (biên dịch hoàn tất trong 826ms).
 
 ---
 
 ## Tổng Kết Day 0
-- `[ ]` Backend Render API và Frontend Vercel React Vite đều hoạt động và ping thông nhau.
-- `[ ]` Sẵn sàng 100% hạ tầng cho Day 1 khi có đề thi chính thức.
+- `[x]` Backend Render API và Frontend Vercel React Vite đều hoạt động và ping thông nhau.
+- `[x]` Đã tích hợp trọn vẹn yêu cầu SRS LifeLink, lược đồ 6 bảng CSDL cốt lõi và hệ màu Light Medical.
+- `[x]` Hoàn thiện Phase 0.6 (ProtectedRoute & Layouts) để sẵn sàng 100% cho Day 1.
