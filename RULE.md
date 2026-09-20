@@ -11,7 +11,19 @@ File này quy định cách thức phối hợp cho 4 anh em, đảm bảo tốc
 ## 2. QUY TẮC VIẾT CODE CƠ BẢN
 
 - **Không vứt rác**: Tuyệt đối KHÔNG ĐỂ LẠI `dd()`, `dump()`, `print_r()` hay `console.log()` trước khi commit. Nhớ xoá!
-- **CSS**: CHỈ SỬ DỤNG **TailwindCSS**. Cấm viết CSS tay vào file `.css` hoặc thẻ `<style>` trừ trường hợp cực kỳ bất khả kháng.
+- **CSS & Giao diện**: CHỈ SỬ DỤNG **TailwindCSS**. Cấm viết CSS tay vào file `.css` hoặc thẻ `<style>` trừ trường hợp cực kỳ bất khả kháng.
+- **BẢNG MÀU CHUẨN Y TẾ (Design System)**: Bắt buộc áp dụng thống nhất các mã màu sau:
+  - **Primary (xanh y tế)**: `#0B6EFD` (Nút chính, link, navbar active)
+  - **Primary tối**: `#084298` (Hover, header, footer)
+  - **Emergency (đỏ)**: `#DC3545` (Nút "Đặt xe ngay", badge khẩn cấp, cảnh báo)
+  - **Success (xanh lá)**: `#198754` (Xe sẵn sàng, hoàn thành)
+  - **Warning (vàng cam)**: `#FFB020` (Đang chờ, sắp tới)
+  - **Nền sáng**: `#F5F8FC` (Background trang)
+  - **Card**: `#FFFFFF` (Card, form)
+  - **Chữ chính**: `#1F2A37` (Body text)
+  - **Chữ phụ**: `#6B7785` (Mô tả, placeholder)
+  - **Viền**: `#E2E8F0` (Border input, card)
+- **KHÔNG CẦN DÙNG DARK/LIGHT THEME**: Cố định duy nhất 1 giao diện nền sáng y tế chuyên nghiệp (`#F5F8FC`), tuyệt đối không tốn thời gian viết toggle dark mode.
 - **Tuân thủ CONVENTION.md**: Đọc kỹ file `CONVENTION.md` về cách đặt tên biến, tên hàm, bắt buộc khai báo `declare(strict_types=1);`. Cứ code ẩu là bắt xoá làm lại.
 
 ## 3. QUY TRÌNH COMMIT & PUSH (Cực Kỳ Quan Trọng)

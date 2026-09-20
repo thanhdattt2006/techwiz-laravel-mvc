@@ -63,53 +63,77 @@ Mọi API trả về cho Frontend bắt buộc tuân theo format thống nhất:
   - `500 Internal Server Error`: Lỗi logic server (luôn bắt qua `try-catch` và log lại).
 
 ### 2.3. Quy Chuẩn Đặt Tên Backend
-- **Controllers**: `PascalCase` + `Controller` (VD: `AuthController`, `EmergencyRequestController`, `AmbulanceController`).
-- **Models**: `PascalCase` số ít (VD: `User`, `EmergencyRequest`, `Ambulance`).
-- **API Resources**: `PascalCase` + `Resource` (VD: `UserResource`, `EmergencyRequestResource`).
+- **Controllers**: `PascalCase` + `Controller` (VD: `AuthController`, `EmergencyRequestController`, `AmbulanceController`, `FeedbackController`, `ContactMessageController`).
+- **Models**: `PascalCase` số ít (VD: `User`, `Ambulance`, `EmergencyRequest`, `Feedback`, `ContactMessage`, `Notification`).
+- **API Resources**: `PascalCase` + `Resource` (VD: `UserResource`, `EmergencyRequestResource`, `AmbulanceResource`, `FeedbackResource`).
 - **Form Requests**: `Store{Model}Request`, `Update{Model}Request`.
-- **Database Tables**: `snake_case` số nhiều (VD: `users`, `emergency_requests`, `ambulances`, `dispatches`).
+- **Database Tables**: `snake_case` số nhiều (VD: `users`, `ambulances`, `emergency_requests`, `feedbacks`, `contact_messages`, `notifications`).
 - **API Routes**: `kebab-case` hoặc `snake_case`, nhóm theo tiền tố `/api/v1/...`.
 
 ---
 
 ## 3. QUY CHUẨN FRONTEND (REACT JS + VITE)
 
-### 3.1. Cấu Trúc Thư Mục Frontend Chuẩn (`src/`)
+### 3.1. Bảng Màu Thiết Kế Chuẩn (Light Medical Design System)
+Dự án áp dụng bộ màu chuẩn y tế chuyên nghiệp:
+- **Primary (Xanh y tế)**: `#0B6EFD` - Nút chính, link, navbar active, brand accent.
+- **Primary tối**: `#084298` - Hover states, header bar, footer.
+- **Emergency (Đỏ cấp cứu)**: `#DC3545` - Nút "Đặt xe ngay", badge SOS, cảnh báo nguy cấp.
+- **Success (Xanh lá)**: `#198754` - Xe sẵn sàng (available), hoàn thành ca trực.
+- **Warning (Vàng cam)**: `#FFB020` - Đang chờ (pending), xe đang di chuyển.
+- **Nền sáng (Light BG)**: `#F5F8FC` - Background chính của toàn bộ trang web.
+- **Card**: `#FFFFFF` - Nền thẻ card, form nhập liệu, modal popup.
+- **Chữ chính (Main Text)**: `#1F2A37` - Văn bản chính, tiêu đề, số liệu.
+- **Chữ phụ (Muted Text)**: `#6B7785` - Mô tả, placeholder, nhãn phụ.
+- **Viền (Border)**: `#E2E8F0` - Border input, viền card, đường kẻ phân chia.
+
+> **QUY TẮC BẮT BUỘC**: **KHÔNG CẦN DÙNG DARK/LIGHT THEME**. Toàn bộ website cố định 1 giao diện nền sáng y tế (`#F5F8FC`), tuyệt đối không viết component toggle dark mode làm phức tạp CSS và phân mảnh thời gian.
+
+### 3.2. Cấu Trúc Thư Mục Frontend Chuẩn (`src/`)
 ```text
 src/
 ├── api/
 │   ├── axiosClient.js        # Axios instance, baseURL, request & response interceptors (Bearer Token)
 │   ├── authApi.js            # API login, register, me, logout
 │   ├── emergencyApi.js       # API SOS, emergency requests, status updates
-│   └── ambulanceApi.js       # API fleet management, tracking
-├── assets/                   # Hình ảnh, icons, logo
+│   ├── ambulanceApi.js       # API fleet catalog, search/filter, tracking
+│   ├── feedbackApi.js        # API gửi và xem đánh giá feedback
+│   └── contactApi.js         # API gửi tin nhắn liên hệ Contact Us
+├── assets/                   # Hình ảnh xe cứu thương, icons, logo LifeLink
 ├── components/
 │   ├── common/               # UI tái sử dụng (Button, Input, Modal, Badge, Spinner, Alert)
 │   ├── layout/               # Header, Sidebar, Footer, Layout cho từng Role
-│   └── maps/                 # Component bản đồ (Leaflet / Google Maps / Live Tracker)
+│   └── maps/                 # Component bản đồ (Leaflet / Live Ambulance Tracker)
 ├── context/
 │   └── AuthContext.jsx       # State quản lý user, token, role, hàm login, logout
 ├── hooks/                    # Custom hooks (useAuth, useGeolocation, usePolling)
 ├── pages/
+│   ├── public/               # Các trang công khai theo SRS:
+│   │   ├── HomePage.jsx      # Catalog danh sách xe eAmbulance, bộ lọc & tìm kiếm
+│   │   ├── AboutPage.jsx     # Giới thiệu công ty, quy mô vùng phục vụ, đội xe tốt nhất
+│   │   ├── GalleryPage.jsx   # Bộ sưu tập ảnh xe cứu thương
+│   │   ├── FeedbackPage.jsx  # Form đánh giá chất lượng dịch vụ
+│   │   ├── ContactPage.jsx   # Form Contact Us (cho cả khách vãng lai)
+│   │   └── SitemapPage.jsx   # Sơ đồ điều hướng website
 │   ├── auth/                 # Login, Register
-│   ├── admin/                # Dashboard, Quản lý tài xế/xe, Thống kê
-│   ├── operator/             # Phòng điều phối, Live SOS Queue, Bản đồ xe
+│   ├── admin/                # Dashboard quản trị xe, tài xế, xem feedback/contact
+│   ├── operator/             # Phòng điều phối Control Room, Live SOS Queue, Bản đồ xe
 │   └── user/                 # Nút bấm SOS 1 chạm, Theo dõi xe tới, Hồ sơ y tế
 ├── routes/
 │   ├── AppRoutes.jsx         # Cấu hình router toàn bộ ứng dụng
 │   └── ProtectedRoute.jsx    # HOC chặn route dựa theo Role (admin, operator, user)
 ├── App.jsx
 ├── main.jsx
-└── index.css                 # Import TailwindCSS
+└── index.css                 # Import TailwindCSS & Theme tokens
 ```
 
-### 3.2. Quy Tắc Lập Trình React JS
+### 3.3. Quy Tắc Lập Trình React JS
 - **Functional Components**: 100% sử dụng Functional Components kèm React Hooks (`useState`, `useEffect`, `useContext`, `useCallback`, `useMemo`). Tuyệt đối không dùng Class Components.
-- **Tên Component & File**: `PascalCase.jsx` (VD: `AdminDashboard.jsx`, `SosButton.jsx`).
-- **Tên Biến & Hàm**: `camelCase` (VD: `fetchEmergencies()`, `handleAssignAmbulance()`).
+- **Tên Component & File**: `PascalCase.jsx` (VD: `AdminDashboard.jsx`, `SosButton.jsx`, `AmbulanceCard.jsx`).
+- **Tên Biến & Hàm**: `camelCase` (VD: `fetchAmbulances()`, `handleBookingAmbulance()`).
 - **CSS**: 100% sử dụng **TailwindCSS**. Không viết CSS chay, không tạo file `.css` lẻ tẻ.
 - **Xử lý Token**: Token nhận từ API Sanctum lưu tại `localStorage` hoặc `sessionStorage`, tự động inject vào header `Authorization: Bearer <token>` qua Axios Interceptor.
-- **UI Feedback**: Mọi thao tác submit/xóa/cập nhật bắt buộc có loading indicator (Spinner/Skeleton) và thông báo Toast (SweetAlert2 hoặc tương đương).
+- **UI Feedback**: Mọi thao tác submit/xóa/cập nhật bắt buộc có loading indicator (Spinner/Skeleton) và thông báo Toast (SweetAlert2).
 
 ---
 
