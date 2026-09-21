@@ -73,19 +73,19 @@ export default function PublicNavbar() {
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-1.5">
           <NavLink to="/" className={navLinkClass} end>
-            Home Catalog
+            Home
           </NavLink>
           <NavLink to="/about" className={navLinkClass}>
-            About Us
+            About
           </NavLink>
           <NavLink to="/gallery" className={navLinkClass}>
-            Image Gallery
+            Gallery
           </NavLink>
           <NavLink to="/feedback" className={navLinkClass}>
             Feedback
           </NavLink>
           <NavLink to="/contact" className={navLinkClass}>
-            Contact Us
+            Contact
           </NavLink>
           <NavLink to="/sitemap" className={navLinkClass}>
             Sitemap
