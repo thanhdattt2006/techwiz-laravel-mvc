@@ -59,22 +59,20 @@ export default function AdminLayout() {
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#6B7785] px-3 pt-4 py-1">
               Fleet & Management
             </div>
-            <button
-              type="button"
-              onClick={() => alert('Ambulance Fleet CRUD is ready for Day 2 models!')}
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-[#1F2A37] hover:bg-slate-100 hover:text-[#0B6EFD] transition text-left cursor-pointer"
+            <NavLink
+              to="/admin/dashboard"
+              className={navClass}
             >
               <Ambulance className="w-4 h-4 text-[#0B6EFD]" />
-              <span>Fleet Management</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => alert('User & Driver Directory ready for Day 2!')}
-              className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-[#1F2A37] hover:bg-slate-100 hover:text-[#0B6EFD] transition text-left cursor-pointer"
+              <span>Fleet Inventory</span>
+            </NavLink>
+            <NavLink
+              to="/sitemap"
+              className={navClass}
             >
               <Users className="w-4 h-4 text-emerald-600" />
-              <span>Users & Drivers</span>
-            </button>
+              <span>System Directory</span>
+            </NavLink>
             <div className="text-[11px] font-bold uppercase tracking-wider text-[#6B7785] px-3 pt-4 py-1">
               Communication
             </div>

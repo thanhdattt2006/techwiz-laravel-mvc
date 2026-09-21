@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Ambulance, Mail, Phone, MapPin, ShieldAlert, Heart } from 'lucide-react';
+import { Ambulance, Mail, Phone, MapPin, Heart } from 'lucide-react';
 
 export default function PublicFooter() {
   return (

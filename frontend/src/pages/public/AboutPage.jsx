@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  ShieldCheck,
-  Award,
-  MapPin,
-  Ambulance,
-  HeartHandshake,
-  Users,
-  CheckCircle2,
-} from 'lucide-react';
+import { Award, HeartHandshake } from 'lucide-react';
 
 export default function AboutPage() {
   return (
@@ -112,7 +104,7 @@ export default function AboutPage() {
           </div>
         </div>
         <p className="text-xs text-[#6B7785] leading-relaxed">
-          The LifeLink platform was engineered using modern decoupled architecture: a high-performance <strong>Laravel 13 REST API</strong> backend coupled with an ultra-responsive <strong>React 19 Single Page Application</strong> frontend. Built with adherence to strict coding conventions, SOLID principles, and accessibility standards.
+          The LifeLink platform was engineered as an ultra-responsive <strong>React 19 Single Page Application (SPA)</strong> with modern component architecture and high-performance client data services. Built in strict accordance with TechWiz 7 eAmbulance specifications, modern UI/UX design standards, and accessibility guidelines.
         </p>
       </section>
     </div>

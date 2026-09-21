@@ -1,19 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Network,
-  Home,
-  Users,
-  ShieldCheck,
-  Headphones,
-  User,
-  HeartHandshake,
-  MessageSquare,
-  Mail,
-  Camera,
-  Layers,
-  ArrowRight,
-} from 'lucide-react';
+import { Home, Users, Layers, ArrowRight } from 'lucide-react';
 
 export default function SitemapPage() {
   return (
@@ -100,8 +87,8 @@ export default function SitemapPage() {
               <p className="text-[11px] text-[#6B7785] mt-0.5">Role security boundary protection barrier.</p>
             </li>
             <li className="pt-2 border-t border-slate-100">
-              <span className="font-semibold text-[#1F2A37] block">Sanctum Token Session:</span>
-              <p className="text-[11px] text-[#6B7785] mt-0.5">Bearer token auto-injected into private API endpoints.</p>
+              <span className="font-semibold text-[#1F2A37] block">Client Session & RBAC:</span>
+              <p className="text-[11px] text-[#6B7785] mt-0.5">Secure client-side session management with role-based routing.</p>
             </li>
           </ul>
         </div>

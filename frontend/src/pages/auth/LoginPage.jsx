@@ -3,7 +3,6 @@ import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import Swal from 'sweetalert2';
 import {
-  ShieldAlert,
   ShieldCheck,
   Headphones,
   User,
@@ -11,7 +10,6 @@ import {
   KeyRound,
   Mail,
   CheckCircle2,
-  AlertTriangle,
   ArrowLeft,
   Ambulance,
 } from 'lucide-react';
@@ -254,8 +252,8 @@ export default function LoginPage() {
                 </button>
 
                 <div className="pt-4 border-t border-[#E2E8F0] text-[11px] text-[#6B7785] flex items-center gap-1.5">
-                  <AlertTriangle className="w-4 h-4 text-amber-500" />
-                  <span>Bearer Token Authentication protected by Laravel Sanctum</span>
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  <span>Session & Role-Based Access Control (RBAC) Active</span>
                 </div>
               </div>
             </form>

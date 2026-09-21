@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Ambulance, Camera, ShieldCheck, ZoomIn } from 'lucide-react';
+import { Ambulance, ShieldCheck } from 'lucide-react';
 
 const GALLERY_ITEMS = [
   {

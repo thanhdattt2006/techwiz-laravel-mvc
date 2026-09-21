@@ -26,13 +26,7 @@ class HealthController extends Controller
         }
 
         return new JsonResponse([
-            'status' => 'ok',
-            'timestamp' => now()->toIso8601String(),
-            'environment' => config('app.env'),
-            'database' => [
-                'status' => $dbStatus,
-                'error' => $dbError,
-            ],
+            'status' => 'ok. Now you can go back to: {https://techwiz-laravel-mvc.vercel.app/}'
         ]);
     }
 }

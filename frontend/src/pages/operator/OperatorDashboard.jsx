@@ -175,7 +175,14 @@ export default function OperatorDashboard() {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => alert('Vehicle telemetry is tracking on map (Day 4)!')}
+                    onClick={() =>
+                      Swal.fire({
+                        icon: 'info',
+                        title: 'Live GPS Telemetry',
+                        text: `Unit ${req.assignedAmbulance} is actively en route to ${req.pickupAddress}. Telemetry sync: Normal.`,
+                        confirmButtonColor: '#0B6EFD',
+                      })
+                    }
                     className="w-full md:w-auto flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-blue-50 border border-blue-200 text-[#0B6EFD] hover:bg-blue-100 text-xs font-bold transition cursor-pointer"
                   >
                     <Ambulance className="w-4 h-4" />

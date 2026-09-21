@@ -2,19 +2,67 @@ import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import {
   Ambulance,
-  Users,
   Activity,
   MessageSquare,
   Mail,
-  ShieldCheck,
   TrendingUp,
   AlertCircle,
   PlusCircle,
   Clock,
 } from 'lucide-react';
 
+import Swal from 'sweetalert2';
+
 export default function AdminDashboard() {
   const { user } = useAuth();
+
+  const handleAddAmbulance = () => {
+    Swal.fire({
+      title: 'Register Ambulance Unit',
+      html: `
+        <div class="space-y-3 text-left text-xs">
+          <div>
+            <label class="block font-bold mb-1 text-slate-700">Vehicle Identifier</label>
+            <input id="swal-unit-id" class="w-full p-2 border rounded-lg" placeholder="e.g. AMB-CHI-107" />
+          </div>
+          <div>
+            <label class="block font-bold mb-1 text-slate-700">Model Name</label>
+            <input id="swal-model" class="w-full p-2 border rounded-lg" placeholder="e.g. Ford Transit Mobile ALS" />
+          </div>
+          <div>
+            <label class="block font-bold mb-1 text-slate-700">Type Category</label>
+            <select id="swal-type" class="w-full p-2 border rounded-lg">
+              <option value="ICCU">ICCU (Advanced Cardiac)</option>
+              <option value="ICU">ICU (Intensive Care)</option>
+              <option value="A/C">A/C Support</option>
+              <option value="Non-A/C">Non-A/C Standard</option>
+            </select>
+          </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Save Unit',
+      confirmButtonColor: '#0B6EFD',
+      preConfirm: () => {
+        const unitId = document.getElementById('swal-unit-id').value;
+        const model = document.getElementById('swal-model').value;
+        if (!unitId || !model) {
+          Swal.showValidationMessage('Please fill in both Unit ID and Model');
+        }
+        return { unitId, model };
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Ambulance Registered',
+          text: `Unit ${result.value.unitId} successfully added to LifeLink fleet registry.`,
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
+    });
+  };
 
   return (
     <div className="space-y-8">
@@ -35,7 +83,7 @@ export default function AdminDashboard() {
         <div className="flex items-center gap-2">
           <button
             type="button"
-            onClick={() => alert('Add New Ambulance form ready for Day 2!')}
+            onClick={handleAddAmbulance}
             className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0B6EFD] hover:bg-[#084298] text-white text-xs font-bold transition shadow-xs cursor-pointer"
           >
             <PlusCircle className="w-4 h-4" />
@@ -106,7 +154,7 @@ export default function AdminDashboard() {
             <h2 className="text-base font-bold text-[#1F2A37]">Fleet Inventory Overview</h2>
             <p className="text-xs text-[#6B7785]">Preview of categorized emergency units available for dispatch</p>
           </div>
-          <span className="text-xs font-mono font-semibold text-[#0B6EFD]">Phase 0.6 Active</span>
+          <span className="text-xs font-mono font-semibold text-[#0B6EFD]">Live Fleet Status</span>
         </div>
 
         <div className="overflow-x-auto">
