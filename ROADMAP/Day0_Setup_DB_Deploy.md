@@ -163,10 +163,26 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn y tế:
   - Thêm các liên kết: `"Forgot password?"` và `"Don't have an account? Sign up now"`.
   - Đăng ký các routes: `/register`, `/forgot-password`.
 
+## Phase 0.10: Bản Đồ Trực Tác Tác Chiến (Contact Page) & Trang Chi Tiết Điều Xe (Ambulance Detail View)
+- `[x]` Tích hợp Bản Đồ Tương Tác Trung Tâm Điều Phối Cấp Cứu tại `src/pages/public/ContactPage.jsx`:
+  - Bản đồ tọa độ chuẩn trung tâm y tế Chicago (`41.8827, -87.6233` - Khu vực Michigan Ave / Central Loop).
+  - Tích hợp khung bản đồ tương tác responsive (OpenStreetMap / Google Maps Embed bảo mật, không cần API key phức tạp).
+  - Ghim Marker vị trí Trụ sở Trực tổng đài LifeLink (LifeLink 24/7 Dispatch Operations HQ).
+  - Thẻ định vị thông tin nhanh (Quick Info Card): Tọa độ GPS, bán kính phủ sóng, nút mở ứng dụng Google Maps chỉ đường ("Get Directions").
+- `[x]` Xây dựng Trang Chi Tiết Xe Cứu Thương & Đặt Xe Trực Tiếp (`src/pages/public/AmbulanceDetailPage.jsx` - Route `/ambulances/:id`):
+  - Nhận tham số URL động `:id` (ví dụ `/ambulances/AMB-CHI-101`).
+  - Hiển thị đầy đủ thông tin chuyên sâu của xe: Ảnh HD, thông số khung gầm, danh mục trang thiết bị y tế cấp cứu chuyên sâu (Máy khử rung tim ALS, bình oxy y tế, cáng cứu thương chống sốc, máy thở ECMO).
+  - Bảng giá niêm yết theo chuyến (`$25 / trip`) và khu vực trực chiến (Chicago Central, Downtown...).
+  - Form Gửi Yêu Cầu Đặt Xe Trực Tiếp (Pre-dispatch Request Form):
+    - Nhập thông tin bệnh nhân, số điện thoại khẩn cấp, địa chỉ đón kèm định vị, tóm tắt tình trạng cấp cứu, chọn bệnh viện tiếp nhận mong muốn.
+    - Nút bấm xác nhận đặt xe (kết nối Modal xác nhận `useModal`, không cần thanh toán thẻ tín dụng theo đúng ràng buộc SRS).
+  - Cập nhật nút `"Request Unit"` tại `HomePage.jsx` trỏ tới `/ambulances/${amb.id}` thay vì nhảy chung chung về dashboard.
+
 ---
 
 ## Tổng Kết Day 0
 - `[x]` Backend Render API và Frontend Vercel React Vite đều hoạt động và ping thông nhau.
 - `[x]` Đã tích hợp trọn vẹn yêu cầu SRS LifeLink, lược đồ 6 bảng CSDL cốt lõi và hệ màu Light Medical.
 - `[x]` Hoàn thiện Phase 0.6 (ProtectedRoute & Layouts) và Phase 0.7 (Deploy Vercel).
-- `[x]` Hoàn thành Phase 0.8 (Custom React Modal System) và Phase 0.9 (Auth UI Suite) để sẵn sàng 100% cho Day 1.
+- `[x]` Hoàn thành Phase 0.8 (Custom React Modal System) và Phase 0.9 (Auth UI Suite).
+- `[x]` Hoàn thành Phase 0.10 (Contact Map & Ambulance Detail View) để hoàn hảo 100% Day 0 trước khi sang Day 1.

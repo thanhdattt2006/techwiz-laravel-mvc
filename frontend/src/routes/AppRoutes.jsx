@@ -17,6 +17,7 @@ import GalleryPage from '../pages/public/GalleryPage';
 import FeedbackPage from '../pages/public/FeedbackPage';
 import ContactPage from '../pages/public/ContactPage';
 import SitemapPage from '../pages/public/SitemapPage';
+import AmbulanceDetailPage from '../pages/public/AmbulanceDetailPage';
 
 // Auth Pages
 import LoginPage from '../pages/auth/LoginPage';
@@ -41,6 +42,7 @@ export default function AppRoutes() {
           <Route path="/feedback" element={<FeedbackPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/sitemap" element={<SitemapPage />} />
+          <Route path="/ambulances/:id" element={<AmbulanceDetailPage />} />
         </Route>
 
         {/* 2. Authentication & Access Restriction Routes */}

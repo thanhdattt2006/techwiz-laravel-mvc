@@ -190,7 +190,9 @@ export default function HomePage() {
                   </div>
 
                   {/* Title */}
-                  <h3 className="text-base font-bold text-[#1F2A37] mb-2 leading-snug">{amb.model}</h3>
+                  <h3 className="text-base font-bold text-[#1F2A37] mb-2 leading-snug hover:text-[#0B6EFD] transition">
+                    <Link to={`/ambulances/${amb.id}`}>{amb.model}</Link>
+                  </h3>
 
                   {/* Specifications */}
                   <div className="space-y-2 text-xs text-[#6B7785] mb-4">
@@ -219,7 +221,7 @@ export default function HomePage() {
                   </div>
 
                   <Link
-                    to="/user/dashboard"
+                    to={`/ambulances/${amb.id}`}
                     className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#DC3545] hover:bg-red-700 text-white text-xs font-bold transition shadow-sm cursor-pointer"
                   >
                     <span>Request Unit</span>
