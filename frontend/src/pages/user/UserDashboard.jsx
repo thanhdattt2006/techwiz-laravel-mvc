@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useModal } from '../../context/ModalContext';
 import {
   HeartPulse,
   PhoneCall,
@@ -7,33 +8,31 @@ import {
   Star,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import Swal from 'sweetalert2';
 
 export default function UserDashboard() {
   const { user } = useAuth();
+  const { showConfirm, showAlert } = useModal();
   const [sosActive, setSosActive] = useState(false);
 
-  const handleTriggerSOS = () => {
-    Swal.fire({
-      icon: 'warning',
+  const handleTriggerSOS = async () => {
+    const confirmed = await showConfirm({
       title: 'Confirm Emergency SOS',
-      text: 'Are you sure you want to broadcast your GPS coordinates to Chicago Emergency Dispatch?',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, Send Ambulance Immediately',
-      cancelButtonText: 'Cancel',
-      confirmButtonColor: '#DC3545',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setSosActive(true);
-        Swal.fire({
-          icon: 'success',
-          title: 'SOS Beacon Broadcasted!',
-          text: 'Operator has received your beacon. Nearest ambulance unit (Unit #102) is being dispatched.',
-          timer: 2500,
-          showConfirmButton: false,
-        });
-      }
+      message: 'Are you sure you want to broadcast your GPS coordinates to Chicago Emergency Dispatch?',
+      type: 'danger',
+      confirmText: 'Yes, Send Ambulance Immediately',
+      cancelText: 'Cancel',
     });
+
+    if (confirmed) {
+      setSosActive(true);
+      showAlert({
+        title: 'SOS Beacon Broadcasted!',
+        message: 'Operator has received your beacon. Nearest ambulance unit (Unit #102) is being dispatched.',
+        type: 'success',
+        confirmText: false,
+        autoCloseMs: 2500,
+      });
+    }
   };
 
   return (

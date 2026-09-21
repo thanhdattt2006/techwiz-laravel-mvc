@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useModal } from '../../context/ModalContext';
 import {
   Ambulance,
   Activity,
@@ -11,56 +12,188 @@ import {
   Clock,
 } from 'lucide-react';
 
-import Swal from 'sweetalert2';
+function AddAmbulanceModalContent({ onClose, onAdd }) {
+  const [unitId, setUnitId] = useState('');
+  const [model, setModel] = useState('');
+  const [type, setType] = useState('ICCU');
+  const [region, setRegion] = useState('Chicago Downtown');
+  const [rate, setRate] = useState('25');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!unitId.trim() || !model.trim()) {
+      setError('Please fill in both Unit Identifier and Model description.');
+      return;
+    }
+    onAdd({
+      unitId: unitId.trim(),
+      model: model.trim(),
+      type,
+      region,
+      rate: rate.startsWith('$') ? rate : `$${rate}`,
+      status: 'Ready',
+    });
+    onClose();
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div className="p-2.5 rounded-xl bg-red-50 border border-red-200 text-[#DC3545] text-xs font-semibold">
+          {error}
+        </div>
+      )}
+
+      <div>
+        <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+          Vehicle Identifier <span className="text-[#DC3545]">*</span>
+        </label>
+        <input
+          type="text"
+          placeholder="e.g. AMB-CHI-107"
+          value={unitId}
+          onChange={(e) => {
+            setUnitId(e.target.value);
+            if (error) setError('');
+          }}
+          className="w-full px-3.5 py-2.5 text-xs bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD]"
+        />
+      </div>
+
+      <div>
+        <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+          Model Name / Specification <span className="text-[#DC3545]">*</span>
+        </label>
+        <input
+          type="text"
+          placeholder="e.g. Ford Transit Mobile ALS"
+          value={model}
+          onChange={(e) => {
+            setModel(e.target.value);
+            if (error) setError('');
+          }}
+          className="w-full px-3.5 py-2.5 text-xs bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD]"
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+            Type Category
+          </label>
+          <select
+            value={type}
+            onChange={(e) => setType(e.target.value)}
+            className="w-full px-3.5 py-2.5 text-xs bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD]"
+          >
+            <option value="ICCU">ICCU (Advanced Cardiac)</option>
+            <option value="ICU">ICU (Intensive Care)</option>
+            <option value="A/C">A/C Support</option>
+            <option value="Non-A/C">Non-A/C Standard</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+            Operating Region
+          </label>
+          <select
+            value={region}
+            onChange={(e) => setRegion(e.target.value)}
+            className="w-full px-3.5 py-2.5 text-xs bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD]"
+          >
+            <option value="Chicago Downtown">Chicago Downtown</option>
+            <option value="Chicago Central">Chicago Central</option>
+            <option value="North Chicago">North Chicago</option>
+            <option value="South Chicago">South Chicago</option>
+            <option value="West Loop">West Loop</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
+          Base Dispatch Rate ($)
+        </label>
+        <input
+          type="number"
+          min="1"
+          placeholder="25"
+          value={rate}
+          onChange={(e) => setRate(e.target.value)}
+          className="w-full px-3.5 py-2.5 text-xs bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD]"
+        />
+      </div>
+
+      <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-[#E2E8F0]">
+        <button
+          type="button"
+          onClick={onClose}
+          className="px-4 py-2 rounded-xl text-xs font-bold text-[#1F2A37] bg-slate-100 hover:bg-slate-200 transition cursor-pointer"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-[#0B6EFD] hover:bg-[#084298] transition cursor-pointer shadow-xs"
+        >
+          Save Unit
+        </button>
+      </div>
+    </form>
+  );
+}
 
 export default function AdminDashboard() {
   const { user } = useAuth();
+  const { showCustomModal, showAlert } = useModal();
+
+  const [fleet, setFleet] = useState([
+    {
+      unitId: 'AMB-CHI-101',
+      model: 'Mercedes Sprinter 3500 Mobile ICU',
+      type: 'ICCU',
+      region: 'Chicago Central',
+      rate: '$25',
+      status: 'Ready',
+    },
+    {
+      unitId: 'AMB-CHI-102',
+      model: 'Ford Transit 250 Life Support',
+      type: 'ICU',
+      region: 'Chicago Downtown',
+      rate: '$20',
+      status: 'Ready',
+    },
+    {
+      unitId: 'AMB-CHI-103',
+      model: 'Chevrolet Express 3500 Dual A/C',
+      type: 'A/C',
+      region: 'North Chicago',
+      rate: '$15',
+      status: 'Ready',
+    },
+  ]);
 
   const handleAddAmbulance = () => {
-    Swal.fire({
+    showCustomModal({
       title: 'Register Ambulance Unit',
-      html: `
-        <div class="space-y-3 text-left text-xs">
-          <div>
-            <label class="block font-bold mb-1 text-slate-700">Vehicle Identifier</label>
-            <input id="swal-unit-id" class="w-full p-2 border rounded-lg" placeholder="e.g. AMB-CHI-107" />
-          </div>
-          <div>
-            <label class="block font-bold mb-1 text-slate-700">Model Name</label>
-            <input id="swal-model" class="w-full p-2 border rounded-lg" placeholder="e.g. Ford Transit Mobile ALS" />
-          </div>
-          <div>
-            <label class="block font-bold mb-1 text-slate-700">Type Category</label>
-            <select id="swal-type" class="w-full p-2 border rounded-lg">
-              <option value="ICCU">ICCU (Advanced Cardiac)</option>
-              <option value="ICU">ICU (Intensive Care)</option>
-              <option value="A/C">A/C Support</option>
-              <option value="Non-A/C">Non-A/C Standard</option>
-            </select>
-          </div>
-        </div>
-      `,
-      showCancelButton: true,
-      confirmButtonText: 'Save Unit',
-      confirmButtonColor: '#0B6EFD',
-      preConfirm: () => {
-        const unitId = document.getElementById('swal-unit-id').value;
-        const model = document.getElementById('swal-model').value;
-        if (!unitId || !model) {
-          Swal.showValidationMessage('Please fill in both Unit ID and Model');
-        }
-        return { unitId, model };
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Ambulance Registered',
-          text: `Unit ${result.value.unitId} successfully added to LifeLink fleet registry.`,
-          timer: 2000,
-          showConfirmButton: false,
-        });
-      }
+      content: ({ close }) => (
+        <AddAmbulanceModalContent
+          onClose={close}
+          onAdd={(newUnit) => {
+            setFleet((prev) => [newUnit, ...prev]);
+            showAlert({
+              title: 'Ambulance Registered',
+              message: `Unit ${newUnit.unitId} successfully added to LifeLink fleet registry.`,
+              type: 'success',
+              confirmText: false,
+              autoCloseMs: 2000,
+            });
+          }}
+        />
+      ),
     });
   };
 
@@ -97,7 +230,7 @@ export default function AdminDashboard() {
         <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-xs flex items-center justify-between">
           <div>
             <span className="text-xs text-[#6B7785] font-semibold">Total Fleet Size</span>
-            <div className="text-2xl font-black text-[#1F2A37] mt-1">6 Units</div>
+            <div className="text-2xl font-black text-[#1F2A37] mt-1">{fleet.length} Units</div>
             <span className="text-[11px] text-emerald-600 font-bold flex items-center gap-1 mt-1">
               <TrendingUp className="w-3.5 h-3.5" /> 100% Operational
             </span>
@@ -170,30 +303,35 @@ export default function AdminDashboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E2E8F0] text-[#1F2A37]">
-              <tr>
-                <td className="py-3 px-4 font-mono font-bold">AMB-CHI-101</td>
-                <td className="py-3 px-4 font-semibold">Mercedes Sprinter 3500 Mobile ICU</td>
-                <td className="py-3 px-4"><span className="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-bold text-[10px]">ICCU</span></td>
-                <td className="py-3 px-4 text-[#6B7785]">Chicago Central</td>
-                <td className="py-3 px-4 font-bold text-[#0B6EFD]">$25</td>
-                <td className="py-3 px-4"><span className="text-emerald-600 font-semibold">● Ready</span></td>
-              </tr>
-              <tr>
-                <td className="py-3 px-4 font-mono font-bold">AMB-CHI-102</td>
-                <td className="py-3 px-4 font-semibold">Ford Transit 250 Life Support</td>
-                <td className="py-3 px-4"><span className="px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-bold text-[10px]">ICU</span></td>
-                <td className="py-3 px-4 text-[#6B7785]">Chicago Downtown</td>
-                <td className="py-3 px-4 font-bold text-[#0B6EFD]">$20</td>
-                <td className="py-3 px-4"><span className="text-emerald-600 font-semibold">● Ready</span></td>
-              </tr>
-              <tr>
-                <td className="py-3 px-4 font-mono font-bold">AMB-CHI-103</td>
-                <td className="py-3 px-4 font-semibold">Chevrolet Express 3500 Dual A/C</td>
-                <td className="py-3 px-4"><span className="px-2 py-0.5 rounded bg-cyan-100 text-cyan-800 font-bold text-[10px]">A/C</span></td>
-                <td className="py-3 px-4 text-[#6B7785]">North Chicago</td>
-                <td className="py-3 px-4 font-bold text-[#0B6EFD]">$15</td>
-                <td className="py-3 px-4"><span className="text-emerald-600 font-semibold">● Ready</span></td>
-              </tr>
+              {fleet.map((item) => (
+                <tr key={item.unitId} className="hover:bg-slate-50/50 transition">
+                  <td className="py-3 px-4 font-mono font-bold text-[#0B6EFD]">{item.unitId}</td>
+                  <td className="py-3 px-4 font-semibold">{item.model}</td>
+                  <td className="py-3 px-4">
+                    <span
+                      className={`px-2 py-0.5 rounded font-bold text-[10px] ${
+                        item.type === 'ICCU'
+                          ? 'bg-purple-100 text-purple-800'
+                          : item.type === 'ICU'
+                          ? 'bg-blue-100 text-blue-800'
+                          : item.type === 'A/C'
+                          ? 'bg-cyan-100 text-cyan-800'
+                          : 'bg-slate-100 text-slate-800'
+                      }`}
+                    >
+                      {item.type}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-[#6B7785]">{item.region}</td>
+                  <td className="py-3 px-4 font-bold text-[#0B6EFD]">{item.rate}</td>
+                  <td className="py-3 px-4">
+                    <span className="text-emerald-600 font-semibold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block"></span>
+                      {item.status || 'Ready'}
+                    </span>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

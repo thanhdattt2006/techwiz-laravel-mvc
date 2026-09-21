@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import Swal from 'sweetalert2';
+import { useModal } from '../../context/ModalContext';
 import {
   ShieldCheck,
   Headphones,
@@ -16,6 +16,7 @@ import {
 
 export default function LoginPage() {
   const { login, quickDemoLogin } = useAuth();
+  const { showAlert } = useModal();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,10 +35,10 @@ export default function LoginPage() {
   const handleManualLogin = async (e) => {
     e.preventDefault();
     if (!loginInput || !passwordInput) {
-      Swal.fire({
-        icon: 'warning',
+      showAlert({
         title: 'Missing Information',
-        text: 'Please enter your Username or Email and Password!',
+        message: 'Please enter your Username or Email and Password!',
+        type: 'warning',
       });
       return;
     }
@@ -47,19 +48,21 @@ export default function LoginPage() {
     setSubmitting(false);
 
     if (result.success) {
-      Swal.fire({
-        icon: 'success',
+      showAlert({
         title: 'Login Successful!',
-        text: `Welcome ${result.user.fullname} (${result.user.role})!`,
-        timer: 1600,
-        showConfirmButton: false,
+        message: `Welcome ${result.user.fullname} (${result.user.role})!`,
+        type: 'success',
+        confirmText: false,
+        autoCloseMs: 1500,
       });
-      navigate(getRedirectPath(result.user.role));
+      setTimeout(() => {
+        navigate(getRedirectPath(result.user.role));
+      }, 400);
     } else {
-      Swal.fire({
-        icon: 'error',
+      showAlert({
         title: 'Login Failed',
-        text: result.message || 'Invalid login credentials!',
+        message: result.message || 'Invalid login credentials!',
+        type: 'danger',
       });
     }
   };
@@ -70,19 +73,21 @@ export default function LoginPage() {
     setSubmitting(false);
 
     if (result.success) {
-      Swal.fire({
-        icon: 'success',
+      showAlert({
         title: `Demo Login: ${targetRole.toUpperCase()}`,
-        text: `Operating as: ${result.user.fullname}`,
-        timer: 1500,
-        showConfirmButton: false,
+        message: `Operating as: ${result.user.fullname}`,
+        type: 'success',
+        confirmText: false,
+        autoCloseMs: 1400,
       });
-      navigate(getRedirectPath(targetRole));
+      setTimeout(() => {
+        navigate(getRedirectPath(targetRole));
+      }, 400);
     } else {
-      Swal.fire({
-        icon: 'error',
+      showAlert({
         title: 'Demo Login Error',
-        text: result.message,
+        message: result.message,
+        type: 'danger',
       });
     }
   };

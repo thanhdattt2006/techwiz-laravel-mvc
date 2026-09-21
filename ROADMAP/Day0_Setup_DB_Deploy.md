@@ -129,14 +129,14 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn y tế:
 - `[x]` Test build thử nghiệm `npm run build` thành công (biên dịch hoàn tất trong 826ms).
 
 ## Phase 0.8: Thay Thế SweetAlert2 Bằng Custom React Modal System (Light Medical Theme)
-- `[ ]` Gỡ bỏ thư viện `sweetalert2` (`npm uninstall sweetalert2`), tối ưu hóa bundle size và loại bỏ triệt để việc can thiệp trực tiếp vào DOM.
-- `[ ]` Xây dựng hệ thống Modal nội bộ chuẩn React 19:
-  - `src/components/common/Modal.jsx`: Wrapper modal sử dụng React Portal (`createPortal`), backdrop kính mờ `backdrop-blur-sm`, bo góc `rounded-2xl`, hỗ trợ phím `Esc` và click backdrop để đóng.
+- `[x]` Gỡ bỏ thư viện `sweetalert2` (`npm uninstall sweetalert2`), tối ưu hóa bundle size và loại bỏ triệt để việc can thiệp trực tiếp vào DOM.
+- `[x]` Xây dựng hệ thống Modal nội bộ chuẩn React 19:
+  - `src/components/common/Modal.jsx`: Wrapper modal sử dụng React Portal (`createPortal`), backdrop kính mờ `backdrop-blur-xs`, bo góc `rounded-2xl`, hỗ trợ phím `Esc` và click backdrop để đóng.
   - `src/context/ModalContext.jsx`: Cung cấp hook toàn cục `useModal()` với các phương thức tiện ích:
     - `showAlert({ title, message, type: 'success' | 'danger' | 'warning' | 'info' })`: Thay thế thông báo popup dạng Alert.
     - `showConfirm({ title, message, confirmText, cancelText, type }): Promise<boolean>`: Thay thế hộp thoại xác nhận (Confirm).
     - `showCustomModal(content)`: Cho phép render trực tiếp Form React component (như form đăng ký xe cứu thương) thay vì raw HTML string.
-- `[ ]` Refactor toàn bộ các trang đang phụ thuộc SweetAlert2 sang `useModal`:
+- `[x]` Refactor toàn bộ các trang đang phụ thuộc SweetAlert2 sang `useModal`:
   - `LoginPage.jsx` (cảnh báo đăng nhập thất bại / chào mừng thành công).
   - `AdminDashboard.jsx` (modal thêm xe cứu thương mới dạng form React sạch với state thay vì `document.getElementById`).
   - `OperatorDashboard.jsx` (dialog chọn xe điều phối và xem GPS telemetry).

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Star, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
-import Swal from 'sweetalert2';
+import { useModal } from '../../context/ModalContext';
 
 export default function FeedbackPage() {
+  const { showAlert } = useModal();
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
   const [requestId, setRequestId] = useState('');
@@ -14,10 +15,10 @@ export default function FeedbackPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!comment) {
-      Swal.fire({
-        icon: 'warning',
+      showAlert({
         title: 'Comment Required',
-        text: 'Please write a brief comment describing your emergency transport experience.',
+        message: 'Please write a brief comment describing your emergency transport experience.',
+        type: 'warning',
       });
       return;
     }
@@ -26,12 +27,12 @@ export default function FeedbackPage() {
     setTimeout(() => {
       setSubmitting(false);
       setSubmitted(true);
-      Swal.fire({
-        icon: 'success',
+      showAlert({
         title: 'Feedback Received',
-        text: 'Thank you for helping us improve LifeLink emergency response services!',
-        timer: 2200,
-        showConfirmButton: false,
+        message: 'Thank you for helping us improve LifeLink emergency response services!',
+        type: 'success',
+        confirmText: false,
+        autoCloseMs: 2200,
       });
     }, 600);
   };

@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, Clock, ShieldCheck, CheckCircle2 } from 'lucide-react';
-import Swal from 'sweetalert2';
+import { useModal } from '../../context/ModalContext';
 
 export default function ContactPage() {
+  const { showAlert } = useModal();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -12,10 +13,10 @@ export default function ContactPage() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!name || !email || !message) {
-      Swal.fire({
-        icon: 'warning',
+      showAlert({
         title: 'Missing Details',
-        text: 'Please fill in your name, email address, and message.',
+        message: 'Please fill in your name, email address, and message.',
+        type: 'warning',
       });
       return;
     }
@@ -24,12 +25,12 @@ export default function ContactPage() {
     setTimeout(() => {
       setSubmitting(false);
       setSent(true);
-      Swal.fire({
-        icon: 'success',
+      showAlert({
         title: 'Message Transmitted',
-        text: 'Your contact message was delivered to LifeLink central dispatch.',
-        timer: 2000,
-        showConfirmButton: false,
+        message: 'Your contact message was delivered to LifeLink central dispatch.',
+        type: 'success',
+        confirmText: false,
+        autoCloseMs: 2000,
       });
     }, 600);
   };

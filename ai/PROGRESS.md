@@ -33,9 +33,9 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] Tiếp nhận đề bài chính thức LifeLink (eAmbulance), quy hoạch 6 bảng CSDL và hệ màu Light Medical Theme
 - [x] Xây dựng `ProtectedRoute.jsx` hỗ trợ 3 roles: `admin`, `operator`, `user`
 - [x] Dựng khung Layout cho 3 roles và khung các trang Public (Home, About, Gallery, Feedback, Contact, Sitemap)
-- `[ ]` Thay thế SweetAlert2 bằng Custom React Modal System (Light Medical Theme, giảm bundle size)
+- `[x]` Thay thế SweetAlert2 bằng Custom React Modal System (Light Medical Theme, giảm bundle size, chuẩn React Portal)
 - `[ ]` Hoàn thiện bộ UI xác thực (RegisterPage, Nút Google Social Login, ForgotPasswordPage 2 bước)
-- Tình trạng: Đang chuẩn bị thực hiện Phase 0.8 và Phase 0.9 để hoàn thiện trọn vẹn Day 0 Frontend
+- Tình trạng: Đã hoàn tất 100% Phase 0.8, sẵn sàng tiến hành Phase 0.9 để hoàn thiện trọn vẹn Day 0 Frontend
 
 ### Day 1: Phân Tích Đề Bài, Thiết Kế ERD & Kiến Trúc 3 Roles
 
