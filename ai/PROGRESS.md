@@ -34,8 +34,8 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] Xây dựng `ProtectedRoute.jsx` hỗ trợ 3 roles: `admin`, `operator`, `user`
 - [x] Dựng khung Layout cho 3 roles và khung các trang Public (Home, About, Gallery, Feedback, Contact, Sitemap)
 - `[x]` Thay thế SweetAlert2 bằng Custom React Modal System (Light Medical Theme, giảm bundle size, chuẩn React Portal)
-- `[ ]` Hoàn thiện bộ UI xác thực (RegisterPage, Nút Google Social Login, ForgotPasswordPage 2 bước)
-- Tình trạng: Đã hoàn tất 100% Phase 0.8, sẵn sàng tiến hành Phase 0.9 để hoàn thiện trọn vẹn Day 0 Frontend
+- `[x]` Hoàn thiện bộ UI xác thực (RegisterPage, Nút Google Social Login, ForgotPasswordPage 2 bước)
+- Tình trạng: Hoàn tất 100% Day 0 (bao gồm Phase 0.8 Modal System & Phase 0.9 Auth UI Suite), sẵn sàng 100% cho Day 1!
 
 ### Day 1: Phân Tích Đề Bài, Thiết Kế ERD & Kiến Trúc 3 Roles
 

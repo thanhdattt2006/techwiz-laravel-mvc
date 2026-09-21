@@ -20,6 +20,8 @@ import SitemapPage from '../pages/public/SitemapPage';
 
 // Auth Pages
 import LoginPage from '../pages/auth/LoginPage';
+import RegisterPage from '../pages/auth/RegisterPage';
+import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
 import UnauthorizedPage from '../pages/auth/UnauthorizedPage';
 
 // Protected Dashboards
@@ -43,6 +45,8 @@ export default function AppRoutes() {
 
         {/* 2. Authentication & Access Restriction Routes */}
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
 
         {/* 3. Protected Admin Portal (RBAC: admin only) */}

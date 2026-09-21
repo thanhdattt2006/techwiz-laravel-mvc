@@ -144,22 +144,22 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn y tế:
   - `FeedbackPage.jsx` & `ContactPage.jsx` (thông báo hoàn tất gửi phản hồi / liên hệ).
 
 ## Phase 0.9: Hoàn Thiện Bộ UI Xác Thực (Đăng Ký, Google Social Login & Quên Mật Khẩu)
-- `[ ]` Xây dựng Trang Đăng Ký Tài Khoản (`src/pages/auth/RegisterPage.jsx` - Route `/register`):
+- `[x]` Xây dựng Trang Đăng Ký Tài Khoản (`src/pages/auth/RegisterPage.jsx` - Route `/register`):
   - Form đăng ký công dân / bệnh nhân: Họ và tên, Username, Email, Số điện thoại, Mật khẩu, Nhập lại mật khẩu.
   - Kiểm tra tính hợp lệ (Validation): So khớp mật khẩu, định dạng email, độ dài tối thiểu.
   - Tích hợp tính năng 1-Click Demo Fill (tự động điền dữ liệu mẫu nhanh cho ban giám khảo chấm thi).
   - Tự động tạo phiên làm việc hoặc điều hướng về `/login` với thông báo đăng ký thành công.
-- `[ ]` Nút Đăng Nhập Nhanh Qua Google ("Sign in with Google" / "Continue with Google"):
+- `[x]` Nút Đăng Nhập Nhanh Qua Google ("Sign in with Google" / "Continue with Google"):
   - Thiết kế chuẩn Google Identity Brand Guidelines: Nền trắng, viền `#E2E8F0`, logo chữ "G" 4 màu chính hãng.
   - Tích hợp tại cả `LoginPage.jsx` và `RegisterPage.jsx`.
   - Cơ chế Client Demo: 1-chạm đăng nhập tức thì với tư cách tài khoản Google mẫu (`google.patient@gmail.com`, role `user`).
   - Sẵn sàng cấu hình kết nối OAuth2/Sanctum khi kích hoạt backend.
-- `[ ]` Trang Quên & Đặt Lại Mật Khẩu (`src/pages/auth/ForgotPasswordPage.jsx` - Route `/forgot-password`):
+- `[x]` Trang Quên & Đặt Lại Mật Khẩu (`src/pages/auth/ForgotPasswordPage.jsx` - Route `/forgot-password`):
   - Quy trình 2 bước trực quan (Multi-step flow):
     - **Bước 1**: Nhập Email hoặc Username đã đăng ký để nhận mã xác minh OTP (kèm bộ đếm ngược 60 giây cooldown gửi lại mã).
     - **Bước 2**: Nhập mã OTP (mã demo `123456`) và thiết lập Mật khẩu mới + Xác nhận mật khẩu mới.
   - Đặt lại mật khẩu thành công -> Hiển thị Modal thông báo và chuyển hướng về trang `/login`.
-- `[ ]` Cập nhật liên kết điều hướng tại `LoginPage.jsx` và đăng ký Route tại `AppRoutes.jsx`:
+- `[x]` Cập nhật liên kết điều hướng tại `LoginPage.jsx` và đăng ký Route tại `AppRoutes.jsx`:
   - Thêm các liên kết: `"Forgot password?"` và `"Don't have an account? Sign up now"`.
   - Đăng ký các routes: `/register`, `/forgot-password`.
 
@@ -169,4 +169,4 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn y tế:
 - `[x]` Backend Render API và Frontend Vercel React Vite đều hoạt động và ping thông nhau.
 - `[x]` Đã tích hợp trọn vẹn yêu cầu SRS LifeLink, lược đồ 6 bảng CSDL cốt lõi và hệ màu Light Medical.
 - `[x]` Hoàn thiện Phase 0.6 (ProtectedRoute & Layouts) và Phase 0.7 (Deploy Vercel).
-- `[ ]` Hoàn thành Phase 0.8 (Custom React Modal System) và Phase 0.9 (Auth UI Suite) để sẵn sàng 100% cho Day 1.
+- `[x]` Hoàn thành Phase 0.8 (Custom React Modal System) và Phase 0.9 (Auth UI Suite) để sẵn sàng 100% cho Day 1.

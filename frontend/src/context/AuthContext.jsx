@@ -207,6 +207,97 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
+   * Register a new patient / citizen account.
+   */
+  const register = async ({ fullname, username, email, phone, password }) => {
+    if (USE_BACKEND_API) {
+      try {
+        const response = await authApi.register({ fullname, username, email, phone, password });
+        if (response && response.success && response.data) {
+          const { token: newToken, user: newUser } = response.data;
+          setToken(newToken);
+          setUser(newUser);
+          localStorage.setItem('auth_token', newToken);
+          localStorage.setItem('auth_user', JSON.stringify(newUser));
+          return { success: true, user: newUser };
+        }
+        return { success: false, message: response.message || 'Registration failed' };
+      } catch (error) {
+        const message = error.response?.data?.message || 'Unable to connect to registration server.';
+        return { success: false, message };
+      }
+    }
+
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
+    const newUser = {
+      id: Date.now(),
+      fullname: fullname.trim(),
+      username: username.trim().toLowerCase(),
+      email: email.trim().toLowerCase(),
+      phone: phone.trim(),
+      role: 'user',
+      status: 'active',
+    };
+
+    const clientToken = `lifelink-registered-${Date.now()}`;
+    setToken(clientToken);
+    setUser(newUser);
+    localStorage.setItem('auth_token', clientToken);
+    localStorage.setItem('auth_user', JSON.stringify(newUser));
+    setIsLoading(false);
+
+    return { success: true, user: newUser };
+  };
+
+  /**
+   * 1-Click Google Social Authentication (Demo & OAuth ready).
+   */
+  const loginWithGoogle = async () => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 250));
+
+    const googleUser = {
+      id: 999,
+      fullname: 'Dr. Alex Morgan (Google)',
+      username: 'alex_morgan_google',
+      email: 'google.patient@gmail.com',
+      phone: '0912-333-888',
+      role: 'user',
+      status: 'active',
+      isGoogleAuth: true,
+    };
+
+    const clientToken = `lifelink-google-${Date.now()}`;
+    setToken(clientToken);
+    setUser(googleUser);
+    localStorage.setItem('auth_token', clientToken);
+    localStorage.setItem('auth_user', JSON.stringify(googleUser));
+    setIsLoading(false);
+
+    return { success: true, user: googleUser };
+  };
+
+  /**
+   * Reset user password with OTP verification.
+   */
+  const resetPassword = async ({ identity, otp, newPassword: _newPassword }) => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    setIsLoading(false);
+
+    if (otp !== '123456') {
+      return { success: false, message: 'Invalid verification OTP code. Please use demo code 123456.' };
+    }
+
+    return {
+      success: true,
+      message: `Password successfully updated for ${identity}. You can now sign in with your new password.`,
+    };
+  };
+
+  /**
    * Log out and clear session.
    */
   const logout = async () => {
@@ -231,6 +322,9 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: Boolean(token && user),
     isLoading,
     login,
+    register,
+    loginWithGoogle,
+    resetPassword,
     logout,
     quickDemoLogin,
     refreshUser: checkAuth,
