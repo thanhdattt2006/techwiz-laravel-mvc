@@ -36,7 +36,13 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - `[x]` Thay thế SweetAlert2 bằng Custom React Modal System (Light Medical Theme, giảm bundle size, chuẩn React Portal)
 - `[x]` Hoàn thiện bộ UI xác thực (RegisterPage, Nút Google Social Login, ForgotPasswordPage 2 bước)
 - `[x]` Phase 0.10: Bản đồ tương tác trạm trực Contact Page & Trang chi tiết điều xe chuyên sâu (Ambulance Detail)
-- Tình trạng: Đã hoàn tất 100% Day 0 với trọn vẹn các tính năng Frontend, sẵn sàng 100% cho Day 1!
+- `[ ]` Phase 0.11: Danh mục xe toàn diện, Theo dõi cấp cứu trực tuyến & Trang 404 y tế (AmbulancesPage, LiveTrackingPage, NotFoundPage)
+- `[ ]` Phase 0.12: Phân hệ người dân & bệnh nhân (MedicalProfilePage, UserHistoryPage)
+- `[ ]` Phase 0.13: Trạm chỉ huy tác chiến & Lịch sử điều phối Operator (LiveDispatchMapPage, DispatchHistoryPage)
+- `[ ]` Phase 0.14: Bộ quản trị hệ thống chuyên sâu Admin (AdminAmbulancePage, AdminUserPage, AdminFeedbackPage, AdminContactPage, AdminReportsPage)
+- `[ ]` Phase 0.15: Quét & trace codebase, tách reusable components & chuẩn hóa cấu trúc thư mục (Bắt buộc research trước khi làm)
+- `[ ]` Phase 0.16: Dọn dẹp giao diện Production-Ready & loại bỏ mock UI rác (Bắt buộc research trước khi làm)
+- Tình trạng: Đang mở rộng hệ thống giao diện Day 0 (Phases 0.11 -> 0.16) để hoàn thiện 100% trải nghiệm trước khi kết nối Backend!
 
 ### Day 1: Phân Tích Đề Bài, Thiết Kế ERD & Kiến Trúc 3 Roles
 

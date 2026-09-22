@@ -9,6 +9,7 @@ import UserLayout from '../components/layout/UserLayout';
 
 // Protection HOC
 import ProtectedRoute from './ProtectedRoute';
+import ScrollToTop from '../components/common/ScrollToTop';
 
 // Public Pages
 import HomePage from '../pages/public/HomePage';
@@ -33,6 +34,7 @@ import UserDashboard from '../pages/user/UserDashboard';
 export default function AppRoutes() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         {/* 1. Public Catalog & Informational Routes */}
         <Route element={<PublicLayout />}>
