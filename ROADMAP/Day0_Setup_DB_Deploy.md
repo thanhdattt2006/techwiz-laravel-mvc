@@ -195,11 +195,11 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn y tế:
   - Nút "Back to Home", "Browse Ambulance Fleet", và nút gọi Hotline khẩn cấp `030-1111-1234`.
 
 ## Phase 0.12: Phân Hệ Người Dân & Bệnh Nhân (MedicalProfilePage, UserHistoryPage)
-- `[ ]` Trang Hồ Sơ Y Tế Khẩn Cấp (`src/pages/user/MedicalProfilePage.jsx` - Route `/user/medical-profile`):
+- `[x]` Trang Hồ Sơ Y Tế Khẩn Cấp (`src/pages/user/MedicalProfilePage.jsx` - Route `/user/medical-profile`):
   - Quản lý hồ sơ y tế: Nhóm máu (A+, A-, B+, B-, AB+, AB-, O+, O-), tiền sử bệnh nền (tim mạch, hen suyễn, tiểu đường, huyết áp), tiền sử dị ứng thuốc (Penicillin, Aspirin...).
   - Người liên hệ khẩn cấp (In Case of Emergency - ICE): Họ tên, số điện thoại, mối quan hệ (Bố/Mẹ, Vợ/Chồng, Con cái).
   - Tự động gắn thẻ cảnh báo y tế khi người dùng kích hoạt tín hiệu SOS.
-- `[ ]` Trang Lịch Sử Cứu Trợ Của Người Dân (`src/pages/user/UserHistoryPage.jsx` - Route `/user/history`):
+- `[x]` Trang Lịch Sử Cứu Trợ Của Người Dân (`src/pages/user/UserHistoryPage.jsx` - Route `/user/history`):
   - Bảng danh sách các ca cấp cứu đã thực hiện của tài khoản.
   - Bộ lọc trạng thái (Hoàn thành, Đã hủy, Đang xử lý).
   - Chi tiết thời gian gọi, địa chỉ đón, bệnh viện tiếp nhận, loại xe phục vụ.

@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Star, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
 import { useModal } from '../../context/ModalContext';
 
 export default function FeedbackPage() {
+  const [searchParams] = useSearchParams();
+  const initialRequestId = searchParams.get('requestId') || '';
+
   const { showAlert } = useModal();
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
-  const [requestId, setRequestId] = useState('');
+  const [requestId, setRequestId] = useState(initialRequestId);
   const [patientName, setPatientName] = useState('');
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);

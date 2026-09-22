@@ -1,10 +1,12 @@
 import React from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet, Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   LogOut,
   ArrowLeft,
   HeartPulse,
+  ShieldCheck,
+  Clock,
 } from 'lucide-react';
 
 export default function UserLayout() {
@@ -62,6 +64,53 @@ export default function UserLayout() {
           </div>
         </div>
       </header>
+
+      {/* Patient Subnavigation Tabs */}
+      <div className="bg-white border-b border-[#E2E8F0] shadow-xs">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center gap-2 overflow-x-auto py-2">
+          <NavLink
+            to="/user/dashboard"
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                isActive
+                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                  : 'text-[#6B7785] hover:text-[#1F2A37] hover:bg-slate-50'
+              }`
+            }
+          >
+            <HeartPulse className="w-4 h-4 text-emerald-600" />
+            <span>1-Touch SOS Beacon</span>
+          </NavLink>
+
+          <NavLink
+            to="/user/medical-profile"
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                isActive
+                  ? 'bg-blue-50 text-[#0B6EFD] border border-blue-200'
+                  : 'text-[#6B7785] hover:text-[#1F2A37] hover:bg-slate-50'
+              }`
+            }
+          >
+            <ShieldCheck className="w-4 h-4 text-[#0B6EFD]" />
+            <span>Emergency Medical Profile</span>
+          </NavLink>
+
+          <NavLink
+            to="/user/history"
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                isActive
+                  ? 'bg-purple-50 text-purple-700 border border-purple-200'
+                  : 'text-[#6B7785] hover:text-[#1F2A37] hover:bg-slate-50'
+              }`
+            }
+          >
+            <Clock className="w-4 h-4 text-purple-600" />
+            <span>Transport History & Feedback</span>
+          </NavLink>
+        </div>
+      </div>
 
       {/* Main Container */}
       <main className="flex-1 max-w-6xl w-full mx-auto p-4 sm:p-6">

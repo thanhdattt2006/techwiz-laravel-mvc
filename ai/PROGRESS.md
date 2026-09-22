@@ -37,7 +37,7 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - `[x]` Hoàn thiện bộ UI xác thực (RegisterPage, Nút Google Social Login, ForgotPasswordPage 2 bước)
 - `[x]` Phase 0.10: Bản đồ tương tác trạm trực Contact Page & Trang chi tiết điều xe chuyên sâu (Ambulance Detail)
 - `[x]` Phase 0.11: Danh mục xe toàn diện, Theo dõi cấp cứu trực tuyến & Trang 404 y tế (AmbulancesPage, LiveTrackingPage, NotFoundPage)
-- `[ ]` Phase 0.12: Phân hệ người dân & bệnh nhân (MedicalProfilePage, UserHistoryPage)
+- `[x]` Phase 0.12: Phân hệ người dân & bệnh nhân (MedicalProfilePage, UserHistoryPage)
 - `[ ]` Phase 0.13: Trạm chỉ huy tác chiến & Lịch sử điều phối Operator (LiveDispatchMapPage, DispatchHistoryPage)
 - `[ ]` Phase 0.14: Bộ quản trị hệ thống chuyên sâu Admin (AdminAmbulancePage, AdminUserPage, AdminFeedbackPage, AdminContactPage, AdminReportsPage)
 - `[ ]` Phase 0.15: Quét & trace codebase, tách reusable components & chuẩn hóa cấu trúc thư mục (Bắt buộc research trước khi làm)

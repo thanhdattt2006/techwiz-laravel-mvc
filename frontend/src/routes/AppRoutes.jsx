@@ -33,6 +33,8 @@ import UnauthorizedPage from '../pages/auth/UnauthorizedPage';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import OperatorDashboard from '../pages/operator/OperatorDashboard';
 import UserDashboard from '../pages/user/UserDashboard';
+import MedicalProfilePage from '../pages/user/MedicalProfilePage';
+import UserHistoryPage from '../pages/user/UserHistoryPage';
 
 export default function AppRoutes() {
   return (
@@ -76,6 +78,8 @@ export default function AppRoutes() {
         <Route element={<ProtectedRoute allowedRoles={['user']} />}>
           <Route element={<UserLayout />}>
             <Route path="/user/dashboard" element={<UserDashboard />} />
+            <Route path="/user/medical-profile" element={<MedicalProfilePage />} />
+            <Route path="/user/history" element={<UserHistoryPage />} />
           </Route>
         </Route>
 

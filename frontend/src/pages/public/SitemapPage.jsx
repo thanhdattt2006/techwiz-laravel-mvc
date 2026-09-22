@@ -147,7 +147,21 @@ export default function SitemapPage() {
                 <span>/user/dashboard (Patient)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
-              <p className="text-[11px] text-[#6B7785] mt-0.5">1-Touch Emergency SOS beacon and vehicle tracker.</p>
+              <p className="text-[11px] text-[#6B7785] mt-0.5">1-Touch Emergency SOS beacon, live tracker & clinical dossier snapshot.</p>
+            </li>
+            <li>
+              <Link to="/user/medical-profile" className="flex items-center justify-between font-semibold text-[#1F2A37] hover:text-[#0B6EFD]">
+                <span>/user/medical-profile (Medical Dossier)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <p className="text-[11px] text-[#6B7785] mt-0.5">Blood group, chronic conditions, critical allergies & ICE contacts.</p>
+            </li>
+            <li>
+              <Link to="/user/history" className="flex items-center justify-between font-semibold text-[#1F2A37] hover:text-[#0B6EFD]">
+                <span>/user/history (Dispatch Ledger)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <p className="text-[11px] text-[#6B7785] mt-0.5">Emergency transport history, clinical summaries & review submission.</p>
             </li>
           </ul>
         </div>
