@@ -56,11 +56,39 @@ export default function SitemapPage() {
               <p className="text-[11px] text-[#6B7785] mt-0.5">Star ratings and qualitative service review.</p>
             </li>
             <li>
-              <Link to="/contact" className="flex items-center justify-between font-semibold text-[#1F2A37] hover:text-[#0B6EFD]">
-                <span>/contact (Contact Us)</span>
+              <Link to="/ambulances" className="flex items-center justify-between font-semibold text-[#1F2A37] hover:text-[#0B6EFD]">
+                <span>/ambulances (Fleet Catalog)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
-              <p className="text-[11px] text-[#6B7785] mt-0.5">Hotline, email, and guest message transmission.</p>
+              <p className="text-[11px] text-[#6B7785] mt-0.5">Multi-criteria filtering, sector search, price range, fleet inventory.</p>
+            </li>
+            <li>
+              <Link to="/ambulances/1" className="flex items-center justify-between font-semibold text-[#1F2A37] hover:text-[#0B6EFD]">
+                <span>/ambulances/:id (Unit Specification)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <p className="text-[11px] text-[#6B7785] mt-0.5">Deep chassis specs, medical onboard equipment & pre-dispatch booking.</p>
+            </li>
+            <li>
+              <Link to="/tracking/REQ-2026-8812" className="flex items-center justify-between font-semibold text-[#1F2A37] hover:text-[#0B6EFD]">
+                <span>/tracking/:id (Live SOS Tracking)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <p className="text-[11px] text-[#6B7785] mt-0.5">Real-time GPS route radar, ETA countdown, milestone rescue stages & crew info.</p>
+            </li>
+            <li>
+              <Link to="/contact" className="flex items-center justify-between font-semibold text-[#1F2A37] hover:text-[#0B6EFD]">
+                <span>/contact (Contact Us & Command Map)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <p className="text-[11px] text-[#6B7785] mt-0.5">Chicago Central HQ radar, hotline, and guest message transmission.</p>
+            </li>
+            <li>
+              <Link to="/not-found-preview" className="flex items-center justify-between font-semibold text-[#1F2A37] hover:text-[#0B6EFD]">
+                <span>* (Medical 404 Error Page)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <p className="text-[11px] text-[#6B7785] mt-0.5">Heartbeat signal lost branding, recovery shortcuts & emergency hotline.</p>
             </li>
           </ul>
         </div>

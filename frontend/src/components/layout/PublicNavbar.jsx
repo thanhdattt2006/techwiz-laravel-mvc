@@ -79,6 +79,9 @@ export default function PublicNavbar() {
           <NavLink to='/' className={navLinkClass} end>
             Home
           </NavLink>
+          <NavLink to='/ambulances' className={navLinkClass}>
+            Ambulances
+          </NavLink>
           <NavLink to='/about' className={navLinkClass}>
             About
           </NavLink>

@@ -90,11 +90,19 @@ export default function UserDashboard() {
         </div>
 
         {sosActive && (
-          <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center justify-center gap-3 max-w-lg mx-auto">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
-            <div className="text-left">
-              <strong>Live Beacon Transmitting:</strong> Unit AMB-CHI-102 (Ford Transit ICU) is en route to your location. Estimated arrival: <strong>6 minutes</strong>.
+          <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex flex-col sm:flex-row items-center justify-between gap-3 max-w-xl mx-auto shadow-xs">
+            <div className="flex items-center gap-3 text-left">
+              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+              <div>
+                <strong>Live Beacon Transmitting:</strong> Unit AMB-CHI-102 (Ford Transit ICU) is en route to your location. Estimated arrival: <strong>5 mins</strong>.
+              </div>
             </div>
+            <Link
+              to="/tracking/AMB-CHI-102"
+              className="px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs shrink-0 transition shadow-xs"
+            >
+              Open Live Tracking
+            </Link>
           </div>
         )}
 

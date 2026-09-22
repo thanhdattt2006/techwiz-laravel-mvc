@@ -31,7 +31,10 @@ export default function PublicFooter() {
             <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wider">Quick Links</h3>
             <ul className="space-y-2 text-xs text-blue-100/80">
               <li>
-                <Link to="/" className="hover:text-white transition">eAmbulance Catalog</Link>
+                <Link to="/ambulances" className="hover:text-white transition font-medium text-blue-200">Ambulance Fleet Directory</Link>
+              </li>
+              <li>
+                <Link to="/tracking/REQ-2026-8812" className="hover:text-white transition text-emerald-300 font-medium">Live SOS Tracking Console</Link>
               </li>
               <li>
                 <Link to="/about" className="hover:text-white transition">About LifeLink</Link>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Layouts
 import PublicLayout from '../components/layout/PublicLayout';
@@ -19,6 +19,9 @@ import FeedbackPage from '../pages/public/FeedbackPage';
 import ContactPage from '../pages/public/ContactPage';
 import SitemapPage from '../pages/public/SitemapPage';
 import AmbulanceDetailPage from '../pages/public/AmbulanceDetailPage';
+import AmbulancesPage from '../pages/public/AmbulancesPage';
+import LiveTrackingPage from '../pages/public/LiveTrackingPage';
+import NotFoundPage from '../pages/public/NotFoundPage';
 
 // Auth Pages
 import LoginPage from '../pages/auth/LoginPage';
@@ -40,11 +43,13 @@ export default function AppRoutes() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/ambulances" element={<AmbulancesPage />} />
+          <Route path="/ambulances/:id" element={<AmbulanceDetailPage />} />
+          <Route path="/tracking/:id" element={<LiveTrackingPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/feedback" element={<FeedbackPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/sitemap" element={<SitemapPage />} />
-          <Route path="/ambulances/:id" element={<AmbulanceDetailPage />} />
         </Route>
 
         {/* 2. Authentication & Access Restriction Routes */}
@@ -74,8 +79,10 @@ export default function AppRoutes() {
           </Route>
         </Route>
 
-        {/* Catch-all Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* 6. Catch-all Fallback (Medical 404 Page) */}
+        <Route element={<PublicLayout />}>
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );

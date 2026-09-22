@@ -179,17 +179,17 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn y tế:
   - Cập nhật nút `"Request Unit"` tại `HomePage.jsx` trỏ tới `/ambulances/${amb.id}` thay vì nhảy chung chung về dashboard.
 
 ## Phase 0.11: Danh Mục Xe Toàn Diện, Theo Dõi Cấp Cứu Trực Tuyến & Trang 404 Y Tế (AmbulancesPage, LiveTrackingPage, NotFoundPage)
-- `[ ]` Trang Danh Mục Xe Cứu Thương Toàn Diện (`src/pages/public/AmbulancesPage.jsx` - Route `/ambulances`):
+- `[x]` Trang Danh Mục Xe Cứu Thương Toàn Diện (`src/pages/public/AmbulancesPage.jsx` - Route `/ambulances`):
   - Bộ lọc đa tiêu chí: Loại xe (ICCU, ICU, A/C, Non-A/C), Vùng trực chiến (Chicago Central, Downtown, North, South, West Suburbs), Khoảng giá theo giờ ($10 - $35), Sắp xếp giá tăng/giảm.
   - Thanh tìm kiếm thông minh theo từ khóa (tên xe, biển số, trang thiết bị).
   - Grid danh sách xe với badge trạng thái, thẻ thông số chi tiết, nút "View Specification & Pre-dispatch" dẫn tới `/ambulances/:id`.
   - Cập nhật liên kết "Ambulances" trên `PublicNavbar.jsx` và `PublicFooter.jsx`.
-- `[ ]` Trang Theo Dõi Ca Cấp Cứu Thời Gian Thực (`src/pages/public/LiveTrackingPage.jsx` - Route `/tracking/:id`):
+- `[x]` Trang Theo Dõi Ca Cấp Cứu Thời Gian Thực (`src/pages/public/LiveTrackingPage.jsx` - Route `/tracking/:id`):
   - Truy cập công khai bằng mã ca cấp cứu (Incident Tracking Code).
   - Bản đồ GPS lộ trình trực quan xe đang di chuyển đến vị trí bệnh nhân.
   - Card tài xế: Họ tên, số điện thoại bấm gọi trực tiếp, biển số xe, đơn vị trực ban.
   - Đồng hồ đếm ngược thời gian dự kiến tiếp cận (ETA Counter) và thanh trạng thái tiến trình cứu hộ (Pending -> Dispatched -> En Route -> Arrived -> Transporting -> Completed).
-- `[ ]` Trang Báo Lỗi 404 Chuẩn Y Tế (`src/pages/public/NotFoundPage.jsx` - Catch-all Route `*`):
+- `[x]` Trang Báo Lỗi 404 Chuẩn Y Tế (`src/pages/public/NotFoundPage.jsx` - Catch-all Route `*`):
   - Thay thế redirect âm thầm hiện tại bằng trang 404 thương hiệu LifeLink chuyên nghiệp.
   - Minh họa trực quan cấp cứu, thông báo đường dẫn không tồn tại.
   - Nút "Back to Home", "Browse Ambulance Fleet", và nút gọi Hotline khẩn cấp `030-1111-1234`.

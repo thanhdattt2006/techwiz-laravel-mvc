@@ -85,7 +85,7 @@ export default function AmbulanceDetailPage() {
         type: 'success',
         confirmText: 'Go to Tracking Console',
       }).then(() => {
-        navigate('/user/dashboard');
+        navigate(`/tracking/${ambulance.vehicleNumber}`);
       });
     }, 600);
   };

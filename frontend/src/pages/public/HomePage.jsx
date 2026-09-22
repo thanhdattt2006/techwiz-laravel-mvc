@@ -238,6 +238,25 @@ export default function HomePage() {
             </div>
           )}
         </div>
+
+        {/* Full Directory CTA Banner */}
+        <div className="mt-8 p-6 rounded-2xl bg-blue-50 border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="space-y-1 text-center sm:text-left">
+            <h3 className="text-base font-bold text-[#1F2A37]">
+              Looking for Advanced Multi-Criteria Filtering & Sector Search?
+            </h3>
+            <p className="text-xs text-[#6B7785]">
+              Inspect our comprehensive fleet directory with live rate budget sliders, chassis sizes, and instant pre-dispatch bookings.
+            </p>
+          </div>
+          <Link
+            to="/ambulances"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0B6EFD] hover:bg-[#084298] text-white text-xs font-bold transition shadow-xs shrink-0"
+          >
+            <span>Explore Full Fleet Directory</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
       </section>
     </div>
   );
