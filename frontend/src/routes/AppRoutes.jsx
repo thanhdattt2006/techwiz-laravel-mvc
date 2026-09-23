@@ -44,6 +44,9 @@ export default function AppRoutes() {
         {/* 1. Public Catalog & Informational Routes */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/markets" element={<HomePage />} />
+          <Route path="/products" element={<AmbulancesPage />} />
+          <Route path="/products/:id" element={<AmbulanceDetailPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/ambulances" element={<AmbulancesPage />} />
           <Route path="/ambulances/:id" element={<AmbulanceDetailPage />} />

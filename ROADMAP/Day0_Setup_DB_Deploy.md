@@ -164,23 +164,23 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn thực phẩm tươi sạch & 
 ## 🚀 KẾ HOẠCH REFACTOR GIAO DIỆN SANG MARKETLINK (PHASES 0.11 -> 0.17)
 
 ### Phase 0.11: Tái Cấu Trúc Thương Hiệu & Hệ Màu Mới (MarketLink Brand Identity & Fresh Botanical Theme)
-- `[ ]` Cập nhật `src/index.css` với Tailwind theme tokens chuẩn **Fresh Botanical & Harvest Gold**:
+- `[x]` Cập nhật `src/index.css` với Tailwind theme tokens chuẩn **Fresh Botanical & Harvest Gold**:
   - Đổi các biến màu từ `--color-medical-*` sang hệ `--color-market-primary` (`#16A34A`), `--color-market-primary-dark` (`#15803D`), `--color-market-accent` (`#F59E0B`), `--color-market-bg` (`#F8FAF6`), `--color-market-border` (`#E2E8DF`), `--color-market-text` (`#0F172A`).
-- `[ ]` Refactor `src/components/layout/PublicNavbar.jsx`:
+- `[x]` Refactor `src/components/layout/PublicNavbar.jsx`:
   - Đổi logo và tên thương hiệu: **MarketLink** (Badge: *eGreen Basket*).
   - Topbar: *🌿 Local Farmers Markets • Fresh Organic Harvest • Community Supported Agriculture*.
   - Hotline hỗ trợ: `(312) 555-FARM` / `support@marketlink.org`.
   - Menu điều hướng: *Markets Directory (`/markets`), Fresh Produce (`/products`), How It Works, About Us, Community Feedback (`/feedback`), Contact Us (`/contact`)*.
-- `[ ]` Refactor `src/components/layout/PublicFooter.jsx`:
+- `[x]` Refactor `src/components/layout/PublicFooter.jsx`:
   - Thông tin thương hiệu MarketLink, tuyên ngôn phát triển nông nghiệp xanh bền vững, giảm thiểu phát thải chuỗi cung ứng thực phẩm (Zero Food Miles).
   - Liên kết danh mục: Rau xanh củ quả vụ mới, Sạp chợ theo quận, Hướng dẫn đặt trước nhận tại sạp, Điều khoản nông dân.
-- `[ ]` Refactor `src/pages/public/HomePage.jsx`:
+- `[x]` Refactor `src/pages/public/HomePage.jsx`:
   - **Hero Section**: Banner ấn tượng "Farm Fresh Just a Click Away", tìm kiếm nhanh nông sản theo từ khóa và chợ địa phương.
   - **Featured Local Markets**: Grid hiển thị 3 chợ nông sản nổi bật (Lincoln Park Farmers Market, Logan Square Market, Green City Market).
   - **Seasonal Harvest Highlights**: Danh sách nông sản tươi ngon nhất tuần (Cà chua gia truyền Heirloom, Dâu tây hữu cơ, Mật ong hoa rừng, Phô mai dê thủ công).
   - **How Pre-Order Works**: Quy trình 3 bước: 1. Khám phá chợ gần bạn ➔ 2. Đặt trước nông sản chọn ngày nhận ➔ 3. Nhận hàng tại sạp & thanh toán tiền mặt.
   - **Farmer Spotlight & Testimonials**: Trích dẫn câu chuyện người nông dân địa phương và đánh giá của khách hàng.
-- `[ ]` Cập nhật `AboutPage.jsx` và `GalleryPage.jsx` theo chủ đề nông nghiệp sinh thái & ngày hội chợ nông sản.
+- `[x]` Cập nhật `AboutPage.jsx` và `GalleryPage.jsx` theo chủ đề nông nghiệp sinh thái & ngày hội chợ nông sản.
 
 ### Phase 0.12: Xây Dựng Bộ Dữ Liệu Nông Sản & Trang Catalog Sản Phẩm (Products Catalog & Pre-Order Detail View)
 - `[ ]` Tạo bộ dữ liệu Mock Data chuẩn SRS:

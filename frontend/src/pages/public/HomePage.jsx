@@ -1,128 +1,344 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Ambulance,
+  Sprout,
   Search,
-  SlidersHorizontal,
   MapPin,
   ArrowRight,
   PhoneCall,
-  Activity,
-  HeartPulse,
+  Calendar,
+  Clock,
+  ShoppingBag,
+  Award,
+  CheckCircle2,
+  Leaf,
+  Star,
+  Store,
 } from 'lucide-react';
 
-import ambulancesData from '../../data/ambulances.json';
+const FEATURED_MARKETS = [
+  {
+    id: 1,
+    name: 'Lincoln Park Farmers Market',
+    neighborhood: 'Lincoln Park, Chicago',
+    address: 'Armitage Ave & Orchard St',
+    operatingDays: 'Every Saturday',
+    openingHours: '08:00 AM - 01:00 PM',
+    stallsCount: 24,
+    specialty: 'Organic Vegetables, Heirloom Tomatoes & Artisan Dairy',
+    bgGradient: 'from-emerald-800 to-green-950',
+  },
+  {
+    id: 2,
+    name: 'Green City Market',
+    neighborhood: 'Lincoln Park South, Chicago',
+    address: '1817 N Clark St',
+    operatingDays: 'Wed & Saturday',
+    openingHours: '07:00 AM - 01:00 PM',
+    stallsCount: 36,
+    specialty: 'Orchard Fruits, Sweet Berries & Pastured Eggs',
+    bgGradient: 'from-green-800 to-teal-950',
+  },
+  {
+    id: 3,
+    name: 'Logan Square Farmers Market',
+    neighborhood: 'Logan Square, Chicago',
+    address: '3107 W Logan Blvd',
+    operatingDays: 'Every Sunday',
+    openingHours: '08:30 AM - 02:00 PM',
+    stallsCount: 30,
+    specialty: 'Artisan Sourdough, Raw Wildflower Honey & Microgreens',
+    bgGradient: 'from-amber-900 to-emerald-950',
+  },
+];
 
-const MOCK_AMBULANCES = ambulancesData;
+const SEASONAL_HARVEST = [
+  {
+    id: 1,
+    name: 'Organic Heirloom Tomatoes',
+    category: 'VEGETABLES',
+    farm: 'Green Valley Organics',
+    market: 'Lincoln Park Market',
+    price: 4.5,
+    unit: 'lb',
+    tag: 'USDA Organic',
+    tagColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    harvestNote: 'Harvested fresh this morning at 05:30 AM',
+    rating: 4.9,
+    reviewsCount: 38,
+    stockStatus: 'In Stock (18 lbs remaining)',
+  },
+  {
+    id: 2,
+    name: 'Crisp Honeycrisp Apples',
+    category: 'FRUITS',
+    farm: 'Sunny Ridge Orchards',
+    market: 'Green City Market',
+    price: 3.8,
+    unit: 'lb',
+    tag: 'Tree Ripened',
+    tagColor: 'bg-amber-100 text-amber-800 border-amber-200',
+    harvestNote: 'Hand-picked from 25-year mature orchard',
+    rating: 4.95,
+    reviewsCount: 52,
+    stockStatus: 'In Stock (35 lbs remaining)',
+  },
+  {
+    id: 3,
+    name: 'Raw Wildflower Honey Comb',
+    category: 'PANTRY',
+    farm: 'Prairie Blossom Apiary',
+    market: 'Logan Square Market',
+    price: 12.0,
+    unit: 'jar',
+    tag: 'Pure & Unfiltered',
+    tagColor: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+    harvestNote: 'Single-source raw nectar with comb slice',
+    rating: 5.0,
+    reviewsCount: 44,
+    stockStatus: 'Only 8 jars left this week',
+  },
+  {
+    id: 4,
+    name: 'Pastured Free-Range Eggs',
+    category: 'DAIRY',
+    farm: 'Oakwood Farmsteads',
+    market: 'Lincoln Park Market',
+    price: 6.5,
+    unit: 'dozen',
+    tag: 'Pasture Raised',
+    tagColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    harvestNote: 'Foraged on open clover grass daily',
+    rating: 4.92,
+    reviewsCount: 29,
+    stockStatus: 'In Stock (20 cartons)',
+  },
+  {
+    id: 5,
+    name: 'Artisan Sourdough Country Loaf',
+    category: 'BAKERY',
+    farm: 'Stone Ground Craft Bakery',
+    market: 'Logan Square Market',
+    price: 7.0,
+    unit: 'loaf',
+    tag: '36-Hr Fermented',
+    tagColor: 'bg-amber-100 text-amber-800 border-amber-200',
+    harvestNote: 'Stone-milled organic wheat, wild sourdough yeast',
+    rating: 4.98,
+    reviewsCount: 67,
+    stockStatus: 'Only 6 loaves remaining',
+  },
+  {
+    id: 6,
+    name: 'Sweet Tender Baby Spinach',
+    category: 'VEGETABLES',
+    farm: 'River Valley Greens',
+    market: 'Green City Market',
+    price: 3.2,
+    unit: 'bundle',
+    tag: 'Pesticide Free',
+    tagColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+    harvestNote: 'Triple washed and hydro-cooled',
+    rating: 4.88,
+    reviewsCount: 23,
+    stockStatus: 'In Stock (25 bundles)',
+  },
+];
 
 export default function HomePage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedType, setSelectedType] = useState('ALL');
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [sortByPrice, setSortByPrice] = useState('default');
 
-  const filteredAmbulances = useMemo(() => {
-    return MOCK_AMBULANCES.filter((amb) => {
+  const filteredHarvest = useMemo(() => {
+    return SEASONAL_HARVEST.filter((item) => {
       const matchSearch =
         searchTerm === '' ||
-        amb.region.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        amb.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        amb.vehicleNumber.toLowerCase().includes(searchTerm.toLowerCase());
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.farm.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.market.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchType =
-        selectedType === 'ALL' || amb.type.toUpperCase() === selectedType.toUpperCase();
+      const matchCat =
+        selectedCategory === 'ALL' || item.category === selectedCategory;
 
-      return matchSearch && matchType;
+      return matchSearch && matchCat;
     }).sort((a, b) => {
       if (sortByPrice === 'asc') return a.price - b.price;
       if (sortByPrice === 'desc') return b.price - a.price;
       return 0;
     });
-  }, [searchTerm, selectedType, sortByPrice]);
+  }, [searchTerm, selectedCategory, sortByPrice]);
 
   return (
-    <div className="space-y-12 pb-16">
+    <div className="space-y-16 pb-20">
       {/* Hero Banner Section */}
-      <section className="bg-gradient-to-br from-[#084298] via-[#0B6EFD] to-blue-700 text-white py-16 px-4 sm:px-8 shadow-lg">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-          <div className="md:col-span-8 space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur text-xs font-semibold border border-white/20">
-              <Activity className="w-3.5 h-3.5 text-emerald-300" />
-              <span>Prompt Medical Assistance • 24/7 Rapid Response</span>
+      <section className="bg-gradient-to-br from-[#15803D] via-[#16A34A] to-emerald-700 text-white py-16 sm:py-20 px-4 sm:px-8 shadow-lg">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div className="lg:col-span-8 space-y-5">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur text-xs font-semibold border border-white/25">
+              <Sprout className="w-3.5 h-3.5 text-amber-300" />
+              <span>eGreen Basket • Farm Fresh Just a Click Away</span>
             </div>
             <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-              LifeLink eAmbulance <br />
-              <span className="text-blue-200">Saving Lives with Smart Technology</span>
+              Connect Directly with <br />
+              <span className="text-amber-300">Local Farmers Markets</span>
             </h1>
-            <p className="text-sm sm:text-base text-blue-100/90 max-w-2xl leading-relaxed">
-              Connect immediately with specialized emergency vehicles across regional hospitals. Browse certified fleets, compare equipment & rates, or initiate a 1-touch SOS beacon.
+            <p className="text-sm sm:text-base text-emerald-100/90 max-w-2xl leading-relaxed">
+              Explore freshly harvested organic vegetables, orchard fruits, farm dairy, artisan bread, and raw honey. Pre-order ahead to guarantee your favorite items at your neighborhood market stall.
             </p>
 
+            {/* Hero Quick Action Buttons */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
-                to="/user/dashboard"
-                className="flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#DC3545] hover:bg-red-700 text-white font-extrabold text-sm shadow-lg shadow-red-600/30 transition transform hover:-translate-y-0.5 cursor-pointer"
+                to="/products"
+                className="flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white text-[#15803D] hover:bg-emerald-50 font-black text-sm shadow-lg shadow-black/10 transition transform hover:-translate-y-0.5 cursor-pointer"
               >
-                <HeartPulse className="w-5 h-5 animate-pulse" />
-                <span>Immediate Emergency SOS</span>
+                <ShoppingBag className="w-4 h-4 text-[#16A34A]" />
+                <span>Browse Fresh Produce</span>
+              </Link>
+              <Link
+                to="/markets"
+                className="flex items-center gap-2 px-5 py-3.5 rounded-xl bg-emerald-800/60 hover:bg-emerald-800 border border-emerald-400/40 text-white font-bold text-sm transition"
+              >
+                <Store className="w-4 h-4 text-amber-300" />
+                <span>Explore Local Markets</span>
               </Link>
               <a
-                href="tel:03011111234"
-                className="flex items-center gap-2 px-5 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/30 text-white font-bold text-sm transition"
+                href="tel:3125553276"
+                className="flex items-center gap-2 px-4 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-semibold transition"
               >
-                <PhoneCall className="w-4 h-4 text-emerald-300" />
-                <span>Call Hotline: 030-1111-1234</span>
+                <PhoneCall className="w-3.5 h-3.5 text-amber-300" />
+                <span>(312) 555-FARM</span>
               </a>
             </div>
           </div>
 
-          {/* Hero Quick Badge */}
-          <div className="md:col-span-4 bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-6 text-xs space-y-4 shadow-xl">
+          {/* Hero Statistics Metric Panel */}
+          <div className="lg:col-span-4 bg-white/10 backdrop-blur border border-white/20 rounded-2xl p-6 text-xs space-y-4 shadow-xl">
             <div className="flex items-center justify-between border-b border-white/15 pb-3">
-              <span className="font-semibold text-blue-100">Live Active Fleet:</span>
-              <span className="font-bold text-emerald-300 text-sm">6 Ready Units</span>
+              <span className="font-semibold text-emerald-100">Local Farmers Markets:</span>
+              <span className="font-black text-amber-300 text-sm">6 Active Markets</span>
             </div>
             <div className="flex items-center justify-between border-b border-white/15 pb-3">
-              <span className="font-semibold text-blue-100">Average Response Time:</span>
-              <span className="font-bold text-white text-sm">6 - 8 Minutes</span>
+              <span className="font-semibold text-emerald-100">Family Farms & Stalls:</span>
+              <span className="font-bold text-white text-sm">48+ Independent Growers</span>
             </div>
             <div className="flex items-center justify-between border-b border-white/15 pb-3">
-              <span className="font-semibold text-blue-100">Coverage Sector:</span>
-              <span className="font-bold text-white text-sm">Chicago Metropolitan</span>
+              <span className="font-semibold text-emerald-100">Direct Stall Pickup:</span>
+              <span className="font-bold text-emerald-200 text-sm">100% In-Person & Cash/Card</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-blue-100">Pricing Base:</span>
-              <span className="font-bold text-amber-300 text-sm">From $12 / Request</span>
+              <span className="font-semibold text-emerald-100">Delivery Markup Fee:</span>
+              <span className="font-black text-amber-300 text-sm">$0.00 (Zero Middlemen)</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Main Catalog Section */}
+      {/* Featured Local Markets Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-8 gap-4">
+          <div>
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#16A34A] uppercase tracking-wider mb-1">
+              <MapPin className="w-3.5 h-3.5" /> Neighborhood Meeting Points
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] tracking-tight">
+              Featured Chicago Farmers Markets
+            </h2>
+            <p className="text-xs sm:text-sm text-[#475569] mt-1">
+              Visit local markets on scheduled weekend days to collect your fresh pre-orders directly from growers.
+            </p>
+          </div>
+          <Link
+            to="/markets"
+            className="flex items-center gap-1.5 text-xs font-bold text-[#16A34A] hover:text-[#15803D] hover:underline shrink-0"
+          >
+            <span>View All 6 Markets</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {FEATURED_MARKETS.map((market) => (
+            <div
+              key={market.id}
+              className="bg-white border border-[#E2E8DF] rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between group"
+            >
+              {/* Header Visual Bar */}
+              <div className={`p-6 bg-gradient-to-br ${market.bgGradient} text-white space-y-2 relative`}>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/20 backdrop-blur">
+                  {market.stallsCount} Artisan Stalls
+                </span>
+                <h3 className="text-lg font-black leading-snug group-hover:text-amber-200 transition">
+                  {market.name}
+                </h3>
+                <p className="text-xs text-emerald-100 flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                  <span>{market.neighborhood}</span>
+                </p>
+              </div>
+
+              {/* Body Details */}
+              <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
+                <div className="space-y-2.5 text-xs text-[#475569]">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-[#16A34A] shrink-0" />
+                    <span><strong>Schedule:</strong> {market.operatingDays}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-amber-600 shrink-0" />
+                    <span><strong>Pickup Window:</strong> {market.openingHours}</span>
+                  </div>
+                  <div className="pt-2 border-t border-slate-100">
+                    <span className="font-semibold text-[#0F172A] block mb-1">Market Highlights:</span>
+                    <p className="text-[11px] leading-relaxed text-[#475569]">{market.specialty}</p>
+                  </div>
+                </div>
+
+                <div className="pt-4 border-t border-[#E2E8DF] flex items-center justify-between">
+                  <span className="text-[11px] font-semibold text-[#16A34A] flex items-center gap-1">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A]" /> Verified Location
+                  </span>
+                  <Link
+                    to="/products"
+                    className="flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#16A34A] text-xs font-bold transition"
+                  >
+                    <span>Browse Stalls</span>
+                    <ArrowRight className="w-3 h-3" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Main Produce Catalog Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Search, Sort & Filter Bar */}
-        <div className="bg-white border border-[#E2E8F0] rounded-2xl p-5 shadow-sm space-y-4">
+        <div className="bg-white border border-[#E2E8DF] rounded-2xl p-6 shadow-xs space-y-4">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
-              <h2 className="text-xl font-bold text-[#1F2A37] flex items-center gap-2">
-                <Ambulance className="w-5 h-5 text-[#0B6EFD]" />
-                <span>Available eAmbulance Listings</span>
+              <h2 className="text-xl font-bold text-[#0F172A] flex items-center gap-2">
+                <Leaf className="w-5 h-5 text-[#16A34A]" />
+                <span>Seasonal Fresh Harvest Highlights</span>
               </h2>
-              <p className="text-xs text-[#6B7785] mt-0.5">
-                Browse, search by region (e.g. "Chicago"), and filter by medical vehicle configuration
+              <p className="text-xs text-[#475569] mt-0.5">
+                Reserve produce picked at peak ripeness directly from certified family farms
               </p>
             </div>
 
             {/* Price Sort Dropdown */}
             <div className="flex items-center gap-2 w-full sm:w-auto">
-              <span className="text-xs font-semibold text-[#6B7785] shrink-0">Sort by Cost:</span>
+              <span className="text-xs font-semibold text-[#475569] shrink-0">Sort Price:</span>
               <select
                 value={sortByPrice}
                 onChange={(e) => setSortByPrice(e.target.value)}
-                className="w-full sm:w-auto text-xs bg-slate-50 border border-[#E2E8F0] rounded-lg px-3 py-2 font-medium text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD]"
+                className="w-full sm:w-auto text-xs bg-slate-50 border border-[#E2E8DF] rounded-xl px-3 py-2 font-medium text-[#0F172A] focus:outline-none focus:border-[#16A34A]"
               >
-                <option value="default">Default Order</option>
-                <option value="asc">Price: Low to High ($12 first)</option>
-                <option value="desc">Price: High to Low ($30 first)</option>
+                <option value="default">Default Harvest Order</option>
+                <option value="asc">Price: Low to High ($3.20 first)</option>
+                <option value="desc">Price: High to Low ($12.00 first)</option>
               </select>
             </div>
           </div>
@@ -130,134 +346,221 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row items-center gap-3 pt-2">
             {/* Search Input */}
             <div className="relative flex-1 w-full">
-              <Search className="w-4 h-4 text-[#6B7785] absolute left-3.5 top-3" />
+              <Search className="w-4 h-4 text-[#475569] absolute left-3.5 top-3" />
               <input
                 type="text"
-                placeholder="Search by region (e.g. Chicago, Downtown), model or unit number..."
+                placeholder="Search produce name, farm (e.g. Green Valley), or market..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 text-xs bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD] transition"
+                className="w-full pl-10 pr-4 py-2 text-xs bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
               />
             </div>
 
-            {/* Filter Pills */}
+            {/* Category Filter Pills */}
             <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto shrink-0 pb-1 sm:pb-0">
-              {['ALL', 'ICCU', 'ICU', 'A/C', 'NON-A/C'].map((type) => (
+              {['ALL', 'VEGETABLES', 'FRUITS', 'DAIRY', 'BAKERY', 'PANTRY'].map((cat) => (
                 <button
-                  key={type}
+                  key={cat}
                   type="button"
-                  onClick={() => setSelectedType(type)}
+                  onClick={() => setSelectedCategory(cat)}
                   className={`px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
-                    selectedType === type
-                      ? 'bg-[#0B6EFD] text-white shadow-xs'
-                      : 'bg-slate-100 hover:bg-slate-200 text-[#1F2A37]'
+                    selectedCategory === cat
+                      ? 'bg-[#16A34A] text-white shadow-xs'
+                      : 'bg-slate-100 hover:bg-slate-200 text-[#0F172A]'
                   }`}
                 >
-                  {type === 'ALL' ? 'All Types' : type}
+                  {cat === 'ALL' ? 'All Harvest' : cat}
                 </button>
               ))}
             </div>
           </div>
         </div>
 
-        {/* Catalog Grid */}
+        {/* Harvest Grid */}
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredAmbulances.length > 0 ? (
-            filteredAmbulances.map((amb) => (
+          {filteredHarvest.length > 0 ? (
+            filteredHarvest.map((item) => (
               <div
-                key={amb.id}
-                className="bg-white border border-[#E2E8F0] hover:border-blue-300 rounded-2xl p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between"
+                key={item.id}
+                className="bg-white border border-[#E2E8DF] hover:border-[#16A34A] rounded-2xl p-6 shadow-xs hover:shadow-md transition flex flex-col justify-between group"
               >
                 <div>
-                  {/* Top Badge Row */}
+                  {/* Badge Row */}
                   <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs font-mono font-bold text-[#6B7785] bg-slate-100 px-2.5 py-1 rounded-lg">
-                      {amb.vehicleNumber}
+                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${item.tagColor}`}>
+                      {item.tag}
                     </span>
-                    <span
-                      className={`text-xs font-bold px-2.5 py-1 rounded-full border ${
-                        amb.type === 'ICCU'
-                          ? 'bg-purple-50 text-purple-700 border-purple-200'
-                          : amb.type === 'ICU'
-                          ? 'bg-blue-50 text-blue-700 border-blue-200'
-                          : amb.type === 'A/C'
-                          ? 'bg-cyan-50 text-cyan-700 border-cyan-200'
-                          : 'bg-slate-100 text-slate-700 border-slate-200'
-                      }`}
-                    >
-                      {amb.type} Class
+                    <span className="flex items-center gap-1 text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">
+                      <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                      {item.rating} ({item.reviewsCount})
                     </span>
                   </div>
 
-                  {/* Title */}
-                  <h3 className="text-base font-bold text-[#1F2A37] mb-2 leading-snug hover:text-[#0B6EFD] transition">
-                    <Link to={`/ambulances/${amb.id}`}>{amb.model}</Link>
+                  {/* Title & Farm */}
+                  <h3 className="text-base font-bold text-[#0F172A] mb-1 group-hover:text-[#16A34A] transition">
+                    <Link to="/products">{item.name}</Link>
                   </h3>
+                  <p className="text-xs font-semibold text-[#15803D] mb-3 flex items-center gap-1">
+                    <Sprout className="w-3.5 h-3.5 text-[#16A34A]" />
+                    <span>{item.farm}</span>
+                  </p>
 
-                  {/* Specifications */}
-                  <div className="space-y-2 text-xs text-[#6B7785] mb-4">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-[#0B6EFD] shrink-0" />
-                      <span>Region: <strong className="text-[#1F2A37]">{amb.region}</strong></span>
+                  {/* Harvest Info */}
+                  <div className="space-y-2 text-xs text-[#475569] mb-4 bg-[#F8FAF6] p-3 rounded-xl border border-[#E2E8DF]">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] text-[#475569]">Pickup Market:</span>
+                      <span className="font-bold text-[#0F172A]">{item.market}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <SlidersHorizontal className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                      <span>Size: {amb.size}</span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] text-[#475569]">Availability:</span>
+                      <span className="font-semibold text-emerald-700">{item.stockStatus}</span>
                     </div>
-                    <div className="pt-2 border-t border-slate-100">
-                      <span className="font-semibold text-[#1F2A37] block mb-1">On-board Medical Equipment:</span>
-                      <p className="text-[11px] leading-relaxed text-[#6B7785]">{amb.equipment}</p>
-                    </div>
+                    <p className="text-[11px] text-[#475569] italic pt-1 border-t border-slate-200">
+                      "{item.harvestNote}"
+                    </p>
                   </div>
                 </div>
 
-                {/* Card Footer: Price and Booking CTA */}
-                <div className="pt-4 border-t border-[#E2E8F0] flex items-center justify-between">
+                {/* Card Footer: Pricing and Pre-Order Button */}
+                <div className="pt-4 border-t border-[#E2E8DF] flex items-center justify-between">
                   <div>
-                    <span className="text-[11px] text-[#6B7785] block">Standard Rate</span>
-                    <div className="text-xl font-black text-[#0B6EFD]">
-                      ${amb.price} <span className="text-xs font-normal text-[#6B7785]">/ trip</span>
+                    <span className="text-[10px] text-[#475569] block uppercase tracking-wider font-semibold">Direct Farm Price</span>
+                    <div className="text-xl font-black text-[#16A34A]">
+                      ${item.price.toFixed(2)} <span className="text-xs font-normal text-[#475569]">/ {item.unit}</span>
                     </div>
                   </div>
 
                   <Link
-                    to={`/ambulances/${amb.id}`}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#DC3545] hover:bg-red-700 text-white text-xs font-bold transition shadow-sm cursor-pointer"
+                    to="/products"
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-xs cursor-pointer"
                   >
-                    <span>Request Unit</span>
+                    <span>Pre-Order</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
               </div>
             ))
           ) : (
-            <div className="col-span-full py-12 text-center bg-white border border-[#E2E8F0] rounded-2xl">
-              <Ambulance className="w-10 h-10 text-[#6B7785] mx-auto mb-2 opacity-50" />
-              <p className="text-sm font-semibold text-[#1F2A37]">No eAmbulance matching criteria found</p>
-              <p className="text-xs text-[#6B7785] mt-1">Try resetting your search region or category filter.</p>
+            <div className="col-span-full py-12 text-center bg-white border border-[#E2E8DF] rounded-2xl">
+              <Sprout className="w-10 h-10 text-[#475569] mx-auto mb-2 opacity-50" />
+              <p className="text-sm font-semibold text-[#0F172A]">No seasonal produce matching criteria found</p>
+              <p className="text-xs text-[#475569] mt-1">Try resetting your search query or selecting "All Harvest".</p>
             </div>
           )}
         </div>
+      </section>
 
-        {/* Full Directory CTA Banner */}
-        <div className="mt-8 p-6 rounded-2xl bg-blue-50 border border-blue-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="space-y-1 text-center sm:text-left">
-            <h3 className="text-base font-bold text-[#1F2A37]">
-              Looking for Advanced Multi-Criteria Filtering & Sector Search?
-            </h3>
-            <p className="text-xs text-[#6B7785]">
-              Inspect our comprehensive fleet directory with live rate budget sliders, chassis sizes, and instant pre-dispatch bookings.
+      {/* How Pre-Order Works (3-Step Visual Process) */}
+      <section className="bg-white border-y border-[#E2E8DF] py-16 px-4 sm:px-6 lg:px-8" id="how-it-works">
+        <div className="max-w-6xl mx-auto space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-100 text-[#16A34A]">
+              Simple 3-Step Process
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-[#0F172A] tracking-tight">
+              How Pre-Ordering for Stall Pickup Works
+            </h2>
+            <p className="text-xs sm:text-sm text-[#475569]">
+              Guarantee your organic produce before market day arrives. No middleman markups, no online payment hassle.
             </p>
           </div>
-          <Link
-            to="/ambulances"
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0B6EFD] hover:bg-[#084298] text-white text-xs font-bold transition shadow-xs shrink-0"
-          >
-            <span>Explore Full Fleet Directory</span>
-            <ArrowRight className="w-4 h-4" />
-          </Link>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+            {/* Step 1 */}
+            <div className="bg-[#F8FAF6] border border-[#E2E8DF] rounded-2xl p-6 relative flex flex-col items-center text-center space-y-3 shadow-xs">
+              <div className="w-12 h-12 rounded-2xl bg-[#16A34A] text-white flex items-center justify-center font-black text-lg shadow-md shadow-emerald-600/20">
+                1
+              </div>
+              <h3 className="text-base font-bold text-[#0F172A]">Discover Local Markets</h3>
+              <p className="text-xs text-[#475569] leading-relaxed">
+                Explore Chicago farmers markets, view operating weekend days, and browse verified stalls with weekly fresh inventory.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="bg-[#F8FAF6] border border-[#E2E8DF] rounded-2xl p-6 relative flex flex-col items-center text-center space-y-3 shadow-xs">
+              <div className="w-12 h-12 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-black text-lg shadow-md shadow-amber-500/20">
+                2
+              </div>
+              <h3 className="text-base font-bold text-[#0F172A]">Pre-Order Ahead</h3>
+              <p className="text-xs text-[#475569] leading-relaxed">
+                Choose your harvest items and select a convenient morning pickup window (e.g. 08:00 AM - 10:00 AM) to lock in your order.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="bg-[#F8FAF6] border border-[#E2E8DF] rounded-2xl p-6 relative flex flex-col items-center text-center space-y-3 shadow-xs">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-800 text-white flex items-center justify-center font-black text-lg shadow-md shadow-emerald-800/20">
+                3
+              </div>
+              <h3 className="text-base font-bold text-[#0F172A]">Pick Up at Stall & Pay</h3>
+              <p className="text-xs text-[#475569] leading-relaxed">
+                Visit the farmer's stall on market day, inspect your freshly packed produce basket, and settle with cash or card directly.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Farmer Spotlight & Customer Testimonials */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          {/* Spotlight Story */}
+          <div className="lg:col-span-6 bg-gradient-to-br from-emerald-900 to-[#15803D] text-white p-8 rounded-3xl shadow-md space-y-4">
+            <div className="flex items-center gap-2 text-xs font-bold text-amber-300 uppercase tracking-wider">
+              <Award className="w-4 h-4" />
+              <span>Grower Spotlight of the Week</span>
+            </div>
+            <h3 className="text-2xl font-black leading-snug">
+              "MarketLink lets us pick only what's needed at peak ripeness."
+            </h3>
+            <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
+              Meet Thomas Miller, 3rd-generation grower at Green Valley Organics. By receiving pre-orders on MarketLink prior to Saturday morning, his family farm reduced post-market spoilage by 95% while customers get produce harvested just hours before pickup.
+            </p>
+            <div className="pt-2 flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-amber-400 text-emerald-950 flex items-center justify-center font-black text-sm">
+                TM
+              </div>
+              <div>
+                <div className="text-xs font-bold text-white">Thomas Miller</div>
+                <div className="text-[11px] text-emerald-200">Green Valley Organics • Lincoln Park Market</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Customer Reviews */}
+          <div className="lg:col-span-6 space-y-4">
+            <div className="bg-white border border-[#E2E8DF] rounded-2xl p-5 shadow-xs space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[#0F172A]">Sarah Jenkins (Lincoln Park)</span>
+                <div className="flex text-amber-500">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-500" />
+                  ))}
+                </div>
+              </div>
+              <p className="text-xs text-[#475569] leading-relaxed">
+                "I never miss out on heirloom tomatoes anymore! Reserving on Thursday evening means my basket is already packed when I walk over Saturday morning."
+              </p>
+            </div>
+
+            <div className="bg-white border border-[#E2E8DF] rounded-2xl p-5 shadow-xs space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-[#0F172A]">David Chen (Logan Square)</span>
+                <div className="flex text-amber-500">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-3.5 h-3.5 fill-amber-500" />
+                  ))}
+                </div>
+              </div>
+              <p className="text-xs text-[#475569] leading-relaxed">
+                "Direct connection with local beekeepers and bakers is amazing. The raw wildflower honey and sourdough are fresher than anything you can buy in a grocery store."
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     </div>
   );
 }
+

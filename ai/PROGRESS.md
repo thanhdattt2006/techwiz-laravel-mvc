@@ -30,19 +30,20 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] Thiết kế chuẩn bảng `users` (fullname, username, email/gmail, phone, role, status) & Seed 3 demo roles
 - [x] Cấu hình Deploy Vercel (`frontend/vercel.json`, rewrite SPA routing, test build passed)
 - [x] Chuẩn hóa 100% tiếng Anh trong codebase (không còn chữ tiếng Việt nào trong mã nguồn & giao diện)
-- [x] Tiếp nhận đề bài chính thức LifeLink (eAmbulance), quy hoạch 6 bảng CSDL và hệ màu Light Medical Theme
-- [x] Xây dựng `ProtectedRoute.jsx` hỗ trợ 3 roles: `admin`, `operator`, `user`
+- [x] Tiếp nhận đề bài chính thức MarketLink (eGreen Basket - TechWiz 7), quy hoạch 6 bảng CSDL cốt lõi và Fresh Botanical Theme
+- [x] Xây dựng `ProtectedRoute.jsx` hỗ trợ 3 roles: `admin`, `farmer`, `customer`
 - [x] Dựng khung Layout cho 3 roles và khung các trang Public (Home, About, Gallery, Feedback, Contact, Sitemap)
-- `[x]` Thay thế SweetAlert2 bằng Custom React Modal System (Light Medical Theme, giảm bundle size, chuẩn React Portal)
-- `[x]` Hoàn thiện bộ UI xác thực (RegisterPage, Nút Google Social Login, ForgotPasswordPage 2 bước)
-- `[x]` Phase 0.10: Bản đồ tương tác trạm trực Contact Page & Trang chi tiết điều xe chuyên sâu (Ambulance Detail)
-- `[x]` Phase 0.11: Danh mục xe toàn diện, Theo dõi cấp cứu trực tuyến & Trang 404 y tế (AmbulancesPage, LiveTrackingPage, NotFoundPage)
-- `[x]` Phase 0.12: Phân hệ người dân & bệnh nhân (MedicalProfilePage, UserHistoryPage)
-- `[ ]` Phase 0.13: Trạm chỉ huy tác chiến & Lịch sử điều phối Operator (LiveDispatchMapPage, DispatchHistoryPage)
-- `[ ]` Phase 0.14: Bộ quản trị hệ thống chuyên sâu Admin (AdminAmbulancePage, AdminUserPage, AdminFeedbackPage, AdminContactPage, AdminReportsPage)
-- `[ ]` Phase 0.15: Quét & trace codebase, tách reusable components & chuẩn hóa cấu trúc thư mục (Bắt buộc research trước khi làm)
-- `[ ]` Phase 0.16: Dọn dẹp giao diện Production-Ready & loại bỏ mock UI rác (Bắt buộc research trước khi làm)
-- Tình trạng: Đang mở rộng hệ thống giao diện Day 0 (Phases 0.11 -> 0.16) để hoàn thiện 100% trải nghiệm trước khi kết nối Backend!
+- [x] Thay thế SweetAlert2 bằng Custom React Modal System (Fresh Botanical Theme, chuẩn React Portal)
+- [x] Hoàn thiện bộ UI xác thực (RegisterPage, Nút Google Social Login, ForgotPasswordPage 2 bước)
+- [x] Phase 0.10: Bản đồ định vị Ban Quản Lý Chợ Chicago (Contact Page) & Khung Pre-order giữ chỗ không cần cổng thanh toán
+- [x] Phase 0.11: Tái cấu trúc thương hiệu & Hệ màu mới Fresh Botanical Theme (MarketLink Logo eGreen Basket, Hotline (312) 555-FARM, PublicNavbar, PublicFooter, HomePage, AboutPage, GalleryPage, index.html, index.css)
+- [ ] Phase 0.12: Xây dựng bộ dữ liệu Nông sản & Trang Catalog sản phẩm (ProductsPage & ProductDetailPage với bộ lọc đa tiêu chí và Pre-order Form)
+- [ ] Phase 0.13: Danh bạ chợ địa phương & Theo dõi đơn nhận hàng tại sạp (MarketsPage & OrderPickupTrackerPage)
+- [ ] Phase 0.14: Phân hệ khách mua hàng Customer Portal (CustomerDashboard, CustomerProfilePage, CustomerOrdersPage)
+- [ ] Phase 0.15: Phân hệ chủ sạp Farmer / Vendor Portal (FarmerDashboard, Weekly Stall Stock, Incoming Pre-orders)
+- [ ] Phase 0.16: Phân hệ quản trị Admin Management Portal (Markets Manager, Farmer Approvals, Review Moderation)
+- [ ] Phase 0.17: Chuẩn hóa Reusable Components & Clean Code Production-Ready
+- Tình trạng: Đã hoàn tất Phase 0.11 (Brand Identity & Fresh Botanical Theme), sẵn sàng bước sang Phase 0.12!
 
 ### Day 1: Phân Tích Đề Bài, Thiết Kế ERD & Kiến Trúc 3 Roles
 
