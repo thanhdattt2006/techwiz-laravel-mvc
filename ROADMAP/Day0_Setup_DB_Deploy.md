@@ -183,10 +183,10 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn thực phẩm tươi sạch & 
 - `[x]` Cập nhật `AboutPage.jsx` và `GalleryPage.jsx` theo chủ đề nông nghiệp sinh thái & ngày hội chợ nông sản.
 
 ### Phase 0.12: Xây Dựng Bộ Dữ Liệu Nông Sản & Trang Catalog Sản Phẩm (Products Catalog & Pre-Order Detail View)
-- `[ ]` Tạo bộ dữ liệu Mock Data chuẩn SRS:
+- `[x]` Tạo bộ dữ liệu Mock Data chuẩn SRS:
   - `src/data/markets.json`: Danh sách 6 chợ nông sản tại Chicago (Tên chợ, địa chỉ, lịch họp chợ, giờ mở cửa, tọa độ GPS, số lượng sạp).
   - `src/data/products.json`: Danh mục 12+ nông sản tươi sạch đa dạng các nhóm ngành (*Vegetables, Fruits, Dairy & Eggs, Bakery, Pantry*), có thông tin xuất xứ trang trại (*Green Valley Organics, Sunny Ridge Orchards...*), ngày thu hoạch, chứng nhận hữu cơ, giá/đơn vị, số lượng tồn sạp.
-- `[ ]` Chuyển đổi `AmbulancesPage.jsx` ➔ `src/pages/public/ProductsPage.jsx` (Route `/products`):
+- `[x]` Chuyển đổi `AmbulancesPage.jsx` ➔ `src/pages/public/ProductsPage.jsx` (Route `/products`):
   - Bộ lọc đa tiêu chí bên thanh Sidebar:
     - Danh mục: All, Vegetables, Fruits, Dairy & Eggs, Bakery, Pantry.
     - Địa điểm chợ: Lincoln Park, Green City, Logan Square, Loop Market.
@@ -195,7 +195,7 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn thực phẩm tươi sạch & 
     - Sắp xếp: Giá thấp -> cao, Giá cao -> thấp, Đánh giá sao, Mới thu hoạch.
   - Thanh tìm kiếm thông minh theo tên rau củ, tên nông trại hoặc từ khóa.
   - Grid thẻ sản phẩm đẹp mắt, hiển thị ảnh tươi ngon, tag Organic, sạp nông dân, đơn vị tính, nút *"Pre-Order for Pickup"* dẫn tới trang chi tiết.
-- `[ ]` Chuyển đổi `AmbulanceDetailPage.jsx` ➔ `src/pages/public/ProductDetailPage.jsx` (Route `/products/:id`):
+- `[x]` Chuyển đổi `AmbulanceDetailPage.jsx` ➔ `src/pages/public/ProductDetailPage.jsx` (Route `/products/:id`):
   - Ảnh HD nông sản, câu chuyện trang trại xuất xứ, chứng nhận chất lượng (USDA Organic, Non-GMO).
   - Thông số thu hoạch: Ngày thu hái, cách bảo quản, hạn dùng tươi ngon.
   - **Biểu mẫu Đặt Trước Nhận Hàng (Pre-Order for Pickup Form)**:

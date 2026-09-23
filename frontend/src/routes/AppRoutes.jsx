@@ -18,8 +18,8 @@ import GalleryPage from '../pages/public/GalleryPage';
 import FeedbackPage from '../pages/public/FeedbackPage';
 import ContactPage from '../pages/public/ContactPage';
 import SitemapPage from '../pages/public/SitemapPage';
-import AmbulanceDetailPage from '../pages/public/AmbulanceDetailPage';
-import AmbulancesPage from '../pages/public/AmbulancesPage';
+import ProductsPage from '../pages/public/ProductsPage';
+import ProductDetailPage from '../pages/public/ProductDetailPage';
 import LiveTrackingPage from '../pages/public/LiveTrackingPage';
 import NotFoundPage from '../pages/public/NotFoundPage';
 
@@ -45,11 +45,11 @@ export default function AppRoutes() {
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/markets" element={<HomePage />} />
-          <Route path="/products" element={<AmbulancesPage />} />
-          <Route path="/products/:id" element={<AmbulanceDetailPage />} />
+          <Route path="/products" element={<ProductsPage />} />
+          <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/ambulances" element={<AmbulancesPage />} />
-          <Route path="/ambulances/:id" element={<AmbulanceDetailPage />} />
+          <Route path="/ambulances" element={<ProductsPage />} />
+          <Route path="/ambulances/:id" element={<ProductDetailPage />} />
           <Route path="/tracking/:id" element={<LiveTrackingPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/feedback" element={<FeedbackPage />} />
