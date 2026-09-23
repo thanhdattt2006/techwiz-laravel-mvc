@@ -45,9 +45,10 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] Phase 0.13: Danh bạ chợ địa phương & Theo dõi đơn nhận hàng tại sạp (MarketsPage & OrderPickupTrackerPage)
 - [x] Phase 0.14: Phân hệ khách mua hàng Customer Portal (CustomerDashboard, CustomerProfilePage, CustomerOrdersPage)
 - [x] Phase 0.15: Phân hệ chủ sạp Farmer / Vendor Portal (FarmerDashboard, Weekly Stall Stock, Incoming Pre-orders)
-- [x] Phase 0.16: Phân hệ quản trị Admin Management Portal (Markets Manager, Farmer Approvals, Review Moderation)
+- [x] Phase 0.16: Phân hệ quản trị Admin Management Portal (Markets Manager CRUD & Modal Form, Farmer Approvals, User Accounts Governance, Review Moderation, Inquiries Inbox, Reports & Analytics, Mobile Drawer Navigation)
 - [x] Phase 0.17: Chuẩn hóa Reusable Components & Clean Code Production-Ready (ProductCard, MarketCard, StatusBadge, FilterSidebar, RatingStars, barrel export index.js; build Vite 0 errors)
 - [x] Quét dọn 100% tàn dư Ambulance cũ: Xóa bỏ 5 file thừa (`AmbulancesPage`, `AmbulanceDetailPage`, `LiveTrackingPage`, `ambulances.json`, `MedicalProfilePage`), làm sạch toàn bộ trang Auth (`LoginPage`, `RegisterPage`, `ForgotPasswordPage`, `UnauthorizedPage`, `AuthContext`).
+- [x] Hoàn thiện Responsive Mobile Navigation cho Admin & Operator Layouts, sửa dứt điểm lỗi Modal Form và sai luồng liên kết public.
 - Tình trạng: **100% HOÀN TẤT TOÀN BỘ DAY 0 SETUP & REFACTOR ROADMAP (Phase 0.1 -> 0.17)**! Sẵn sàng 100% cho Day 1 (ERD & Backend Migrations).
 
 ### Day 1: Phân Tích Đề Bài SRS, Thiết Kế ERD & Kiến Trúc 3 Roles
