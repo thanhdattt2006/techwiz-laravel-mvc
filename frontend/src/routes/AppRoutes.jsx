@@ -32,7 +32,7 @@ import UnauthorizedPage from '../pages/auth/UnauthorizedPage';
 
 // Protected Dashboards
 import AdminDashboard from '../pages/admin/AdminDashboard';
-import OperatorDashboard from '../pages/operator/OperatorDashboard';
+import FarmerDashboard from '../pages/farmer/FarmerDashboard';
 import CustomerDashboard from '../pages/customer/CustomerDashboard';
 import CustomerProfilePage from '../pages/customer/CustomerProfilePage';
 import CustomerOrdersPage from '../pages/customer/CustomerOrdersPage';
@@ -72,10 +72,11 @@ export default function AppRoutes() {
           </Route>
         </Route>
 
-        {/* 4. Protected Operator / Dispatcher Portal (RBAC: operator only) */}
-        <Route element={<ProtectedRoute allowedRoles={['operator']} />}>
+        {/* 4. Protected Farmer / Stall Master Portal (RBAC: farmer, operator, vendor) */}
+        <Route element={<ProtectedRoute allowedRoles={['farmer', 'operator', 'vendor', 'admin']} />}>
           <Route element={<OperatorLayout />}>
-            <Route path="/operator/dashboard" element={<OperatorDashboard />} />
+            <Route path="/farmer/dashboard" element={<FarmerDashboard />} />
+            <Route path="/operator/dashboard" element={<FarmerDashboard />} />
           </Route>
         </Route>
 

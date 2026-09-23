@@ -40,10 +40,10 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] Phase 0.12: Xây dựng bộ dữ liệu Nông sản & Trang Catalog sản phẩm (ProductsPage & ProductDetailPage với bộ lọc đa tiêu chí và Pre-order Form)
 - [x] Phase 0.13: Danh bạ chợ địa phương & Theo dõi đơn nhận hàng tại sạp (MarketsPage & OrderPickupTrackerPage)
 - [x] Phase 0.14: Phân hệ khách mua hàng Customer Portal (CustomerDashboard, CustomerProfilePage, CustomerOrdersPage)
-- [ ] Phase 0.15: Phân hệ chủ sạp Farmer / Vendor Portal (FarmerDashboard, Weekly Stall Stock, Incoming Pre-orders)
+- [x] Phase 0.15: Phân hệ chủ sạp Farmer / Vendor Portal (FarmerDashboard, Weekly Stall Stock, Incoming Pre-orders)
 - [ ] Phase 0.16: Phân hệ quản trị Admin Management Portal (Markets Manager, Farmer Approvals, Review Moderation)
 - [ ] Phase 0.17: Chuẩn hóa Reusable Components & Clean Code Production-Ready
-- Tình trạng: Đã hoàn tất Phase 0.14 (Customer Portal: Dashboard, Profile, Orders & Receipts, FeedbackPage), sẵn sàng bước sang Phase 0.15!
+- Tình trạng: Đã hoàn tất Phase 0.15 (Farmer / Vendor Portal: Dashboard, Stall Stock, Pre-orders Queue), sẵn sàng bước sang Phase 0.16!
 
 ### Day 1: Phân Tích Đề Bài, Thiết Kế ERD & Kiến Trúc 3 Roles
 

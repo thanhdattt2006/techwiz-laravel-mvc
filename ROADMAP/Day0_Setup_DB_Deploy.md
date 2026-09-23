@@ -234,7 +234,7 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn thực phẩm tươi sạch & 
 - `[x]` Tích hợp `FeedbackPage.jsx` để gửi đánh giá chất lượng nông sản thực tế.
 
 ### Phase 0.15: Phân Hệ Chủ Sạp / Nông Dân (Farmer / Vendor Portal)
-- `[ ]` Chuyển đổi `OperatorDashboard.jsx` ➔ `src/pages/farmer/FarmerDashboard.jsx` (Route `/farmer/dashboard`):
+- `[x]` Chuyển đổi `OperatorDashboard.jsx` ➔ `src/pages/farmer/FarmerDashboard.jsx` (Route `/farmer/dashboard`):
   - Quản lý Hàng chờ đơn đặt trước (Incoming Pre-orders Queue):
     - Khách hàng đặt trước rau củ cho phiên chợ cuối tuần.
     - Nông dân xem số lượng cần hái tại vườn, bấm "Accept & Prepare", bấm "Mark as Ready at Stall", hoặc "Completed Pickup".
