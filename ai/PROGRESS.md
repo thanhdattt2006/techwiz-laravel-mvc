@@ -41,9 +41,9 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] Phase 0.13: Danh bạ chợ địa phương & Theo dõi đơn nhận hàng tại sạp (MarketsPage & OrderPickupTrackerPage)
 - [x] Phase 0.14: Phân hệ khách mua hàng Customer Portal (CustomerDashboard, CustomerProfilePage, CustomerOrdersPage)
 - [x] Phase 0.15: Phân hệ chủ sạp Farmer / Vendor Portal (FarmerDashboard, Weekly Stall Stock, Incoming Pre-orders)
-- [ ] Phase 0.16: Phân hệ quản trị Admin Management Portal (Markets Manager, Farmer Approvals, Review Moderation)
-- [ ] Phase 0.17: Chuẩn hóa Reusable Components & Clean Code Production-Ready
-- Tình trạng: Đã hoàn tất Phase 0.15 (Farmer / Vendor Portal: Dashboard, Stall Stock, Pre-orders Queue), sẵn sàng bước sang Phase 0.16!
+- [x] Phase 0.16: Phân hệ quản trị Admin Management Portal (Markets Manager, Farmer Approvals, Review Moderation)
+- [x] Phase 0.17: Chuẩn hóa Reusable Components & Clean Code Production-Ready (Tạo ProductCard, MarketCard, StatusBadge, FilterSidebar, RatingStars và barrel export index.js; build Vite 1.45s 0 errors)
+- Tình trạng: **100% HOÀN TẤT TOÀN BỘ DAY 0 SETUP & REFACTOR ROADMAP (Phase 0.1 -> 0.17)**! Sẵn sàng 100% cho Day 1 (ERD & Backend Migrations).
 
 ### Day 1: Phân Tích Đề Bài, Thiết Kế ERD & Kiến Trúc 3 Roles
 
