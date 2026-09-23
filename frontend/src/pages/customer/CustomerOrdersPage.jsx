@@ -4,18 +4,16 @@ import {
   ShoppingBag,
   Store,
   Calendar,
-  Clock,
   ArrowRight,
   Printer,
   DollarSign,
   Star,
-  CheckCircle2,
-  XCircle,
   FileText,
   Sprout,
   Receipt,
   Search,
 } from 'lucide-react';
+import { StatusBadge } from '../../components/common';
 
 const MOCK_ORDERS = [
   {
@@ -129,38 +127,7 @@ export default function CustomerOrdersPage() {
   };
 
   const getStatusBadge = (status) => {
-    switch (status) {
-      case 'Ready for Pickup':
-        return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-[#16A34A] border border-emerald-200">
-            <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
-            <span>Ready for Pickup</span>
-          </span>
-        );
-      case 'Harvested & Packed':
-        return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800 border border-amber-200">
-            <Clock className="w-3.5 h-3.5" />
-            <span>Harvested & Packed</span>
-          </span>
-        );
-      case 'Completed Pickup':
-        return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-[#475569] border border-slate-200">
-            <CheckCircle2 className="w-3.5 h-3.5 text-slate-500" />
-            <span>Completed & Paid at Stall</span>
-          </span>
-        );
-      case 'Cancelled':
-        return (
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-200">
-            <XCircle className="w-3.5 h-3.5" />
-            <span>Cancelled</span>
-          </span>
-        );
-      default:
-        return null;
-    }
+    return <StatusBadge status={status} />;
   };
 
   return (

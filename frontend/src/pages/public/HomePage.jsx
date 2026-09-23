@@ -3,18 +3,16 @@ import { Link } from 'react-router-dom';
 import {
   Sprout,
   Search,
-  MapPin,
   ArrowRight,
   PhoneCall,
-  Calendar,
-  Clock,
   ShoppingBag,
   Award,
-  CheckCircle2,
   Leaf,
-  Star,
   Store,
+  MapPin,
+  Star,
 } from 'lucide-react';
+import { ProductCard, MarketCard } from '../../components/common';
 
 const FEATURED_MARKETS = [
   {
@@ -260,55 +258,7 @@ export default function HomePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {FEATURED_MARKETS.map((market) => (
-            <div
-              key={market.id}
-              className="bg-white border border-[#E2E8DF] rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between group"
-            >
-              {/* Header Visual Bar */}
-              <div className={`p-6 bg-gradient-to-br ${market.bgGradient} text-white space-y-2 relative`}>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/20 backdrop-blur">
-                  {market.stallsCount} Artisan Stalls
-                </span>
-                <h3 className="text-lg font-black leading-snug group-hover:text-amber-200 transition">
-                  {market.name}
-                </h3>
-                <p className="text-xs text-emerald-100 flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                  <span>{market.neighborhood}</span>
-                </p>
-              </div>
-
-              {/* Body Details */}
-              <div className="p-6 space-y-4 flex-1 flex flex-col justify-between">
-                <div className="space-y-2.5 text-xs text-[#475569]">
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-[#16A34A] shrink-0" />
-                    <span><strong>Schedule:</strong> {market.operatingDays}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-amber-600 shrink-0" />
-                    <span><strong>Pickup Window:</strong> {market.openingHours}</span>
-                  </div>
-                  <div className="pt-2 border-t border-slate-100">
-                    <span className="font-semibold text-[#0F172A] block mb-1">Market Highlights:</span>
-                    <p className="text-[11px] leading-relaxed text-[#475569]">{market.specialty}</p>
-                  </div>
-                </div>
-
-                <div className="pt-4 border-t border-[#E2E8DF] flex items-center justify-between">
-                  <span className="text-[11px] font-semibold text-[#16A34A] flex items-center gap-1">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A]" /> Verified Location
-                  </span>
-                  <Link
-                    to="/products"
-                    className="flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#16A34A] text-xs font-bold transition"
-                  >
-                    <span>Browse Stalls</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </Link>
-                </div>
-              </div>
-            </div>
+            <MarketCard key={market.id} market={market} />
           ))}
         </div>
       </section>
@@ -380,65 +330,7 @@ export default function HomePage() {
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredHarvest.length > 0 ? (
             filteredHarvest.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white border border-[#E2E8DF] hover:border-[#16A34A] rounded-2xl p-6 shadow-xs hover:shadow-md transition flex flex-col justify-between group"
-              >
-                <div>
-                  {/* Badge Row */}
-                  <div className="flex items-center justify-between mb-3">
-                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${item.tagColor}`}>
-                      {item.tag}
-                    </span>
-                    <span className="flex items-center gap-1 text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md">
-                      <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-                      {item.rating} ({item.reviewsCount})
-                    </span>
-                  </div>
-
-                  {/* Title & Farm */}
-                  <h3 className="text-base font-bold text-[#0F172A] mb-1 group-hover:text-[#16A34A] transition">
-                    <Link to="/products">{item.name}</Link>
-                  </h3>
-                  <p className="text-xs font-semibold text-[#15803D] mb-3 flex items-center gap-1">
-                    <Sprout className="w-3.5 h-3.5 text-[#16A34A]" />
-                    <span>{item.farm}</span>
-                  </p>
-
-                  {/* Harvest Info */}
-                  <div className="space-y-2 text-xs text-[#475569] mb-4 bg-[#F8FAF6] p-3 rounded-xl border border-[#E2E8DF]">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-[#475569]">Pickup Market:</span>
-                      <span className="font-bold text-[#0F172A]">{item.market}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-[#475569]">Availability:</span>
-                      <span className="font-semibold text-emerald-700">{item.stockStatus}</span>
-                    </div>
-                    <p className="text-[11px] text-[#475569] italic pt-1 border-t border-slate-200">
-                      "{item.harvestNote}"
-                    </p>
-                  </div>
-                </div>
-
-                {/* Card Footer: Pricing and Pre-Order Button */}
-                <div className="pt-4 border-t border-[#E2E8DF] flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] text-[#475569] block uppercase tracking-wider font-semibold">Direct Farm Price</span>
-                    <div className="text-xl font-black text-[#16A34A]">
-                      ${item.price.toFixed(2)} <span className="text-xs font-normal text-[#475569]">/ {item.unit}</span>
-                    </div>
-                  </div>
-
-                  <Link
-                    to="/products"
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-xs cursor-pointer"
-                  >
-                    <span>Pre-Order</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
+              <ProductCard key={item.id} product={item} />
             ))
           ) : (
             <div className="col-span-full py-12 text-center bg-white border border-[#E2E8DF] rounded-2xl">

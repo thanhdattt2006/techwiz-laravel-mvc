@@ -7,14 +7,12 @@ import {
   DollarSign,
   Sprout,
   CheckCircle2,
-  Clock,
   Search,
-  XCircle,
-  PackageCheck,
   TrendingUp,
   Sliders,
   Check,
 } from 'lucide-react';
+import { StatusBadge } from '../../components/common';
 
 const INITIAL_QUEUE = [
   {
@@ -385,36 +383,7 @@ export default function FarmerDashboard() {
                       <span className="font-mono text-xs font-bold px-2.5 py-0.5 rounded-md bg-slate-100 text-[#475569] border border-slate-200">
                         {ord.crateNumber}
                       </span>
-                      {ord.status === 'Ready for Pickup' && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-[#16A34A]">
-                          <span className="w-2 h-2 rounded-full bg-[#16A34A] animate-pulse" />
-                          Ready at Stall #04
-                        </span>
-                      )}
-                      {ord.status === 'Harvested & Packed' && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-amber-100 text-amber-800">
-                          <PackageCheck className="w-3.5 h-3.5" />
-                          Harvested & Packed
-                        </span>
-                      )}
-                      {ord.status === 'Farmer Confirmed' && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800">
-                          <Clock className="w-3.5 h-3.5" />
-                          Farmer Confirmed
-                        </span>
-                      )}
-                      {ord.status === 'Completed' && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-slate-100 text-[#475569]">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A]" />
-                          Completed & Paid
-                        </span>
-                      )}
-                      {ord.status === 'Cancelled' && (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700">
-                          <XCircle className="w-3.5 h-3.5" />
-                          Cancelled
-                        </span>
-                      )}
+                      <StatusBadge status={ord.status} />
                     </div>
                     <p className="text-xs text-[#475569]">
                       Customer: <strong>{ord.customerName}</strong> • Phone:{' '}

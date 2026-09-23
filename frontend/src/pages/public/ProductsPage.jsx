@@ -1,18 +1,14 @@
 import React, { useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import productsData from '../../data/products.json';
 import marketsData from '../../data/markets.json';
 import {
   Sprout,
   Search,
-  MapPin,
   RotateCcw,
   SlidersHorizontal,
-  Star,
-  Clock,
-  ShoppingBag,
   Filter,
 } from 'lucide-react';
+import { ProductCard } from '../../components/common';
 
 const CATEGORIES = [
   { id: 'ALL', label: 'All Harvest' },
@@ -310,88 +306,7 @@ export default function ProductsPage() {
             {filteredProducts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filteredProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    className="bg-white border border-[#E2E8DF] hover:border-[#16A34A] rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition flex flex-col justify-between group"
-                  >
-                    <div>
-                      {/* Image Preview with Badges */}
-                      <div className="h-44 relative overflow-hidden bg-slate-100">
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                        />
-                        <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-                          {product.isOrganic && (
-                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-800/90 text-white backdrop-blur">
-                              Organic
-                            </span>
-                          )}
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-black/60 text-white backdrop-blur">
-                            {product.category}
-                          </span>
-                        </div>
-                        <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-lg bg-white/90 backdrop-blur text-[11px] font-bold text-amber-700 flex items-center gap-1 shadow-xs">
-                          <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                          <span>{product.rating}</span>
-                        </div>
-                      </div>
-
-                      {/* Details */}
-                      <div className="p-5 space-y-2.5">
-                        <div className="flex items-center justify-between text-[11px] text-[#475569]">
-                          <span className="font-semibold text-[#15803D] flex items-center gap-1">
-                            <Sprout className="w-3 h-3" />
-                            {product.farmOrigin}
-                          </span>
-                          <span>{product.stallNumber}</span>
-                        </div>
-
-                        <h3 className="text-sm font-bold text-[#0F172A] leading-snug group-hover:text-[#16A34A] transition">
-                          <Link to={`/products/${product.id}`}>{product.name}</Link>
-                        </h3>
-
-                        <p className="text-xs text-[#475569] line-clamp-2 leading-relaxed">
-                          {product.description}
-                        </p>
-
-                        <div className="pt-2 border-t border-slate-100 text-[11px] text-[#475569] space-y-1">
-                          <div className="flex items-center gap-1.5">
-                            <MapPin className="w-3 h-3 text-amber-500 shrink-0" />
-                            <span className="truncate">{product.marketName}</span>
-                          </div>
-                          <div className="flex items-center gap-1.5 text-emerald-700 font-medium">
-                            <Clock className="w-3 h-3 text-[#16A34A] shrink-0" />
-                            <span>{product.harvestDate}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Card Footer */}
-                    <div className="px-5 pb-5 pt-3 border-t border-[#E2E8DF] flex items-center justify-between">
-                      <div>
-                        <span className="text-[10px] font-semibold uppercase text-[#475569] block">
-                          Farm Price
-                        </span>
-                        <div className="text-lg font-black text-[#16A34A]">
-                          ${product.price.toFixed(2)}{' '}
-                          <span className="text-xs font-normal text-[#475569]">
-                            / {product.unit}
-                          </span>
-                        </div>
-                      </div>
-
-                      <Link
-                        to={`/products/${product.id}`}
-                        className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-xs"
-                      >
-                        <ShoppingBag className="w-3.5 h-3.5" />
-                        <span>Pre-Order</span>
-                      </Link>
-                    </div>
-                  </div>
+                  <ProductCard key={product.id} product={product} />
                 ))}
               </div>
             ) : (
