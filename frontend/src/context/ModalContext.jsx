@@ -189,6 +189,7 @@ export function ModalProvider({ children }) {
     ({
       title = null,
       content,
+      render,
       maxWidth = 'max-w-md',
       showCloseButton = true,
       closeOnBackdrop = true,
@@ -198,6 +199,12 @@ export function ModalProvider({ children }) {
       return new Promise((resolve) => {
         resolverRef.current = resolve;
 
+        const body = content !== undefined ? content : render;
+        const renderedContent =
+          typeof body === 'function'
+            ? body({ close: closeModal, onClose: closeModal })
+            : body;
+
         setModalState({
           isOpen: true,
           title,
@@ -205,7 +212,7 @@ export function ModalProvider({ children }) {
           showCloseButton,
           closeOnBackdrop,
           closeOnEsc,
-          content: typeof content === 'function' ? content({ close: closeModal }) : content,
+          content: renderedContent,
         });
       });
     },
