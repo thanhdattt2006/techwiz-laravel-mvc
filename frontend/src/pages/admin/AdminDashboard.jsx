@@ -1,19 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useModal } from '../../context/ModalContext';
 import marketsData from '../../data/markets.json';
 import {
   Store,
   Users,
-  Mail,
   TrendingUp,
   PlusCircle,
   Clock,
   MapPin,
-  Star,
   Check,
   ShieldCheck,
-  BarChart3,
   Edit2,
   Trash2,
   Search,
@@ -21,6 +18,7 @@ import {
   UserCheck,
   UserX,
 } from 'lucide-react';
+import AdminAnalyticsCharts from './AdminAnalyticsCharts';
 
 const VALID_TABS = ['markets', 'vendors', 'users', 'reviews', 'messages', 'reports'];
 
@@ -523,14 +521,13 @@ function EditMarketModalContent({ market, onClose, onSave }) {
 
 export default function AdminDashboard() {
   const { showAlert, showConfirm, showCustomModal } = useModal();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const urlTab = searchParams.get('tab');
-  const initialTab = urlTab && VALID_TABS.includes(urlTab.toLowerCase())
+  const activeTab = urlTab && VALID_TABS.includes(urlTab.toLowerCase())
     ? urlTab.toUpperCase()
     : 'MARKETS';
 
-  const [activeTab, setActiveTabState] = useState(initialTab);
   const [marketsList, setMarketsList] = useState(marketsData);
   const [vendorApps, setVendorApps] = useState(INITIAL_VENDOR_APPLICATIONS);
   const [usersList, setUsersList] = useState(INITIAL_USERS);
@@ -541,18 +538,6 @@ export default function AdminDashboard() {
   const [userSearchQuery, setUserSearchQuery] = useState('');
   const [userRoleFilter, setUserRoleFilter] = useState('ALL');
   const [userStatusFilter, setUserStatusFilter] = useState('ALL');
-
-  // Keep state synced with URL query param
-  useEffect(() => {
-    if (urlTab && VALID_TABS.includes(urlTab.toLowerCase())) {
-      setActiveTabState(urlTab.toUpperCase());
-    }
-  }, [urlTab]);
-
-  const setActiveTab = (tab) => {
-    setActiveTabState(tab);
-    setSearchParams({ tab: tab.toLowerCase() });
-  };
 
   // 1. Add Market Modal (Fixed prop signature with content)
   const handleOpenAddMarketModal = () => {
@@ -726,85 +711,22 @@ export default function AdminDashboard() {
           </p>
         </div>
 
-        {/* Tab Switcher */}
-        <div className="flex flex-wrap items-center gap-1.5 p-1.5 rounded-2xl bg-[#F8FAF6] border border-[#E2E8DF]">
-          <button
-            type="button"
-            onClick={() => setActiveTab('MARKETS')}
-            className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
-              activeTab === 'MARKETS'
-                ? 'bg-[#16A34A] text-white shadow-xs'
-                : 'text-[#475569] hover:text-[#0F172A]'
-            }`}
-          >
-            <Store className="w-3.5 h-3.5" />
-            <span>Markets ({marketsList.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('VENDORS')}
-            className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
-              activeTab === 'VENDORS'
-                ? 'bg-[#16A34A] text-white shadow-xs'
-                : 'text-[#475569] hover:text-[#0F172A]'
-            }`}
-          >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>Stall Apps ({vendorApps.filter((v) => v.status === 'PENDING').length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('USERS')}
-            className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
-              activeTab === 'USERS'
-                ? 'bg-[#16A34A] text-white shadow-xs'
-                : 'text-[#475569] hover:text-[#0F172A]'
-            }`}
-          >
-            <Users className="w-3.5 h-3.5" />
-            <span>Users ({usersList.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('REVIEWS')}
-            className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
-              activeTab === 'REVIEWS'
-                ? 'bg-[#16A34A] text-white shadow-xs'
-                : 'text-[#475569] hover:text-[#0F172A]'
-            }`}
-          >
-            <Star className="w-3.5 h-3.5" />
-            <span>Reviews ({reviewsList.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('MESSAGES')}
-            className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
-              activeTab === 'MESSAGES'
-                ? 'bg-[#16A34A] text-white shadow-xs'
-                : 'text-[#475569] hover:text-[#0F172A]'
-            }`}
-          >
-            <Mail className="w-3.5 h-3.5" />
-            <span>Inquiries ({inquiries.filter((m) => m.status === 'NEW').length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab('REPORTS')}
-            className={`px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer flex items-center gap-1.5 ${
-              activeTab === 'REPORTS'
-                ? 'bg-[#16A34A] text-white shadow-xs'
-                : 'text-[#475569] hover:text-[#0F172A]'
-            }`}
-          >
-            <BarChart3 className="w-3.5 h-3.5" />
-            <span>Reports</span>
-          </button>
+        {/* Active Module Indicator (Driven cleanly by Sidebar) */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-[#F8FAF6] border border-[#E2E8DF] shadow-2xs">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#16A34A] animate-pulse"></span>
+            <div>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#475569] block">Selected View</span>
+              <span className="text-xs font-black text-[#0F172A]">
+                {activeTab === 'MARKETS' && `Markets Registry (${marketsList.length} Hubs)`}
+                {activeTab === 'VENDORS' && `Stall Applications (${vendorApps.filter((v) => v.status === 'PENDING').length} Pending)`}
+                {activeTab === 'USERS' && `User Accounts (${usersList.length} Registered)`}
+                {activeTab === 'REVIEWS' && `Review Moderation (${reviewsList.length} Reviews)`}
+                {activeTab === 'MESSAGES' && `Inquiries Inbox (${inquiries.filter((m) => m.status === 'NEW').length} New)`}
+                {activeTab === 'REPORTS' && 'Platform Reports & Analytics'}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1337,6 +1259,9 @@ export default function AdminDashboard() {
               <span>Export Audit CSV</span>
             </button>
           </div>
+
+          {/* Interactive Chart.js Visualizations */}
+          <AdminAnalyticsCharts />
 
           {/* Highlight Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
