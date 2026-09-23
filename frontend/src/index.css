@@ -13,18 +13,6 @@
   --color-market-border: #E2E8DF;
   --color-market-artisan: #78350F;
 
-  /* Backward Compatibility Aliases for Unrefactored Modules */
-  --color-medical-primary: #16A34A;
-  --color-medical-primary-dark: #15803D;
-  --color-medical-emergency: #DC2626;
-  --color-medical-success: #16A34A;
-  --color-medical-warning: #F59E0B;
-  --color-medical-bg: #F8FAF6;
-  --color-market-bg: #F8FAF6;
-  --color-medical-card: #FFFFFF;
-  --color-medical-text: #0F172A;
-  --color-medical-muted: #475569;
-  --color-medical-border: #E2E8DF;
 }
 
 @layer base {

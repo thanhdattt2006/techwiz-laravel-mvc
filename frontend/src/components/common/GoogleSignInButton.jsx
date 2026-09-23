@@ -21,7 +21,7 @@ export default function GoogleSignInButton({
     if (result.success) {
       showAlert({
         title: 'Google Authentication Successful',
-        message: `Welcome ${result.user.fullname}! Signed in via google.patient@gmail.com`,
+        message: `Welcome ${result.user.fullname}! Signed in via elena.shopper@gmail.com`,
         type: 'success',
         confirmText: false,
         autoCloseMs: 1500,
@@ -31,7 +31,7 @@ export default function GoogleSignInButton({
         onSuccess(result.user);
       } else {
         setTimeout(() => {
-          navigate('/user/dashboard');
+          navigate('/customer/dashboard');
         }, 350);
       }
     } else {
@@ -49,7 +49,7 @@ export default function GoogleSignInButton({
       disabled={loading}
       onClick={handleClick}
       aria-label={text}
-      className={`w-full flex items-center justify-center gap-3 py-2.5 px-4 bg-white hover:bg-slate-50 active:bg-slate-100 border border-[#E2E8F0] hover:border-slate-300 rounded-xl text-xs sm:text-sm font-semibold text-[#1F2A37] shadow-xs hover:shadow transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+      className={`w-full flex items-center justify-center gap-3 py-2.5 px-4 bg-white hover:bg-slate-50 active:bg-slate-100 border border-[#E2E8DF] hover:border-slate-300 rounded-xl text-xs sm:text-sm font-semibold text-[#0F172A] shadow-xs hover:shadow transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
     >
       {/* Official Google 4-Color 'G' Logo SVG */}
       <svg

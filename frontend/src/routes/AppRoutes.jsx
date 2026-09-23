@@ -51,8 +51,6 @@ export default function AppRoutes() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/tracking/:id" element={<OrderPickupTrackerPage />} />
           <Route path="/orders/track/:id" element={<OrderPickupTrackerPage />} />
-          <Route path="/ambulances" element={<ProductsPage />} />
-          <Route path="/ambulances/:id" element={<ProductDetailPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/feedback" element={<FeedbackPage />} />
           <Route path="/contact" element={<ContactPage />} />
@@ -86,14 +84,13 @@ export default function AppRoutes() {
             <Route path="/user/dashboard" element={<CustomerDashboard />} />
             <Route path="/customer/dashboard" element={<CustomerDashboard />} />
             <Route path="/user/profile" element={<CustomerProfilePage />} />
-            <Route path="/user/medical-profile" element={<CustomerProfilePage />} />
             <Route path="/customer/profile" element={<CustomerProfilePage />} />
             <Route path="/user/history" element={<CustomerOrdersPage />} />
             <Route path="/customer/orders" element={<CustomerOrdersPage />} />
           </Route>
         </Route>
 
-        {/* 6. Catch-all Fallback (Medical 404 Page) */}
+        {/* 6. Catch-all Fallback (404 Page) */}
         <Route element={<PublicLayout />}>
           <Route path="*" element={<NotFoundPage />} />
         </Route>

@@ -4,18 +4,18 @@ import { useAuth } from '../../context/AuthContext';
 import { useModal } from '../../context/ModalContext';
 import GoogleSignInButton from '../../components/common/GoogleSignInButton';
 import {
-  User,
+  UserPlus,
   Mail,
   Phone,
   KeyRound,
-  ShieldCheck,
-  CheckCircle2,
+  User,
   ArrowLeft,
-  Ambulance,
-  UserPlus,
+  CheckCircle2,
+  Sprout,
+  ShoppingBag,
   Sparkles,
-  HeartPulse,
-  Clock,
+  ShieldCheck,
+  Store,
   MapPin,
 } from 'lucide-react';
 
@@ -42,11 +42,12 @@ export default function RegisterPage() {
   };
 
   const handleDemoFill = () => {
+    const timestamp = Date.now().toString().slice(-4);
     setFormData({
-      fullname: 'Robert Langdon',
-      username: 'robert_langdon',
-      email: 'robert.langdon@gmail.com',
-      phone: '0912-888-999',
+      fullname: `Elena Rostova`,
+      username: `elena_shopper_${timestamp}`,
+      email: `elena_${timestamp}@gmail.com`,
+      phone: `(312) 555-88${timestamp.slice(0, 2)}`,
       password: 'password123',
       confirmPassword: 'password123',
     });
@@ -58,7 +59,7 @@ export default function RegisterPage() {
     const { fullname, username, email, phone, password, confirmPassword } = formData;
 
     if (!fullname.trim() || !username.trim() || !email.trim() || !phone.trim() || !password) {
-      setError('All fields are required for emergency patient registration.');
+      setError('All fields are required for shopper registration.');
       return;
     }
 
@@ -90,14 +91,14 @@ export default function RegisterPage() {
     if (result.success) {
       showAlert({
         title: 'Registration Complete!',
-        message: `Welcome to LifeLink, ${result.user.fullname}! Your citizen patient portal is active.`,
+        message: `Welcome to MarketLink, ${result.user.fullname}! Your shopper account is active.`,
         type: 'success',
         confirmText: false,
         autoCloseMs: 1600,
       });
 
       setTimeout(() => {
-        navigate('/user/dashboard');
+        navigate('/customer/dashboard');
       }, 400);
     } else {
       showAlert({
@@ -109,21 +110,21 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F5F8FC] text-[#1F2A37] flex flex-col items-center justify-center p-4 sm:p-8 font-sans">
+    <div className="min-h-screen bg-[#F8FAF6] text-[#0F172A] flex flex-col items-center justify-center p-4 sm:p-8 font-sans">
       <div className="w-full max-w-4xl space-y-6">
         {/* Navigation & Header Brand */}
         <div className="flex items-center justify-between pb-2">
           <Link
             to="/"
-            className="flex items-center gap-1.5 text-xs font-semibold text-[#0B6EFD] hover:underline"
+            className="flex items-center gap-1.5 text-xs font-semibold text-[#16A34A] hover:underline"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Return to eAmbulance Catalog</span>
+            <span>Return to Fresh Marketplace</span>
           </Link>
           <div className="flex items-center gap-2">
-            <Ambulance className="w-5 h-5 text-[#0B6EFD]" />
-            <span className="text-sm font-black tracking-tight text-[#1F2A37]">
-              Life<span className="text-[#0B6EFD]">Link</span> Patient Registration
+            <Sprout className="w-5 h-5 text-[#16A34A]" />
+            <span className="text-sm font-black tracking-tight text-[#0F172A]">
+              Market<span className="text-[#16A34A]">Link</span> Community Registration
             </span>
           </div>
         </div>
@@ -131,56 +132,56 @@ export default function RegisterPage() {
         {/* 2-Column Register Container */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
           {/* Left Column: Why Register & 1-Click Demo Fill (5 cols) */}
-          <section className="md:col-span-5 bg-white border border-[#E2E8F0] rounded-2xl p-6 sm:p-8 flex flex-col justify-between shadow-xs space-y-6">
+          <section className="md:col-span-5 bg-white border border-[#E2E8DF] rounded-2xl p-6 sm:p-8 flex flex-col justify-between shadow-xs space-y-6">
             <div className="space-y-4">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-blue-100 text-[#0B6EFD]">
-                  Citizen Medical Portal
+                <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-emerald-100 text-[#15803D]">
+                  Shopper & Food Lover Portal
                 </span>
-                <h2 className="text-lg font-bold text-[#1F2A37] mt-2">
-                  Rapid Emergency Care Membership
+                <h2 className="text-lg font-bold text-[#0F172A] mt-2">
+                  Farm Fresh Community Membership
                 </h2>
-                <p className="text-xs text-[#6B7785] mt-1 leading-relaxed">
-                  Pre-registering your emergency contact details accelerates triage times by up to 65% when requesting certified ambulances.
+                <p className="text-xs text-[#475569] mt-1 leading-relaxed">
+                  Pre-order fresh organic produce ahead of market day, connect directly with certified family farms, and inspect produce before paying at the stall.
                 </p>
               </div>
 
               {/* Benefits list */}
               <div className="space-y-3 pt-2">
                 <div className="flex items-start gap-3 text-xs">
-                  <div className="p-1.5 rounded-lg bg-red-50 text-[#DC3545] shrink-0 mt-0.5">
-                    <HeartPulse className="w-4 h-4" />
+                  <div className="p-1.5 rounded-lg bg-emerald-50 text-[#16A34A] shrink-0 mt-0.5">
+                    <ShoppingBag className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="font-bold text-[#1F2A37] block">1-Touch Emergency SOS</span>
-                    <span className="text-[#6B7785] text-[11px]">Instantly broadcast browser GPS beacons to Chicago Dispatch.</span>
+                    <span className="font-bold text-[#0F172A] block">Exclusive Weekend Pre-Orders</span>
+                    <span className="text-[#475569] text-[11px]">Reserve peak seasonal crops before market day with 0 online payment fees.</span>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-3 text-xs">
-                  <div className="p-1.5 rounded-lg bg-blue-50 text-[#0B6EFD] shrink-0 mt-0.5">
+                  <div className="p-1.5 rounded-lg bg-emerald-50 text-[#16A34A] shrink-0 mt-0.5">
+                    <Store className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <span className="font-bold text-[#0F172A] block">Direct Farm Verification</span>
+                    <span className="text-[#475569] text-[11px]">Connect directly with independent local growers and harvest origins.</span>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 text-xs">
+                  <div className="p-1.5 rounded-lg bg-emerald-50 text-[#16A34A] shrink-0 mt-0.5">
                     <MapPin className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="font-bold text-[#1F2A37] block">Live Fleet Telemetry</span>
-                    <span className="text-[#6B7785] text-[11px]">Track assigned ICU & ALS ambulances on the map in real time.</span>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-3 text-xs">
-                  <div className="p-1.5 rounded-lg bg-emerald-50 text-emerald-600 shrink-0 mt-0.5">
-                    <Clock className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="font-bold text-[#1F2A37] block">Transport Records & Reviews</span>
-                    <span className="text-[#6B7785] text-[11px]">Access historical care logs and submit paramedic reviews.</span>
+                    <span className="font-bold text-[#0F172A] block">Stall Pickup & In-Person Pay</span>
+                    <span className="text-[#475569] text-[11px]">Inspect produce freshness in person and pay at your preferred stall.</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* 1-Click Demo Fill Action */}
-            <div className="pt-4 border-t border-[#E2E8F0] space-y-2">
+            <div className="pt-4 border-t border-[#E2E8DF] space-y-2">
               <button
                 type="button"
                 onClick={handleDemoFill}
@@ -189,29 +190,29 @@ export default function RegisterPage() {
                 <Sparkles className="w-4 h-4 text-amber-500" />
                 <span>1-Click Demo Fill (For Evaluation)</span>
               </button>
-              <div className="text-[11px] text-[#6B7785] flex items-center gap-1.5 justify-center">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Sanctum Token & RBAC Role: <code className="font-bold text-[#1F2A37]">user</code></span>
+              <div className="text-[11px] text-[#475569] flex items-center gap-1.5 justify-center">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#16A34A]" />
+                <span>Sanctum Token & RBAC Role: <code className="font-bold text-[#0F172A]">customer</code></span>
               </div>
             </div>
           </section>
 
           {/* Right Column: Registration Form (7 cols) */}
-          <section className="md:col-span-7 bg-white border border-[#E2E8F0] rounded-2xl p-6 sm:p-8 shadow-xs">
+          <section className="md:col-span-7 bg-white border border-[#E2E8DF] rounded-2xl p-6 sm:p-8 shadow-xs">
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
-                <div className="flex items-center gap-2 mb-1 text-[#0B6EFD]">
+                <div className="flex items-center gap-2 mb-1 text-[#16A34A]">
                   <UserPlus className="w-5 h-5" />
-                  <h2 className="text-lg font-bold text-[#1F2A37]">Register Patient Account</h2>
+                  <h2 className="text-lg font-bold text-[#0F172A]">Create Shopper Account</h2>
                 </div>
-                <p className="text-xs text-[#6B7785]">
-                  Fill in your details below to create your patient profile.
+                <p className="text-xs text-[#475569]">
+                  Fill in your details below to create your MarketLink shopper profile.
                 </p>
               </div>
 
               {/* Error banner */}
               {error && (
-                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-[#DC3545] text-xs font-semibold">
+                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-[#DC2626] text-xs font-semibold">
                   {error}
                 </div>
               )}
@@ -219,35 +220,35 @@ export default function RegisterPage() {
               {/* Full Name & Username */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                    Full Name <span className="text-[#DC3545]">*</span>
+                  <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                    Full Name <span className="text-[#DC2626]">*</span>
                   </label>
                   <div className="relative">
-                    <User className="w-4 h-4 text-[#6B7785] absolute left-3 top-3" />
+                    <User className="w-4 h-4 text-[#475569] absolute left-3 top-3" />
                     <input
                       type="text"
                       required
-                      placeholder="e.g. Robert Langdon"
+                      placeholder="e.g. Elena Rostova"
                       value={formData.fullname}
                       onChange={(e) => handleInputChange('fullname', e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-xs text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD] transition"
+                      className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                    Username <span className="text-[#DC3545]">*</span>
+                  <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                    Username <span className="text-[#DC2626]">*</span>
                   </label>
                   <div className="relative">
-                    <span className="text-[#6B7785] font-mono text-xs absolute left-3 top-2.5">@</span>
+                    <span className="text-[#475569] font-mono text-xs absolute left-3 top-2.5">@</span>
                     <input
                       type="text"
                       required
-                      placeholder="e.g. robert_langdon"
+                      placeholder="e.g. elena_shopper"
                       value={formData.username}
                       onChange={(e) => handleInputChange('username', e.target.value)}
-                      className="w-full pl-8 pr-3 py-2 bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-xs text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD] transition"
+                      className="w-full pl-8 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
                     />
                   </div>
                 </div>
@@ -256,35 +257,35 @@ export default function RegisterPage() {
               {/* Email & Phone */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                    Email Address <span className="text-[#DC3545]">*</span>
+                  <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                    Email Address <span className="text-[#DC2626]">*</span>
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-[#6B7785] absolute left-3 top-3" />
+                    <Mail className="w-4 h-4 text-[#475569] absolute left-3 top-3" />
                     <input
                       type="email"
                       required
-                      placeholder="e.g. robert@gmail.com"
+                      placeholder="e.g. elena@gmail.com"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-xs text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD] transition"
+                      className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                    Phone Number <span className="text-[#DC3545]">*</span>
+                  <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                    Phone Number <span className="text-[#DC2626]">*</span>
                   </label>
                   <div className="relative">
-                    <Phone className="w-4 h-4 text-[#6B7785] absolute left-3 top-3" />
+                    <Phone className="w-4 h-4 text-[#475569] absolute left-3 top-3" />
                     <input
                       type="tel"
                       required
-                      placeholder="e.g. 0912-888-999"
+                      placeholder="e.g. (312) 555-8819"
                       value={formData.phone}
                       onChange={(e) => handleInputChange('phone', e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-xs text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD] transition"
+                      className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
                     />
                   </div>
                 </div>
@@ -293,35 +294,35 @@ export default function RegisterPage() {
               {/* Password & Confirm */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                    Password <span className="text-[#DC3545]">*</span>
+                  <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                    Password <span className="text-[#DC2626]">*</span>
                   </label>
                   <div className="relative">
-                    <KeyRound className="w-4 h-4 text-[#6B7785] absolute left-3 top-3" />
+                    <KeyRound className="w-4 h-4 text-[#475569] absolute left-3 top-3" />
                     <input
                       type="password"
                       required
                       placeholder="Min 6 characters"
                       value={formData.password}
                       onChange={(e) => handleInputChange('password', e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-xs text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD] transition"
+                      className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                    Confirm Password <span className="text-[#DC3545]">*</span>
+                  <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                    Confirm Password <span className="text-[#DC2626]">*</span>
                   </label>
                   <div className="relative">
-                    <CheckCircle2 className="w-4 h-4 text-[#6B7785] absolute left-3 top-3" />
+                    <CheckCircle2 className="w-4 h-4 text-[#475569] absolute left-3 top-3" />
                     <input
                       type="password"
                       required
                       placeholder="Re-enter password"
                       value={formData.confirmPassword}
                       onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-xs text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD] transition"
+                      className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
                     />
                   </div>
                 </div>
@@ -332,29 +333,29 @@ export default function RegisterPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full py-2.5 px-4 rounded-xl bg-[#0B6EFD] hover:bg-[#084298] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 transition cursor-pointer disabled:opacity-50"
+                  className="w-full py-2.5 px-4 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer disabled:opacity-50"
                 >
                   <UserPlus className="w-4 h-4" />
-                  <span>{submitting ? 'Registering Account...' : 'Create Patient Account'}</span>
+                  <span>{submitting ? 'Registering Account...' : 'Create Shopper Account'}</span>
                 </button>
               </div>
 
               {/* Divider */}
               <div className="relative flex py-2 items-center">
-                <div className="grow border-t border-[#E2E8F0]"></div>
-                <span className="shrink mx-4 text-[11px] text-[#6B7785] font-medium uppercase">
+                <div className="grow border-t border-[#E2E8DF]"></div>
+                <span className="shrink mx-4 text-[11px] text-[#475569] font-medium uppercase">
                   Or continue with
                 </span>
-                <div className="grow border-t border-[#E2E8F0]"></div>
+                <div className="grow border-t border-[#E2E8DF]"></div>
               </div>
 
               {/* Google Social Sign In */}
               <GoogleSignInButton text="Continue with Google" />
 
               {/* Sign In Link */}
-              <div className="pt-3 border-t border-[#E2E8F0] text-center text-xs text-[#6B7785]">
-                Already have an emergency portal account?{' '}
-                <Link to="/login" className="font-bold text-[#0B6EFD] hover:underline">
+              <div className="pt-3 border-t border-[#E2E8DF] text-center text-xs text-[#475569]">
+                Already have an account?{' '}
+                <Link to="/login" className="font-bold text-[#16A34A] hover:underline">
                   Sign In Here
                 </Link>
               </div>

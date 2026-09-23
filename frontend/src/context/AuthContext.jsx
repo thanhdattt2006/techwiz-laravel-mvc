@@ -13,28 +13,28 @@ const USE_BACKEND_API = false;
 const DEMO_USERS = {
   admin: {
     id: 1,
-    fullname: 'LifeLink Administrator',
+    fullname: 'MarketLink Platform Administrator',
     username: 'admin',
     email: 'admin@gmail.com',
-    phone: '090-111-2222',
+    phone: '(312) 555-0100',
     role: 'admin',
     status: 'active',
   },
   operator: {
     id: 2,
-    fullname: 'Emergency Dispatcher',
+    fullname: 'Arthur Pendelton (Prairie Organic Grove)',
     username: 'operator',
     email: 'operator@gmail.com',
-    phone: '090-333-4444',
+    phone: '(312) 555-4421',
     role: 'operator',
     status: 'active',
   },
   user: {
     id: 3,
-    fullname: 'Patient Citizen',
+    fullname: 'Elena Rostova (Local Shopper)',
     username: 'user',
     email: 'user@gmail.com',
-    phone: '090-555-6666',
+    phone: '(312) 555-8819',
     role: 'user',
     status: 'active',
   },
@@ -167,7 +167,7 @@ export const AuthProvider = ({ children }) => {
       return { success: false, message: 'Invalid login credentials!' };
     }
 
-    const clientToken = `lifelink-session-${authenticatedUser.role}-${Date.now()}`;
+    const clientToken = `marketlink-session-${authenticatedUser.role}-${Date.now()}`;
     setToken(clientToken);
     setUser(authenticatedUser);
     localStorage.setItem('auth_token', clientToken);
@@ -197,7 +197,7 @@ export const AuthProvider = ({ children }) => {
       return { success: false, message: `Role "${targetRole}" does not exist.` };
     }
 
-    const clientToken = `lifelink-demo-${targetRole}-${Date.now()}`;
+    const clientToken = `marketlink-demo-${targetRole}-${Date.now()}`;
     setToken(clientToken);
     setUser(targetUser);
     localStorage.setItem('auth_token', clientToken);
@@ -207,7 +207,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
-   * Register a new patient / citizen account.
+   * Register a new shopper / customer account.
    */
   const register = async ({ fullname, username, email, phone, password }) => {
     if (USE_BACKEND_API) {
@@ -241,7 +241,7 @@ export const AuthProvider = ({ children }) => {
       status: 'active',
     };
 
-    const clientToken = `lifelink-registered-${Date.now()}`;
+    const clientToken = `marketlink-registered-${Date.now()}`;
     setToken(clientToken);
     setUser(newUser);
     localStorage.setItem('auth_token', clientToken);
@@ -260,16 +260,16 @@ export const AuthProvider = ({ children }) => {
 
     const googleUser = {
       id: 999,
-      fullname: 'Dr. Alex Morgan (Google)',
-      username: 'alex_morgan_google',
-      email: 'google.patient@gmail.com',
-      phone: '0912-333-888',
+      fullname: 'Elena Rostova (Google Shopper)',
+      username: 'elena_google_shopper',
+      email: 'elena.shopper@gmail.com',
+      phone: '(312) 555-8819',
       role: 'user',
       status: 'active',
       isGoogleAuth: true,
     };
 
-    const clientToken = `lifelink-google-${Date.now()}`;
+    const clientToken = `marketlink-google-${Date.now()}`;
     setToken(clientToken);
     setUser(googleUser);
     localStorage.setItem('auth_token', clientToken);
