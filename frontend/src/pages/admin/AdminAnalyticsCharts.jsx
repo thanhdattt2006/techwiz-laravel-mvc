@@ -1,29 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  ArcElement,
-} from 'chart.js';
+import Chart from 'chart.js/auto';
 import { Download, TrendingUp, PieChart } from 'lucide-react';
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-  ArcElement
-);
 
 const MOCK_CHART_TIMEFRAMES = {
   '7d': {
@@ -58,20 +35,23 @@ export default function AdminAnalyticsCharts() {
 
   // 1. Line/Area Chart (Pre-orders & Estimated Cash Volume)
   useEffect(() => {
-    if (!lineChartRef.current) return;
-    const ctx = lineChartRef.current.getContext('2d');
+    const canvas = lineChartRef.current;
+    if (!canvas) return;
 
-    if (lineInstanceRef.current) {
-      lineInstanceRef.current.destroy();
+    // Destroy any pre-existing ChartJS instance associated with this canvas
+    const existingChart = Chart.getChart(canvas);
+    if (existingChart) {
+      existingChart.destroy();
     }
 
+    const ctx = lineChartRef.current.getContext('2d');
     const gradient = ctx.createLinearGradient(0, 0, 0, 320);
     gradient.addColorStop(0, 'rgba(22, 163, 74, 0.28)');
     gradient.addColorStop(1, 'rgba(22, 163, 74, 0.0)');
 
     const activeData = MOCK_CHART_TIMEFRAMES[timeframe];
 
-    lineInstanceRef.current = new ChartJS(ctx, {
+    lineInstanceRef.current = new Chart(canvas, {
       type: 'line',
       data: {
         labels: activeData.labels,
@@ -190,22 +170,25 @@ export default function AdminAnalyticsCharts() {
     });
 
     return () => {
-      if (lineInstanceRef.current) {
-        lineInstanceRef.current.destroy();
+      const chart = Chart.getChart(canvas);
+      if (chart) {
+        chart.destroy();
       }
     };
   }, [timeframe]);
 
   // 2. Donut Chart (Category Distribution)
   useEffect(() => {
-    if (!donutChartRef.current) return;
-    const ctx = donutChartRef.current.getContext('2d');
+    const canvas = donutChartRef.current;
+    if (!canvas) return;
 
-    if (donutInstanceRef.current) {
-      donutInstanceRef.current.destroy();
+    // Destroy any pre-existing ChartJS instance associated with this canvas
+    const existingChart = Chart.getChart(canvas);
+    if (existingChart) {
+      existingChart.destroy();
     }
 
-    donutInstanceRef.current = new ChartJS(ctx, {
+    donutInstanceRef.current = new Chart(canvas, {
       type: 'doughnut',
       data: {
         labels: CATEGORY_DISTRIBUTION.labels,
@@ -242,8 +225,9 @@ export default function AdminAnalyticsCharts() {
     });
 
     return () => {
-      if (donutInstanceRef.current) {
-        donutInstanceRef.current.destroy();
+      const chart = Chart.getChart(canvas);
+      if (chart) {
+        chart.destroy();
       }
     };
   }, []);
