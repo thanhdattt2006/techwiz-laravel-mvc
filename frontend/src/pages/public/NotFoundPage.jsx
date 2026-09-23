@@ -1,39 +1,40 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Ambulance,
+  Sprout,
   PhoneCall,
   Home,
-  HeartPulse,
-  ShieldAlert,
+  ShoppingBag,
+  Store,
+  HelpCircle,
 } from 'lucide-react';
 
 export default function NotFoundPage() {
   return (
     <div className="min-h-[70vh] flex items-center justify-center px-4 py-16">
       <div className="max-w-2xl w-full text-center space-y-8">
-        {/* Animated Medical Beacon Visual */}
+        {/* Animated Botanical Visual */}
         <div className="relative mx-auto w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-red-100 animate-ping opacity-30"></div>
-          <div className="absolute inset-2 rounded-full bg-red-50 border-2 border-red-200"></div>
-          <div className="relative w-16 h-16 rounded-2xl bg-[#DC3545] text-white flex items-center justify-center shadow-lg shadow-red-500/30">
-            <HeartPulse className="w-9 h-9 animate-pulse" />
+          <div className="absolute inset-0 rounded-full bg-emerald-100 animate-ping opacity-30"></div>
+          <div className="absolute inset-2 rounded-full bg-emerald-50 border-2 border-emerald-200"></div>
+          <div className="relative w-16 h-16 rounded-2xl bg-[#16A34A] text-white flex items-center justify-center shadow-lg shadow-emerald-600/30">
+            <Sprout className="w-9 h-9" />
           </div>
         </div>
 
         {/* 404 Headline */}
         <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 text-[#DC3545] text-xs font-mono font-bold border border-red-200">
-            <ShieldAlert className="w-3.5 h-3.5" />
-            <span>ERROR CODE: 404 • DISPATCH SIGNAL UNRESOLVED</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-[#15803D] text-xs font-mono font-bold border border-emerald-200">
+            <HelpCircle className="w-3.5 h-3.5" />
+            <span>ERROR CODE: 404 • HARVEST TRAIL UNRESOLVED</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-[#1F2A37]">
-            Emergency Signal Lost
+          <h1 className="text-4xl sm:text-5xl font-black tracking-tight text-[#0F172A]">
+            Harvest Trail Not Found
           </h1>
 
-          <p className="text-xs sm:text-sm text-[#6B7785] max-w-lg mx-auto leading-relaxed">
-            The medical dispatch route or page URL you requested cannot be located in the LifeLink metropolitan network. It may have been moved, renamed, or is currently out of service.
+          <p className="text-xs sm:text-sm text-[#475569] max-w-lg mx-auto leading-relaxed">
+            The farmers market stall, seasonal harvest listing, or page URL you requested cannot be located in the MarketLink directory. It may have sold out for the season or been moved.
           </p>
         </div>
 
@@ -41,49 +42,55 @@ export default function NotFoundPage() {
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#0B6EFD] hover:bg-[#084298] text-white text-xs font-bold transition shadow-md shadow-blue-500/20 cursor-pointer"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-md shadow-emerald-600/20 cursor-pointer"
           >
             <Home className="w-4 h-4" />
-            <span>Back to Home</span>
+            <span>Back to Market Home</span>
           </Link>
 
           <Link
-            to="/ambulances"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-50 border border-[#E2E8F0] text-[#1F2A37] text-xs font-bold transition shadow-xs cursor-pointer"
+            to="/products"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-50 border border-[#E2E8DF] text-[#0F172A] text-xs font-bold transition shadow-xs cursor-pointer"
           >
-            <Ambulance className="w-4 h-4 text-[#0B6EFD]" />
-            <span>Browse Ambulance Fleet</span>
+            <ShoppingBag className="w-4 h-4 text-[#16A34A]" />
+            <span>Browse Fresh Produce</span>
           </Link>
 
-          <a
-            href="tel:03011111234"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-red-50 hover:bg-red-100 border border-red-200 text-[#DC3545] text-xs font-bold transition shadow-xs"
+          <Link
+            to="/markets"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-[#15803D] text-xs font-bold transition shadow-xs"
           >
-            <PhoneCall className="w-4 h-4" />
-            <span>Emergency Hotline: 030-1111-1234</span>
-          </a>
+            <Store className="w-4 h-4 text-[#16A34A]" />
+            <span>Local Markets Directory</span>
+          </Link>
         </div>
 
-        {/* Helpful Emergency Directory Links */}
-        <div className="pt-6 border-t border-[#E2E8F0] max-w-md mx-auto">
-          <p className="text-xs font-bold text-[#1F2A37] mb-3 uppercase tracking-wider">
-            Quick Navigation Directories
+        {/* Helpful Market Directory Links */}
+        <div className="pt-6 border-t border-[#E2E8DF] max-w-md mx-auto">
+          <p className="text-xs font-bold text-[#0F172A] mb-3 uppercase tracking-wider">
+            Quick Navigation Shortcuts
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-[#0B6EFD] font-semibold">
+          <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-[#16A34A] font-semibold">
             <Link to="/contact" className="hover:underline">
-              Contact Dispatch Desk
+              Contact Market Desk
             </Link>
             <span className="text-slate-300">•</span>
             <Link to="/feedback" className="hover:underline">
-              Submit Patient Feedback
+              Customer Reviews
             </Link>
             <span className="text-slate-300">•</span>
             <Link to="/sitemap" className="hover:underline">
-              Portal Sitemap
+              Platform Sitemap
             </Link>
+            <span className="text-slate-300">•</span>
+            <a href="tel:3125553276" className="flex items-center gap-1 hover:underline text-amber-700">
+              <PhoneCall className="w-3 h-3 text-amber-500" />
+              <span>(312) 555-FARM</span>
+            </a>
           </div>
         </div>
       </div>
     </div>
   );
 }
+

@@ -38,12 +38,12 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] Phase 0.10: Bản đồ định vị Ban Quản Lý Chợ Chicago (Contact Page) & Khung Pre-order giữ chỗ không cần cổng thanh toán
 - [x] Phase 0.11: Tái cấu trúc thương hiệu & Hệ màu mới Fresh Botanical Theme (MarketLink Logo eGreen Basket, Hotline (312) 555-FARM, PublicNavbar, PublicFooter, HomePage, AboutPage, GalleryPage, index.html, index.css)
 - [x] Phase 0.12: Xây dựng bộ dữ liệu Nông sản & Trang Catalog sản phẩm (ProductsPage & ProductDetailPage với bộ lọc đa tiêu chí và Pre-order Form)
-- [ ] Phase 0.13: Danh bạ chợ địa phương & Theo dõi đơn nhận hàng tại sạp (MarketsPage & OrderPickupTrackerPage)
+- [x] Phase 0.13: Danh bạ chợ địa phương & Theo dõi đơn nhận hàng tại sạp (MarketsPage & OrderPickupTrackerPage)
 - [ ] Phase 0.14: Phân hệ khách mua hàng Customer Portal (CustomerDashboard, CustomerProfilePage, CustomerOrdersPage)
 - [ ] Phase 0.15: Phân hệ chủ sạp Farmer / Vendor Portal (FarmerDashboard, Weekly Stall Stock, Incoming Pre-orders)
 - [ ] Phase 0.16: Phân hệ quản trị Admin Management Portal (Markets Manager, Farmer Approvals, Review Moderation)
 - [ ] Phase 0.17: Chuẩn hóa Reusable Components & Clean Code Production-Ready
-- Tình trạng: Đã hoàn tất Phase 0.12 (Products Catalog & Pre-Order for Pickup View), sẵn sàng bước sang Phase 0.13!
+- Tình trạng: Đã hoàn tất Phase 0.13 (Markets Directory & Order Pickup Tracker, cập nhật Sitemap và 404), sẵn sàng bước sang Phase 0.14!
 
 ### Day 1: Phân Tích Đề Bài, Thiết Kế ERD & Kiến Trúc 3 Roles
 

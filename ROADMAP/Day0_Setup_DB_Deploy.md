@@ -207,17 +207,17 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn thực phẩm tươi sạch & 
     - Nút bấm *"Confirm Pre-Order (Pay at Stall)"* kết nối `useModal` xác nhận thành công và chuyển hướng đến trang theo dõi mã đơn.
 
 ### Phase 0.13: Danh Bạ Chợ Địa Phương & Theo Dõi Đơn Nhận Hàng Tại Sạp (Markets Directory & Order Pickup Tracker)
-- `[ ]` Xây dựng Trang Danh Bạ Chợ Nông Dân (`src/pages/public/MarketsPage.jsx` - Route `/markets`):
+- `[x]` Xây dựng Trang Danh Bạ Chợ Nông Dân (`src/pages/public/MarketsPage.jsx` - Route `/markets`):
   - Grid danh sách các chợ nông dân địa phương kèm lịch họp định kỳ (thứ 7 / chủ nhật).
   - Bản đồ Google Maps / OpenStreetMap ghim các vị trí chợ tại thành phố.
   - Thẻ thông tin chi tiết từng chợ: Giờ mở cửa, danh sách các sạp nông dân đang bán, nút "View Stalls & Produce" và nút "Get Directions".
-- `[ ]` Chuyển đổi `LiveTrackingPage.jsx` ➔ `src/pages/public/OrderPickupTrackerPage.jsx` (Route `/orders/track/:id`):
+- `[x]` Chuyển đổi `LiveTrackingPage.jsx` ➔ `src/pages/public/OrderPickupTrackerPage.jsx` (Route `/orders/track/:id`):
   - Nhập mã đơn hoặc truy cập trực tiếp từ link xác nhận pre-order.
   - Tiến trình trạng thái 4 bước: `1. Order Placed` ➔ `2. Farmer Accepted` ➔ `3. Harvesting & Packed` ➔ `4. Ready for Pickup at Stall #08`.
   - Thông tin sạp nhận hàng: Tên nông dân/chủ sạp, số điện thoại liên hệ trực tiếp, số thứ tự sạp tại chợ, khung giờ hẹn nhận.
   - Bản đồ chỉ đường dẫn đến vị trí sạp trong khuôn viên chợ.
   - Nút "Save Order Pass" hoặc "Need Support / Change Pickup Window".
-- `[ ]` Chuẩn hóa `NotFoundPage.jsx` & `SitemapPage.jsx` theo phong cách MarketLink.
+- `[x]` Chuẩn hóa `NotFoundPage.jsx` & `SitemapPage.jsx` theo phong cách MarketLink.
 
 ### Phase 0.14: Phân Hệ Khách Mua Hàng (Customer Portal)
 - `[ ]` Chuyển đổi `UserDashboard.jsx` ➔ `src/pages/customer/CustomerDashboard.jsx` (Route `/customer/dashboard`):

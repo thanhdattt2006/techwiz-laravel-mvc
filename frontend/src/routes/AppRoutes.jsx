@@ -20,7 +20,8 @@ import ContactPage from '../pages/public/ContactPage';
 import SitemapPage from '../pages/public/SitemapPage';
 import ProductsPage from '../pages/public/ProductsPage';
 import ProductDetailPage from '../pages/public/ProductDetailPage';
-import LiveTrackingPage from '../pages/public/LiveTrackingPage';
+import MarketsPage from '../pages/public/MarketsPage';
+import OrderPickupTrackerPage from '../pages/public/OrderPickupTrackerPage';
 import NotFoundPage from '../pages/public/NotFoundPage';
 
 // Auth Pages
@@ -44,13 +45,14 @@ export default function AppRoutes() {
         {/* 1. Public Catalog & Informational Routes */}
         <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/markets" element={<HomePage />} />
+          <Route path="/markets" element={<MarketsPage />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/products/:id" element={<ProductDetailPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/tracking/:id" element={<OrderPickupTrackerPage />} />
+          <Route path="/orders/track/:id" element={<OrderPickupTrackerPage />} />
           <Route path="/ambulances" element={<ProductsPage />} />
           <Route path="/ambulances/:id" element={<ProductDetailPage />} />
-          <Route path="/tracking/:id" element={<LiveTrackingPage />} />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/feedback" element={<FeedbackPage />} />
           <Route path="/contact" element={<ContactPage />} />
