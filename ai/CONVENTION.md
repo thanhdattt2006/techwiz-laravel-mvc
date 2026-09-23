@@ -1,10 +1,11 @@
 # QUY TẮC LẬP TRÌNH (CODING CONVENTIONS)
+# DỰ ÁN: MARKETLINK (THEME: EGREEN BASKET - TECHWIZ 7)
 # KIẾN TRÚC: LARAVEL REST WEB API + REACT JS (VITE)
 
 Dự án này áp dụng mô hình phân tách hoàn toàn Client - Server:
-- **Backend**: Laravel 11/12 Web API (Deploy trên Render + Aiven MySQL)
+- **Backend**: Laravel 12/13 Web API (Deploy trên Render + Aiven MySQL)
 - **Frontend**: React.js (JavaScript) + Vite + TailwindCSS (Deploy trên Vercel)
-- **Thời gian thi**: 5 ngày (mỗi thành viên 4h/ngày). Toàn team tuân thủ nghiêm ngặt các quy chuẩn dưới đây để tránh conflict và đảm bảo tiến độ tối đa.
+- **Thời gian thi**: 5 ngày. Toàn team và AI tuân thủ nghiêm ngặt các quy chuẩn dưới đây để tránh conflict và đảm bảo tiến độ tối đa.
 
 ---
 
@@ -22,10 +23,11 @@ Dự án này áp dụng mô hình phân tách hoàn toàn Client - Server:
 ### 1.2. D.R.Y (Don't Repeat Yourself)
 - TUYỆT ĐỐI không copy-paste logic hoặc UI lặp đi lặp lại.
 - Backend: Trích xuất logic dùng chung vào Helpers, Traits, Services.
-- Frontend: Tái sử dụng Component dùng chung (`Button`, `Modal`, `Badge`, `Card`, `InputField`, `Navbar`, `Sidebar`) đặt trong `src/components/common/`.
+- Frontend: Tái sử dụng Component dùng chung (`ProductCard`, `MarketCard`, `StatusBadge`, `FilterSidebar`, `RatingStars`, `Modal`, `ScrollToTop`) đặt trong `src/components/common/`.
 
 ### 1.3. K.I.S.S (Keep It Simple, Stupid)
-- Giữ code đơn giản, sáng sủa, dễ đọc. Không over-engineer. Tránh các thư viện cồng kềnh không cần thiết.
+- Giữ code đơn giản, sáng sủa, dễ đọc. Không over-engineer.
+- Tuân thủ đúng ràng buộc SRS: **Không tích hợp cổng thanh toán trực tuyến** (Pre-order thanh toán tiền mặt/thẻ khi nhận tại sạp), **Không làm module giao hàng tận nhà** (chỉ nhận hàng tại sạp chợ).
 
 ---
 
@@ -36,9 +38,9 @@ Dự án này áp dụng mô hình phân tách hoàn toàn Client - Server:
 - **Type Hinting**: BẮT BUỘC khai báo kiểu dữ liệu cho toàn bộ param và return type của hàm. Không có return type -> `void`.
 - **Superglobals**: TUYỆT ĐỐI không dùng `$_GET`, `$_POST`, `$_REQUEST`. Dùng `$request` object của Laravel.
 - **Environment**: CẤM gọi hàm `env()` ngoài thư mục `config/`. Trong source code chỉ dùng `config('services.xxx')`.
-- **Magic Numbers/Strings**: CẤM hardcode số hay chuỗi vô nghĩa vào logic. BẮT BUỘC định nghĩa hằng số trong Model hoặc Enum (VD: `const STATUS_PENDING = 'pending';`).
-- **Chống N+1 Query**: BẮT BUỘC dùng Eager Loading `with()` khi truy vấn quan hệ Eloquent.
-- **Bảo Toàn Dữ Liệu**: Các bảng nghiệp vụ quan trọng (Users, Requests, Ambulances, Dispatches) bắt buộc dùng trait `SoftDeletes`.
+- **Magic Numbers/Strings**: CẤM hardcode số hay chuỗi vô nghĩa vào logic. BẮT BUỘC định nghĩa hằng số trong Model hoặc Enum (VD: `const STATUS_PLACED = 'placed'; const STATUS_READY = 'ready';`).
+- **Chống N+1 Query**: BẮT BUỘC dùng Eager Loading `with()` khi truy vấn quan hệ Eloquent (VD: `Product::with(['market', 'farmer'])`).
+- **Bảo Toàn Dữ Liệu**: Các bảng nghiệp vụ quan trọng (`users`, `markets`, `products`, `orders`) bắt buộc dùng trait `SoftDeletes`.
 
 ### 2.2. Chuẩn Phản Hồi JSON (API Standard Response Envelope)
 Mọi API trả về cho Frontend bắt buộc tuân theo format thống nhất:
@@ -46,7 +48,7 @@ Mọi API trả về cho Frontend bắt buộc tuân theo format thống nhất:
 ```json
 {
   "success": true,
-  "message": "Chi tiết thông báo",
+  "message": "Detail message",
   "data": { ... },
   "errors": null
 }
@@ -62,32 +64,31 @@ Mọi API trả về cho Frontend bắt buộc tuân theo format thống nhất:
   - `422 Unprocessable Content`: Lỗi validate dữ liệu từ FormRequest.
   - `500 Internal Server Error`: Lỗi logic server (luôn bắt qua `try-catch` và log lại).
 
-### 2.3. Quy Chuẩn Đặt Tên Backend
-- **Controllers**: `PascalCase` + `Controller` (VD: `AuthController`, `EmergencyRequestController`, `AmbulanceController`, `FeedbackController`, `ContactMessageController`).
-- **Models**: `PascalCase` số ít (VD: `User`, `Ambulance`, `EmergencyRequest`, `Feedback`, `ContactMessage`, `Notification`).
-- **API Resources**: `PascalCase` + `Resource` (VD: `UserResource`, `EmergencyRequestResource`, `AmbulanceResource`, `FeedbackResource`).
-- **Form Requests**: `Store{Model}Request`, `Update{Model}Request`.
-- **Database Tables**: `snake_case` số nhiều (VD: `users`, `ambulances`, `emergency_requests`, `feedbacks`, `contact_messages`, `notifications`).
-- **API Routes**: `kebab-case` hoặc `snake_case`, nhóm theo tiền tố `/api/v1/...`.
+### 2.3. Quy Chuẩn Đặt Tên Backend (MarketLink)
+- **Controllers**: `PascalCase` + `Controller` (VD: `AuthController`, `MarketController`, `ProductController`, `PreOrderController`, `ReviewController`, `ContactController`, `AdminController`).
+- **Models**: `PascalCase` số ít (VD: `User`, `Market`, `Product`, `Order`, `OrderItem`, `Review`, `Report`, `ContactMessage`).
+- **API Resources**: `PascalCase` + `Resource` (VD: `UserResource`, `ProductResource`, `MarketResource`, `OrderResource`, `ReviewResource`).
+- **Form Requests**: `Store{Model}Request`, `Update{Model}Request` (VD: `StorePreOrderRequest`, `StoreProductRequest`).
+- **Database Tables**: `snake_case` số nhiều (VD: `users`, `markets`, `products`, `orders`, `order_items`, `reviews`, `reports`, `contact_messages`).
+- **API Routes**: `kebab-case`, nhóm theo tiền tố `/api/v1/...`.
 
 ---
 
 ## 3. QUY CHUẨN FRONTEND (REACT JS + VITE)
 
-### 3.1. Bảng Màu Thiết Kế Chuẩn (Light Medical Design System)
-Dự án áp dụng bộ màu chuẩn y tế chuyên nghiệp:
-- **Primary (Xanh y tế)**: `#0B6EFD` - Nút chính, link, navbar active, brand accent.
-- **Primary tối**: `#084298` - Hover states, header bar, footer.
-- **Emergency (Đỏ cấp cứu)**: `#DC3545` - Nút "Đặt xe ngay", badge SOS, cảnh báo nguy cấp.
-- **Success (Xanh lá)**: `#198754` - Xe sẵn sàng (available), hoàn thành ca trực.
-- **Warning (Vàng cam)**: `#FFB020` - Đang chờ (pending), xe đang di chuyển.
-- **Nền sáng (Light BG)**: `#F5F8FC` - Background chính của toàn bộ trang web.
-- **Card**: `#FFFFFF` - Nền thẻ card, form nhập liệu, modal popup.
-- **Chữ chính (Main Text)**: `#1F2A37` - Văn bản chính, tiêu đề, số liệu.
-- **Chữ phụ (Muted Text)**: `#6B7785` - Mô tả, placeholder, nhãn phụ.
-- **Viền (Border)**: `#E2E8F0` - Border input, viền card, đường kẻ phân chia.
+### 3.1. Bảng Màu Thiết Kế Chuẩn (Fresh Botanical & Harvest Gold)
+Dự án áp dụng bộ màu nông sản hữu cơ tươi sáng:
+- **Primary (Xanh nông sản)**: `#16A34A` / `#15803D` - Nút Pre-Order, active link, badge hữu cơ.
+- **Accent (Vàng cam mùa gặt)**: `#F59E0B` / `#D97706` - Star rating, badge mùa vụ, điểm nhấn harvest.
+- **Warning / Alert**: `#F59E0B` (Chờ hái & đóng gói), `#DC2626` (Hết hàng / Hủy đơn).
+- **Success**: `#16A34A` - Sẵn sàng nhận tại sạp (Ready for pickup).
+- **Nền sáng (Light BG)**: `#F8FAF6` - Nền chính toàn bộ website (Fresh cream background).
+- **Card**: `#FFFFFF` - Nền thẻ card sản phẩm, sạp chợ, form pre-order.
+- **Chữ chính (Main Text)**: `#0F172A` - Tiêu đề nông sản, giá tiền, số lượng.
+- **Chữ phụ (Muted Text)**: `#475569` - Mô tả mùa vụ, xuất xứ trang trại.
+- **Viền (Border)**: `#E2E8DF` - Viền nhẹ nhàng hài hòa với màu xanh lá.
 
-> **QUY TẮC BẮT BUỘC**: **KHÔNG CẦN DÙNG DARK/LIGHT THEME**. Toàn bộ website cố định 1 giao diện nền sáng y tế (`#F5F8FC`), tuyệt đối không viết component toggle dark mode làm phức tạp CSS và phân mảnh thời gian.
+> **QUY TẮC BẮT BUỘC**: **KHÔNG DÙNG DARK THEME**. Toàn bộ website cố định 1 giao diện nền sáng tươi mát (`#F8FAF6`).
 
 ### 3.2. Cấu Trúc Thư Mục Frontend Chuẩn (`src/`)
 ```text
@@ -95,66 +96,59 @@ src/
 ├── api/
 │   ├── axiosClient.js        # Axios instance, baseURL, request & response interceptors (Bearer Token)
 │   ├── authApi.js            # API login, register, me, logout
-│   ├── emergencyApi.js       # API SOS, emergency requests, status updates
-│   ├── ambulanceApi.js       # API fleet catalog, search/filter, tracking
-│   ├── feedbackApi.js        # API gửi và xem đánh giá feedback
-│   └── contactApi.js         # API gửi tin nhắn liên hệ Contact Us
-├── assets/                   # Hình ảnh xe cứu thương, icons, logo LifeLink
+│   ├── marketApi.js          # API danh bạ chợ, lịch họp, tọa độ bản đồ
+│   ├── productApi.js         # API catalog nông sản, bộ lọc, chi tiết sản phẩm
+│   ├── orderApi.js           # API pre-order giữ chỗ, cập nhật tiến độ 4 bước
+│   ├── reviewApi.js          # API gửi và xem đánh giá 1-5 sao
+│   └── contactApi.js         # API gửi tin nhắn liên hệ Ban Quản Lý Chợ
+├── assets/                   # Icons, logo MarketLink (eGreen Basket)
 ├── components/
-│   ├── common/               # UI tái sử dụng (Button, Input, Modal, Badge, Spinner, Alert)
-│   ├── layout/               # Header, Sidebar, Footer, Layout cho từng Role
-│   └── maps/                 # Component bản đồ (Leaflet / Live Ambulance Tracker)
+│   ├── common/               # UI tái sử dụng (ProductCard, MarketCard, StatusBadge, FilterSidebar, RatingStars, Modal)
+│   │   └── index.js          # Barrel export
+│   └── layout/               # Header, Sidebar, Footer, Layout cho từng Role (Public, Admin, Farmer, Customer)
 ├── context/
-│   └── AuthContext.jsx       # State quản lý user, token, role, hàm login, logout
-├── hooks/                    # Custom hooks (useAuth, useGeolocation, usePolling)
+│   ├── AuthContext.jsx       # State quản lý user, token, role, hàm login, logout
+│   └── ModalContext.jsx      # Hệ thống Custom React Portal Modal thay thế SweetAlert2
+├── data/
+│   ├── markets.json          # Danh bạ 6 chợ nông sản Chicago
+│   └── products.json         # Danh mục nông sản theo mùa
+├── hooks/                    # Custom hooks
 ├── pages/
-│   ├── public/               # Các trang công khai theo SRS:
-│   │   ├── HomePage.jsx      # Catalog danh sách xe eAmbulance, bộ lọc & tìm kiếm
-│   │   ├── AboutPage.jsx     # Giới thiệu công ty, quy mô vùng phục vụ, đội xe tốt nhất
-│   │   ├── GalleryPage.jsx   # Bộ sưu tập ảnh xe cứu thương
-│   │   ├── FeedbackPage.jsx  # Form đánh giá chất lượng dịch vụ
-│   │   ├── ContactPage.jsx   # Form Contact Us (cho cả khách vãng lai)
-│   │   └── SitemapPage.jsx   # Sơ đồ điều hướng website
-│   ├── auth/                 # Login, Register
-│   ├── admin/                # Dashboard quản trị xe, tài xế, xem feedback/contact
-│   ├── operator/             # Phòng điều phối Control Room, Live SOS Queue, Bản đồ xe
-│   └── user/                 # Nút bấm SOS 1 chạm, Theo dõi xe tới, Hồ sơ y tế
+│   ├── public/               # HomePage, MarketsPage, ProductsPage, ProductDetailPage, AboutPage, GalleryPage, FeedbackPage, ContactPage, SitemapPage, NotFoundPage
+│   ├── auth/                 # LoginPage, RegisterPage, ForgotPasswordPage, UnauthorizedPage
+│   ├── admin/                # AdminDashboard (Markets Registry, Vendor Applications, Review Moderation, Inquiries)
+│   ├── farmer/               # FarmerDashboard (Pre-Order Queue, Weekly Stall Stock, Sales Summary)
+│   └── customer/             # CustomerDashboard, CustomerProfilePage, CustomerOrdersPage (Tote Slip)
 ├── routes/
 │   ├── AppRoutes.jsx         # Cấu hình router toàn bộ ứng dụng
-│   └── ProtectedRoute.jsx    # HOC chặn route dựa theo Role (admin, operator, user)
+│   └── ProtectedRoute.jsx    # HOC phân quyền dựa theo Role (admin, farmer, customer)
 ├── App.jsx
 ├── main.jsx
-└── index.css                 # Import TailwindCSS & Theme tokens
+└── index.css                 # TailwindCSS & Theme tokens
 ```
 
 ### 3.3. Quy Tắc Lập Trình React JS
-- **Functional Components**: 100% sử dụng Functional Components kèm React Hooks (`useState`, `useEffect`, `useContext`, `useCallback`, `useMemo`). Tuyệt đối không dùng Class Components.
-- **Tên Component & File**: `PascalCase.jsx` (VD: `AdminDashboard.jsx`, `SosButton.jsx`, `AmbulanceCard.jsx`).
-- **Tên Biến & Hàm**: `camelCase` (VD: `fetchAmbulances()`, `handleBookingAmbulance()`).
-- **CSS**: 100% sử dụng **TailwindCSS**. Không viết CSS chay, không tạo file `.css` lẻ tẻ.
-- **Xử lý Token**: Token nhận từ API Sanctum lưu tại `localStorage` hoặc `sessionStorage`, tự động inject vào header `Authorization: Bearer <token>` qua Axios Interceptor.
-- **UI Feedback**: Mọi thao tác submit/xóa/cập nhật bắt buộc có loading indicator (Spinner/Skeleton) và thông báo Toast (SweetAlert2).
+- **Functional Components**: 100% Functional Components kèm React Hooks (`useState`, `useEffect`, `useContext`, `useCallback`, `useMemo`).
+- **Tên Component & File**: `PascalCase.jsx` (VD: `ProductCard.jsx`, `MarketCard.jsx`, `FarmerDashboard.jsx`).
+- **Tên Biến & Hàm**: `camelCase` (VD: `fetchProducts()`, `handlePreOrder()`).
+- **CSS**: 100% sử dụng **TailwindCSS**.
+- **Xử lý Token**: Token nhận từ API Sanctum lưu tại `localStorage`, tự động inject vào header `Authorization: Bearer <token>` qua Axios Interceptor.
+- **UI Modal & Alerts**: Sử dụng `useModal()` (`showAlert`, `showConfirm`) từ `ModalContext.jsx` chuẩn React Portal.
 
 ---
 
 ## 4. QUY CHUẨN PHÂN QUYỀN (ROLE-BASED ACCESS CONTROL - RBAC)
 
 Hệ thống hỗ trợ 3 Roles chính:
-1. **`admin`**: Quản trị viên tối cao (Quản lý users, fleet xe cứu thương, tài xế, trạm xá, báo cáo doanh thu/thống kê).
-2. **`operator`**: Điều phối viên / Tổng đài viên (Tiếp nhận SOS, theo dõi bản đồ trực tiếp, gán xe cứu thương cho bệnh nhân, cập nhật trạng thái cứu hộ).
-3. **`user`**: Người dân / Bệnh nhân (Gửi yêu cầu cấp cứu 1 chạm kèm GPS, theo dõi xe đến theo thời gian thực, quản lý hồ sơ y tế cá nhân).
-
-- **Backend Enforcement**:
-  - Middleware kiểm tra role: `auth:sanctum` + `role:admin`, `role:operator`, `role:user`.
-  - Từ chối truy cập trái phép với HTTP `403 Forbidden`.
-- **Frontend Enforcement**:
-  - Component `<ProtectedRoute allowedRoles={['admin', 'operator']} />` tự động chuyển hướng nếu người dùng không đủ quyền hạn.
+1. **`admin`**: Quản trị viên sàn chợ (Quản lý chợ địa phương, duyệt nông dân mở sạp, kiểm duyệt đánh giá xấu, báo cáo sàn).
+2. **`farmer` (hoặc `operator`)**: Nông dân & Chủ sạp chợ (Quản lý hàng tồn sạp cuối tuần, tiếp nhận hàng chờ pre-order, duyệt đóng gói, báo hàng đã sẵn sàng).
+3. **`customer` (hoặc `user`)**: Khách hàng mua sắm (Tìm chợ và nông sản sạch, đặt trước giữ chỗ, theo dõi mã nhận hàng, thanh toán tiền mặt tại sạp, đánh giá 1-5 sao).
 
 ---
 
 ## 5. QUY TRÌNH GIT VÀ COMMITS
 
-- **Commit Messages (BẮT BUỘC TIẾNG ANH)**: Chuẩn **Conventional Commits** (`type: message`).
+- **Commit Messages (BẮT BUỘC TIẾNG ANH)**: Chuẩn **Conventional Commits** (`type: message` hoặc `type(scope): message`).
   - Danh sách types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
-- **Nguyên tắc "TRẢM LIÊN TỤC"**: Cứ hoàn thành 1 component, 1 endpoint API hoặc 1 tính năng nhỏ là phải commit ngay lập tức.
+- **Nguyên tắc**: Commit sau mỗi phase/tính năng hoàn chỉnh.
 - **Không vứt rác**: Xoá toàn bộ `dd()`, `dump()`, `console.log()` trước khi commit.
