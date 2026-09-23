@@ -120,7 +120,7 @@ export default function UserLayout() {
             }
           >
             <SlidersHorizontal className="w-4 h-4 text-[#16A34A]" />
-            <span>Preferences & Farm Alerts</span>
+            <span>Account Settings & Preferences</span>
           </NavLink>
         </div>
       </div>

@@ -11,6 +11,7 @@ import {
   X,
   Layers,
   ExternalLink,
+  Settings,
 } from 'lucide-react';
 
 export default function OperatorLayout() {
@@ -75,6 +76,14 @@ export default function OperatorLayout() {
             </div>
 
             <Link
+              to="/farmer/dashboard?tab=settings"
+              className="p-2 text-[#475569] hover:text-[#16A34A] hover:bg-emerald-50 rounded-xl transition hidden sm:inline-flex"
+              title="Stall Settings & Security"
+            >
+              <Settings className="w-4 h-4" />
+            </Link>
+
+            <Link
               to="/"
               className="p-2 text-[#475569] hover:text-[#16A34A] hover:bg-emerald-50 rounded-xl transition hidden sm:inline-flex"
               title="Return to Public Site"
@@ -135,6 +144,15 @@ export default function OperatorLayout() {
                 >
                   <Layers className="w-4 h-4" />
                   <span>Stall Dashboard</span>
+                </Link>
+
+                <Link
+                  to="/farmer/dashboard?tab=settings"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold text-[#475569] hover:bg-[#F8FAF6] hover:text-[#0F172A]"
+                >
+                  <Settings className="w-4 h-4" />
+                  <span>Stall Settings & Password</span>
                 </Link>
 
                 <div className="text-[10px] font-bold uppercase tracking-wider text-[#475569] px-2 pt-4 py-1">

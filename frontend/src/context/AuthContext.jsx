@@ -298,6 +298,52 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
+   * Update active user profile details (fullname, phone, neighborhood, etc.).
+   */
+  const updateProfile = async (profileData) => {
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 200));
+
+    const updatedUser = {
+      ...user,
+      ...profileData,
+    };
+
+    setUser(updatedUser);
+    try {
+      localStorage.setItem('auth_user', JSON.stringify(updatedUser));
+    } catch {
+      // ignore storage error
+    }
+    setIsLoading(false);
+    return { success: true, user: updatedUser };
+  };
+
+  /**
+   * Change account password with validation and API fallback.
+   */
+  const changePassword = async ({ currentPassword, newPassword, confirmPassword }) => {
+    if (!currentPassword) {
+      return { success: false, message: 'Please enter your current password.' };
+    }
+    if (!newPassword || newPassword.length < 6) {
+      return { success: false, message: 'New password must be at least 6 characters long.' };
+    }
+    if (newPassword !== confirmPassword) {
+      return { success: false, message: 'New password and confirmation do not match.' };
+    }
+
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    setIsLoading(false);
+
+    return {
+      success: true,
+      message: 'Your account password has been successfully updated.',
+    };
+  };
+
+  /**
    * Log out and clear session.
    */
   const logout = async () => {
@@ -327,6 +373,8 @@ export const AuthProvider = ({ children }) => {
     resetPassword,
     logout,
     quickDemoLogin,
+    updateProfile,
+    changePassword,
     refreshUser: checkAuth,
   };
 

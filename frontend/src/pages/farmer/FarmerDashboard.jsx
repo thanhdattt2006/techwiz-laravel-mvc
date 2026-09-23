@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import { useModal } from '../../context/ModalContext';
 import productsData from '../../data/products.json';
 import {
@@ -11,6 +13,16 @@ import {
   TrendingUp,
   Sliders,
   Check,
+  Settings,
+  Lock,
+  KeyRound,
+  Eye,
+  EyeOff,
+  User,
+  Phone,
+  Clock,
+  ShieldCheck,
+  Save,
 } from 'lucide-react';
 import { StatusBadge } from '../../components/common';
 
@@ -84,14 +96,130 @@ const INITIAL_STALL_STOCK = productsData.slice(0, 6).map((p) => ({
 }));
 
 export default function FarmerDashboard() {
+  const { user, updateProfile, changePassword } = useAuth();
   const { showAlert, showConfirm } = useModal();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [activeTab, setActiveTab] = useState('QUEUE'); // 'QUEUE' | 'STOCK' | 'GUIDE'
+  const urlTab = searchParams.get('tab');
+  const activeTab = urlTab && ['queue', 'stock', 'settings'].includes(urlTab.toLowerCase())
+    ? urlTab.toUpperCase()
+    : 'QUEUE';
+
+  const setActiveTab = (tab) => {
+    setSearchParams({ tab: tab.toLowerCase() });
+  };
+
   const [queue, setQueue] = useState(INITIAL_QUEUE);
   const [stockList, setStockList] = useState(INITIAL_STALL_STOCK);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [selectedOrderForSettle, setSelectedOrderForSettle] = useState(null);
+
+  // Farm Profile State
+  const [farmSettings, setFarmSettings] = useState(() => {
+    try {
+      const saved = localStorage.getItem('marketlink_farmer_stall_settings');
+      if (saved) return JSON.parse(saved);
+    } catch {
+      // fallback
+    }
+    return {
+      farmName: 'Prairie Organic Grove',
+      farmerName: user?.fullname || 'Marcus Jenkins (Grower)',
+      phone: user?.phone || '(312) 555-4421',
+      marketAssigned: 'Green City Market • Stall #04',
+      operatingHours: 'Saturdays: 07:00 AM – 01:00 PM',
+      autoAcceptPreOrders: true,
+      notifyFridayCutoff: true,
+      notifyShopperCrateReady: true,
+    };
+  });
+
+  // Password State
+  const [farmerPassword, setFarmerPassword] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+  const [showFarmerPassword, setShowFarmerPassword] = useState({
+    current: false,
+    new: false,
+    confirm: false,
+  });
+  const [farmSaving, setFarmSaving] = useState(false);
+  const [farmerPassLoading, setFarmerPassLoading] = useState(false);
+
+  // Handlers for Stall Settings
+  const handleSaveFarmSettings = async (e) => {
+    e.preventDefault();
+    setFarmSaving(true);
+    await updateProfile({
+      fullname: farmSettings.farmerName,
+      phone: farmSettings.phone,
+    });
+    localStorage.setItem('marketlink_farmer_stall_settings', JSON.stringify(farmSettings));
+    setFarmSaving(false);
+    showAlert({
+      title: 'Stall Settings Saved',
+      message: 'Your farm identity, operating hours, and pre-order parameters have been updated.',
+      type: 'success',
+      confirmText: false,
+      autoCloseMs: 2000,
+    });
+  };
+
+  const handleFarmerChangePassword = async (e) => {
+    e.preventDefault();
+    if (!farmerPassword.currentPassword) {
+      showAlert({
+        title: 'Missing Current Password',
+        message: 'Please enter your current Stall Master password.',
+        type: 'danger',
+      });
+      return;
+    }
+    if (!farmerPassword.newPassword || farmerPassword.newPassword.length < 6) {
+      showAlert({
+        title: 'Password Too Short',
+        message: 'New password must be at least 6 characters long.',
+        type: 'danger',
+      });
+      return;
+    }
+    if (farmerPassword.newPassword !== farmerPassword.confirmPassword) {
+      showAlert({
+        title: 'Password Mismatch',
+        message: 'New password and confirmation do not match.',
+        type: 'danger',
+      });
+      return;
+    }
+
+    setFarmerPassLoading(true);
+    const result = await changePassword({
+      currentPassword: farmerPassword.currentPassword,
+      newPassword: farmerPassword.newPassword,
+      confirmPassword: farmerPassword.confirmPassword,
+    });
+    setFarmerPassLoading(false);
+
+    if (result.success) {
+      setFarmerPassword({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      showAlert({
+        title: 'Password Updated',
+        message: result.message || 'Stall Master account credentials updated successfully.',
+        type: 'success',
+        confirmText: false,
+        autoCloseMs: 2200,
+      });
+    } else {
+      showAlert({
+        title: 'Update Failed',
+        message: result.message || 'Could not update password.',
+        type: 'danger',
+      });
+    }
+  };
 
   // Filtered Queue
   const filteredQueue = queue.filter((order) => {
@@ -239,6 +367,19 @@ export default function FarmerDashboard() {
           >
             <Sliders className="w-4 h-4" />
             <span>Stall Stock ({stockList.length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('SETTINGS')}
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
+              activeTab === 'SETTINGS'
+                ? 'bg-[#16A34A] text-white shadow-xs'
+                : 'text-[#475569] hover:text-[#0F172A]'
+            }`}
+          >
+            <Settings className="w-4 h-4" />
+            <span>Stall Settings</span>
           </button>
         </div>
       </div>
@@ -604,6 +745,270 @@ export default function FarmerDashboard() {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* 4. TAB 3: STALL & FARMER SETTINGS */}
+      {activeTab === 'SETTINGS' && (
+        <div className="space-y-6">
+          {/* Farm & Stall Master Identity */}
+          <form onSubmit={handleSaveFarmSettings} className="bg-white border border-[#E2E8DF] rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#E2E8DF]">
+              <div className="flex items-center gap-2.5">
+                <Store className="w-5 h-5 text-[#16A34A]" />
+                <div>
+                  <h2 className="text-base font-bold text-[#0F172A]">Farm & Stall Master Identity</h2>
+                  <p className="text-[11px] text-[#475569]">Public information displayed on your stall banner and customer pickup receipts</p>
+                </div>
+              </div>
+              <span className="text-[10px] font-mono text-[#16A34A] font-bold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 uppercase">
+                ROLE: STALL MASTER
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label htmlFor="farm-name-input" className="text-xs font-bold text-[#0F172A] flex items-center gap-1.5">
+                  <Sprout className="w-3.5 h-3.5 text-[#16A34A]" />
+                  <span>Farm / Brand Name</span>
+                </label>
+                <input
+                  id="farm-name-input"
+                  type="text"
+                  value={farmSettings.farmName}
+                  onChange={(e) => setFarmSettings({ ...farmSettings, farmName: e.target.value })}
+                  placeholder="e.g. Prairie Organic Grove"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8DF] bg-[#F8FAF6] text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-[#16A34A]"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="farmer-name-input" className="text-xs font-bold text-[#0F172A] flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5 text-[#16A34A]" />
+                  <span>Lead Grower / Stall Master Name</span>
+                </label>
+                <input
+                  id="farmer-name-input"
+                  type="text"
+                  value={farmSettings.farmerName}
+                  onChange={(e) => setFarmSettings({ ...farmSettings, farmerName: e.target.value })}
+                  placeholder="e.g. Marcus Jenkins"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8DF] bg-[#F8FAF6] text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-[#16A34A]"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="farmer-phone-input" className="text-xs font-bold text-[#0F172A] flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5 text-[#16A34A]" />
+                  <span>Emergency Stall Phone Hotline</span>
+                </label>
+                <input
+                  id="farmer-phone-input"
+                  type="tel"
+                  value={farmSettings.phone}
+                  onChange={(e) => setFarmSettings({ ...farmSettings, phone: e.target.value })}
+                  placeholder="(312) 555-4421"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8DF] bg-[#F8FAF6] text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-[#16A34A]"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="market-assigned-input" className="text-xs font-bold text-[#0F172A] flex items-center gap-1.5">
+                  <Store className="w-3.5 h-3.5 text-[#16A34A]" />
+                  <span>Assigned Market & Stall Number</span>
+                </label>
+                <input
+                  id="market-assigned-input"
+                  type="text"
+                  value={farmSettings.marketAssigned}
+                  onChange={(e) => setFarmSettings({ ...farmSettings, marketAssigned: e.target.value })}
+                  placeholder="e.g. Green City Market • Stall #04"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8DF] bg-[#F8FAF6] text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-[#16A34A]"
+                />
+              </div>
+
+              <div className="space-y-2 md:col-span-2">
+                <label htmlFor="operating-hours-input" className="text-xs font-bold text-[#0F172A] flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-[#16A34A]" />
+                  <span>Weekend Stall Operating Hours</span>
+                </label>
+                <input
+                  id="operating-hours-input"
+                  type="text"
+                  value={farmSettings.operatingHours}
+                  onChange={(e) => setFarmSettings({ ...farmSettings, operatingHours: e.target.value })}
+                  placeholder="Saturdays: 07:00 AM – 01:00 PM"
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-[#E2E8DF] bg-[#F8FAF6] text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-[#16A34A]"
+                />
+              </div>
+            </div>
+
+            {/* Operational Preferences */}
+            <div className="pt-4 border-t border-[#E2E8DF] space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-[#475569]">Stall Pre-Order Automation</h3>
+              
+              <label className="flex items-start gap-3 p-3.5 rounded-2xl border border-[#E2E8DF] hover:bg-[#F8FAF6] transition cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={farmSettings.autoAcceptPreOrders}
+                  onChange={(e) => setFarmSettings({ ...farmSettings, autoAcceptPreOrders: e.target.checked })}
+                  className="mt-0.5 rounded text-[#16A34A] focus:ring-[#16A34A] w-4 h-4"
+                />
+                <div className="text-xs">
+                  <span className="font-bold text-[#0F172A]">Auto-Confirm Valid Reservation Requests</span>
+                  <p className="text-[#475569] text-[11px] mt-0.5">Automatically mark incoming orders as "Farmer Confirmed" if stock is available.</p>
+                </div>
+              </label>
+
+              <label className="flex items-start gap-3 p-3.5 rounded-2xl border border-[#E2E8DF] hover:bg-[#F8FAF6] transition cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={farmSettings.notifyFridayCutoff}
+                  onChange={(e) => setFarmSettings({ ...farmSettings, notifyFridayCutoff: e.target.checked })}
+                  className="mt-0.5 rounded text-[#16A34A] focus:ring-[#16A34A] w-4 h-4"
+                />
+                <div className="text-xs">
+                  <span className="font-bold text-[#0F172A]">Enforce Friday 6:00 PM Harvest Cutoff</span>
+                  <p className="text-[#475569] text-[11px] mt-0.5">Locks catalog modifications after dawn picking begins so crate quantities stay accurate.</p>
+                </div>
+              </label>
+
+              <label className="flex items-start gap-3 p-3.5 rounded-2xl border border-[#E2E8DF] hover:bg-[#F8FAF6] transition cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={farmSettings.notifyShopperCrateReady}
+                  onChange={(e) => setFarmSettings({ ...farmSettings, notifyShopperCrateReady: e.target.checked })}
+                  className="mt-0.5 rounded text-[#16A34A] focus:ring-[#16A34A] w-4 h-4"
+                />
+                <div className="text-xs">
+                  <span className="font-bold text-[#0F172A]">Automated SMS When Crate is Ready</span>
+                  <p className="text-[#475569] text-[11px] mt-0.5">Sends pickup crate code to customer when status changes to "Ready for Pickup".</p>
+                </div>
+              </label>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                type="submit"
+                disabled={farmSaving}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold shadow-xs transition cursor-pointer disabled:opacity-50"
+              >
+                <Save className="w-4 h-4" />
+                <span>{farmSaving ? 'Saving...' : 'Save Stall Settings'}</span>
+              </button>
+            </div>
+          </form>
+
+          {/* Stall Master Security & Change Password */}
+          <form onSubmit={handleFarmerChangePassword} className="bg-white border border-[#E2E8DF] rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-[#E2E8DF]">
+              <div className="flex items-center gap-2.5">
+                <Lock className="w-5 h-5 text-[#16A34A]" />
+                <div>
+                  <h2 className="text-base font-bold text-[#0F172A]">Stall Master Security & Change Password</h2>
+                  <p className="text-[11px] text-[#475569]">Update your access credentials for market stall management</p>
+                </div>
+              </div>
+              <ShieldCheck className="w-5 h-5 text-emerald-600" />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              <div className="space-y-2">
+                <label htmlFor="farmer-curr-pass" className="text-xs font-bold text-[#0F172A] flex items-center gap-1.5">
+                  <KeyRound className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Current Password</span>
+                </label>
+                <div className="relative">
+                  <input
+                    id="farmer-curr-pass"
+                    type={showFarmerPassword.current ? 'text' : 'password'}
+                    value={farmerPassword.currentPassword}
+                    onChange={(e) => setFarmerPassword({ ...farmerPassword, currentPassword: e.target.value })}
+                    placeholder="••••••••"
+                    className="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-[#E2E8DF] bg-[#F8FAF6] text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-[#16A34A]"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowFarmerPassword({ ...showFarmerPassword, current: !showFarmerPassword.current })}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    {showFarmerPassword.current ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                <p className="text-[10px] text-slate-400">Demo account: password123</p>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="farmer-new-pass" className="text-xs font-bold text-[#0F172A] flex items-center gap-1.5">
+                  <Lock className="w-3.5 h-3.5 text-[#16A34A]" />
+                  <span>New Password</span>
+                </label>
+                <div className="relative">
+                  <input
+                    id="farmer-new-pass"
+                    type={showFarmerPassword.new ? 'text' : 'password'}
+                    value={farmerPassword.newPassword}
+                    onChange={(e) => setFarmerPassword({ ...farmerPassword, newPassword: e.target.value })}
+                    placeholder="Min. 6 characters"
+                    className="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-[#E2E8DF] bg-[#F8FAF6] text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-[#16A34A]"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowFarmerPassword({ ...showFarmerPassword, new: !showFarmerPassword.new })}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    {showFarmerPassword.new ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                <p className="text-[10px] text-[#475569]">Must be at least 6 characters</p>
+              </div>
+
+              <div className="space-y-2">
+                <label htmlFor="farmer-confirm-pass" className="text-xs font-bold text-[#0F172A] flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[#16A34A]" />
+                  <span>Confirm New Password</span>
+                </label>
+                <div className="relative">
+                  <input
+                    id="farmer-confirm-pass"
+                    type={showFarmerPassword.confirm ? 'text' : 'password'}
+                    value={farmerPassword.confirmPassword}
+                    onChange={(e) => setFarmerPassword({ ...farmerPassword, confirmPassword: e.target.value })}
+                    placeholder="Repeat new password"
+                    className="w-full pl-3.5 pr-10 py-2.5 rounded-xl border border-[#E2E8DF] bg-[#F8FAF6] text-xs font-medium focus:outline-hidden focus:ring-2 focus:ring-[#16A34A]"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowFarmerPassword({ ...showFarmerPassword, confirm: !showFarmerPassword.confirm })}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                  >
+                    {showFarmerPassword.confirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                {farmerPassword.confirmPassword && (
+                  <p className={`text-[10px] font-bold ${farmerPassword.newPassword === farmerPassword.confirmPassword ? 'text-[#16A34A]' : 'text-rose-500'}`}>
+                    {farmerPassword.newPassword === farmerPassword.confirmPassword ? '✓ Passwords match' : '✕ Passwords do not match'}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                type="submit"
+                disabled={farmerPassLoading}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0F172A] hover:bg-slate-800 text-white text-xs font-bold shadow-xs transition cursor-pointer disabled:opacity-50"
+              >
+                <KeyRound className="w-4 h-4 text-emerald-400" />
+                <span>{farmerPassLoading ? 'Updating...' : 'Update Password'}</span>
+              </button>
+            </div>
+          </form>
         </div>
       )}
 

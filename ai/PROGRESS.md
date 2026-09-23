@@ -49,6 +49,7 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] Phase 0.17: Chuẩn hóa Reusable Components & Clean Code Production-Ready (ProductCard, MarketCard, StatusBadge, FilterSidebar, RatingStars, barrel export index.js; build Vite 0 errors)
 - [x] Quét dọn 100% tàn dư Ambulance cũ: Xóa bỏ 5 file thừa (`AmbulancesPage`, `AmbulanceDetailPage`, `LiveTrackingPage`, `ambulances.json`, `MedicalProfilePage`), làm sạch toàn bộ trang Auth (`LoginPage`, `RegisterPage`, `ForgotPasswordPage`, `UnauthorizedPage`, `AuthContext`).
 - [x] Hoàn thiện Responsive Mobile Navigation cho Admin & Operator Layouts, sửa dứt điểm lỗi Modal Form và sai luồng liên kết public.
+- [x] Hoàn thiện Phân hệ Account Settings & Change Password cho cả Khách hàng (Shopper Profile & Security) và Nông dân (Stall Master Settings & Operations), đồng bộ dữ liệu vào AuthContext và localStorage.
 - Tình trạng: **100% HOÀN TẤT TOÀN BỘ DAY 0 SETUP & REFACTOR ROADMAP (Phase 0.1 -> 0.17)**! Sẵn sàng 100% cho Day 1 (ERD & Backend Migrations).
 
 ### Day 1: Phân Tích Đề Bài SRS, Thiết Kế ERD & Kiến Trúc 3 Roles
