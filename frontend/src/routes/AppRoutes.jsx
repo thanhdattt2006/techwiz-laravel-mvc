@@ -33,9 +33,9 @@ import UnauthorizedPage from '../pages/auth/UnauthorizedPage';
 // Protected Dashboards
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import OperatorDashboard from '../pages/operator/OperatorDashboard';
-import UserDashboard from '../pages/user/UserDashboard';
-import MedicalProfilePage from '../pages/user/MedicalProfilePage';
-import UserHistoryPage from '../pages/user/UserHistoryPage';
+import CustomerDashboard from '../pages/customer/CustomerDashboard';
+import CustomerProfilePage from '../pages/customer/CustomerProfilePage';
+import CustomerOrdersPage from '../pages/customer/CustomerOrdersPage';
 
 export default function AppRoutes() {
   return (
@@ -79,12 +79,16 @@ export default function AppRoutes() {
           </Route>
         </Route>
 
-        {/* 5. Protected Patient / User Portal (RBAC: user only) */}
-        <Route element={<ProtectedRoute allowedRoles={['user']} />}>
+        {/* 5. Protected Shopper / Customer Portal (RBAC: user or customer) */}
+        <Route element={<ProtectedRoute allowedRoles={['user', 'customer']} />}>
           <Route element={<UserLayout />}>
-            <Route path="/user/dashboard" element={<UserDashboard />} />
-            <Route path="/user/medical-profile" element={<MedicalProfilePage />} />
-            <Route path="/user/history" element={<UserHistoryPage />} />
+            <Route path="/user/dashboard" element={<CustomerDashboard />} />
+            <Route path="/customer/dashboard" element={<CustomerDashboard />} />
+            <Route path="/user/profile" element={<CustomerProfilePage />} />
+            <Route path="/user/medical-profile" element={<CustomerProfilePage />} />
+            <Route path="/customer/profile" element={<CustomerProfilePage />} />
+            <Route path="/user/history" element={<CustomerOrdersPage />} />
+            <Route path="/customer/orders" element={<CustomerOrdersPage />} />
           </Route>
         </Route>
 

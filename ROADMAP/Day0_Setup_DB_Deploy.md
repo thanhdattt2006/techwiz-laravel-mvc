@@ -220,18 +220,18 @@ Toàn bộ dự án tuân thủ bộ màu chuẩn thực phẩm tươi sạch & 
 - `[x]` Chuẩn hóa `NotFoundPage.jsx` & `SitemapPage.jsx` theo phong cách MarketLink.
 
 ### Phase 0.14: Phân Hệ Khách Mua Hàng (Customer Portal)
-- `[ ]` Chuyển đổi `UserDashboard.jsx` ➔ `src/pages/customer/CustomerDashboard.jsx` (Route `/customer/dashboard`):
+- `[x]` Chuyển đổi `UserDashboard.jsx` ➔ `src/pages/customer/CustomerDashboard.jsx` (Route `/customer/dashboard`):
   - Lời chào cá nhân hóa, widget tóm tắt: Đơn pre-order đang chờ nhận tuần này, Sạp nông sản đã lưu, Tổng số kg rau quả sạch đã mua ủng hộ nông dân.
   - Danh sách đơn hàng sắp đến giờ lấy (Upcoming Pickups) với đồng hồ đếm ngược và chỉ đường.
   - Đề xuất nông sản vụ mới từ các sạp đã mua quen thuộc.
-- `[ ]` Thay thế hoàn toàn `MedicalProfilePage.jsx` ➔ `src/pages/customer/CustomerProfilePage.jsx` (Route `/customer/profile`):
+- `[x]` Thay thế hoàn toàn `MedicalProfilePage.jsx` ➔ `src/pages/customer/CustomerProfilePage.jsx` (Route `/customer/profile`):
   - Bỏ triệt để các thông tin y tế (nhóm máu, bệnh nền, thuốc men).
   - Thay bằng hồ sơ mua sắm nông sản sạch: Chợ nông dân gần nhà nhất (Preferred Local Market), Thói quen ăn uống (Ăn chay Vegan, Hữu cơ 100%, Không Gluten), Tùy chọn nhắc lịch đi chợ cuối tuần qua SMS/Email.
-- `[ ]` Chuyển đổi `UserHistoryPage.jsx` ➔ `src/pages/customer/CustomerOrdersPage.jsx` (Route `/customer/orders`):
+- `[x]` Chuyển đổi `UserHistoryPage.jsx` ➔ `src/pages/customer/CustomerOrdersPage.jsx` (Route `/customer/orders`):
   - Bảng danh sách toàn bộ các đơn đặt trước (Đang chuẩn bị, Sẵn sàng lấy, Đã hoàn tất, Đã hủy).
   - Xem chi tiết biên lai đặt trước, đơn giá, địa điểm sạp nhận hàng.
   - Nút *"Leave Feedback & Rating"* mở form đánh giá 1-5 sao cho người nông dân.
-- `[ ]` Tích hợp `FeedbackPage.jsx` để gửi đánh giá chất lượng nông sản thực tế.
+- `[x]` Tích hợp `FeedbackPage.jsx` để gửi đánh giá chất lượng nông sản thực tế.
 
 ### Phase 0.15: Phân Hệ Chủ Sạp / Nông Dân (Farmer / Vendor Portal)
 - `[ ]` Chuyển đổi `OperatorDashboard.jsx` ➔ `src/pages/farmer/FarmerDashboard.jsx` (Route `/farmer/dashboard`):

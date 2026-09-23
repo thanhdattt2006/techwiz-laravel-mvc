@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Star, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
+import { useSearchParams, Link } from 'react-router-dom';
+import { Star, Send, CheckCircle2, Sprout } from 'lucide-react';
 import { useModal } from '../../context/ModalContext';
+import marketsData from '../../data/markets.json';
 
 export default function FeedbackPage() {
   const [searchParams] = useSearchParams();
@@ -10,18 +11,27 @@ export default function FeedbackPage() {
   const { showAlert } = useModal();
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
-  const [requestId, setRequestId] = useState(initialRequestId);
-  const [patientName, setPatientName] = useState('');
+  const [orderCode, setOrderCode] = useState(initialRequestId);
+  const [shopperName, setShopperName] = useState('');
+  const [selectedMarketId, setSelectedMarketId] = useState('mkt-02');
+  const [feedbackAspect, setFeedbackAspect] = useState('Produce Freshness & Flavor');
   const [comment, setComment] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
+  const ASPECT_OPTIONS = [
+    'Produce Freshness & Flavor',
+    'Farmer Courtesy & Warmth',
+    'Accurate Tote Packing',
+    'Pickup Punctuality & Ease',
+  ];
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!comment) {
+    if (!comment.trim()) {
       showAlert({
-        title: 'Comment Required',
-        message: 'Please write a brief comment describing your emergency transport experience.',
+        title: 'Review Required',
+        message: 'Please share a brief comment about your produce quality or stall pickup experience.',
         type: 'warning',
       });
       return;
@@ -32,8 +42,8 @@ export default function FeedbackPage() {
       setSubmitting(false);
       setSubmitted(true);
       showAlert({
-        title: 'Feedback Received',
-        message: 'Thank you for helping us improve LifeLink emergency response services!',
+        title: 'Review Published',
+        message: 'Thank you for supporting Chicago family farms! Your review directly inspires local growers.',
         type: 'success',
         confirmText: false,
         autoCloseMs: 2200,
@@ -43,48 +53,59 @@ export default function FeedbackPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12">
-      <div className="bg-white border border-[#E2E8F0] rounded-2xl p-6 sm:p-10 shadow-sm space-y-8">
+      <div className="bg-white border border-[#E2E8DF] rounded-3xl p-6 sm:p-10 shadow-xs space-y-8">
         {/* Header */}
-        <div className="text-center space-y-2 border-b border-[#E2E8F0] pb-6">
-          <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-2">
-            <MessageSquare className="w-6 h-6" />
+        <div className="text-center space-y-2 border-b border-[#E2E8DF] pb-6">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-[#16A34A] flex items-center justify-center mx-auto mb-2">
+            <Sprout className="w-6 h-6" />
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#1F2A37]">
-            Patient Care & Dispatch Feedback
+          <span className="text-xs font-bold uppercase tracking-wider text-[#16A34A] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-block">
+            Community Harvest Review
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#0F172A]">
+            Market Stall & Harvest Feedback
           </h1>
-          <p className="text-xs sm:text-sm text-[#6B7785]">
-            We value your experience. Your feedback directly shapes our paramedic training and rapid response protocols.
+          <p className="text-xs sm:text-sm text-[#475569]">
+            We value your honest review. Your feedback directly helps family farmers refine their harvesting dawn routines and rewards outstanding organic care.
           </p>
         </div>
 
         {submitted ? (
           <div className="py-12 text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-emerald-100 text-[#198754] flex items-center justify-center mx-auto">
+            <div className="w-16 h-16 rounded-full bg-emerald-100 text-[#16A34A] flex items-center justify-center mx-auto">
               <CheckCircle2 className="w-10 h-10" />
             </div>
-            <h2 className="text-xl font-bold text-[#1F2A37]">Thank You For Your Feedback!</h2>
-            <p className="text-xs text-[#6B7785] max-w-md mx-auto">
-              Your review has been recorded into the LifeLink quality assurance database.
+            <h2 className="text-xl font-bold text-[#0F172A]">Review Successfully Recorded!</h2>
+            <p className="text-xs text-[#475569] max-w-md mx-auto">
+              Thank you for sharing your harvest experience! Your feedback has been forwarded to the stall master and recorded on the MarketLink public index.
             </p>
-            <button
-              type="button"
-              onClick={() => {
-                setSubmitted(false);
-                setComment('');
-                setRequestId('');
-                setPatientName('');
-              }}
-              className="mt-4 px-5 py-2.5 rounded-xl bg-[#0B6EFD] text-white text-xs font-bold hover:bg-[#084298] transition cursor-pointer"
-            >
-              Submit Another Feedback
-            </button>
+            <div className="flex items-center justify-center gap-3 pt-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setSubmitted(false);
+                  setComment('');
+                  setOrderCode('');
+                  setShopperName('');
+                }}
+                className="px-5 py-2.5 rounded-xl border border-[#E2E8DF] text-xs font-bold text-[#0F172A] hover:bg-slate-50 transition cursor-pointer"
+              >
+                Submit Another Review
+              </button>
+              <Link
+                to="/user/history"
+                className="px-5 py-2.5 rounded-xl bg-[#16A34A] text-white text-xs font-bold hover:bg-[#15803D] transition shadow-xs"
+              >
+                Return to My Pre-Orders
+              </Link>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Star Rating */}
             <div className="text-center space-y-2">
-              <label className="block text-xs font-bold text-[#1F2A37] uppercase tracking-wider">
-                Overall Service Quality Rating
+              <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider">
+                Overall Produce & Stall Experience
               </label>
               <div className="flex items-center justify-center gap-2">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -94,7 +115,7 @@ export default function FeedbackPage() {
                     onMouseEnter={() => setHoverRating(star)}
                     onMouseLeave={() => setHoverRating(0)}
                     onClick={() => setRating(star)}
-                    className="p-1.5 transition transform hover:scale-125 cursor-pointer focus:outline-none"
+                    className="p-1.5 transition transform hover:scale-125 cursor-pointer focus:outline-hidden"
                   >
                     <Star
                       className={`w-8 h-8 ${
@@ -106,55 +127,96 @@ export default function FeedbackPage() {
                   </button>
                 ))}
               </div>
-              <span className="text-xs font-bold text-[#0B6EFD]">
-                {rating === 5 && 'Outstanding • Paramedic team was prompt & clinical'}
-                {rating === 4 && 'Very Good • Satisfactory transport experience'}
-                {rating === 3 && 'Average • Timely response'}
-                {rating <= 2 && 'Needs Improvement'}
+              <span className="text-xs font-bold text-[#16A34A] block">
+                {rating === 5 && '★★★★★ Outstanding • Crisp, peak flavor & harvest at dawn'}
+                {rating === 4 && '★★★★☆ Very Good • Fresh produce & cordial grower service'}
+                {rating === 3 && '★★★☆☆ Average • Satisfactory stall pickup'}
+                {rating <= 2 && '★★☆☆☆ Needs Improvement • Quality did not meet expectations'}
               </span>
             </div>
 
-            {/* Request ID & Name */}
+            {/* Quality Aspect Badges */}
+            <div className="space-y-2">
+              <label className="block text-xs font-semibold text-[#0F172A]">
+                Key Highlight of Your Visit
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {ASPECT_OPTIONS.map((aspect) => (
+                  <button
+                    type="button"
+                    key={aspect}
+                    onClick={() => setFeedbackAspect(aspect)}
+                    className={`px-3 py-2 rounded-xl text-[11px] font-bold border transition text-center cursor-pointer ${
+                      feedbackAspect === aspect
+                        ? 'bg-emerald-50 text-[#16A34A] border-emerald-300 shadow-2xs'
+                        : 'bg-white text-[#475569] border-[#E2E8DF] hover:bg-[#F8FAF6]'
+                    }`}
+                  >
+                    {aspect}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Market Selection & Order Code */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                  Trip / Emergency Request ID (Optional)
+                <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                  Chicago Farmers Market
                 </label>
-                <input
-                  type="text"
-                  placeholder="e.g. SOS-2026-081"
-                  value={requestId}
-                  onChange={(e) => setRequestId(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD]"
-                />
+                <select
+                  value={selectedMarketId}
+                  onChange={(e) => setSelectedMarketId(e.target.value)}
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-[#0F172A] focus:outline-hidden focus:ring-2 focus:ring-[#16A34A]"
+                >
+                  {marketsData.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name} ({m.neighborhood})
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                  Patient or Reporter Name (Optional)
+                <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                  Pre-Order Reservation Code (Optional)
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. John Doe"
-                  value={patientName}
-                  onChange={(e) => setPatientName(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD]"
+                  placeholder="e.g. MLB-2026-8819"
+                  value={orderCode}
+                  onChange={(e) => setOrderCode(e.target.value)}
+                  className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-[#0F172A] focus:outline-hidden focus:ring-2 focus:ring-[#16A34A]"
                 />
               </div>
+            </div>
+
+            {/* Shopper Name */}
+            <div>
+              <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                Your Name or Initials (Optional - will be displayed publicly)
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Elena R. (Logan Square neighbor)"
+                value={shopperName}
+                onChange={(e) => setShopperName(e.target.value)}
+                className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-[#0F172A] focus:outline-hidden focus:ring-2 focus:ring-[#16A34A]"
+              />
             </div>
 
             {/* Comment */}
             <div>
-              <label className="block text-xs font-semibold text-[#1F2A37] mb-1">
-                Your Feedback & Comments <span className="text-[#DC3545]">*</span>
+              <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                Your Detailed Harvest Review <span className="text-rose-500">*</span>
               </label>
               <textarea
                 rows={4}
                 required
-                placeholder="Share your experience regarding driver speed, on-board equipment quality, communication, and overall care..."
+                placeholder="Share your experience regarding produce ripeness, aroma, packaging, farmer hospitality, or stall cleanliness..."
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs bg-[#F5F8FC] border border-[#E2E8F0] rounded-xl text-[#1F2A37] focus:outline-none focus:border-[#0B6EFD] leading-relaxed"
+                className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-[#0F172A] focus:outline-hidden focus:ring-2 focus:ring-[#16A34A] leading-relaxed"
               ></textarea>
             </div>
 
@@ -162,10 +224,10 @@ export default function FeedbackPage() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3 px-4 rounded-xl bg-[#0B6EFD] hover:bg-[#084298] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 transition cursor-pointer disabled:opacity-50"
+              className="w-full py-3.5 px-4 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer disabled:opacity-50"
             >
               <Send className="w-4 h-4" />
-              <span>{submitting ? 'Submitting Review...' : 'Submit Patient Feedback'}</span>
+              <span>{submitting ? 'Publishing Review...' : 'Publish Community Review'}</span>
             </button>
           </form>
         )}

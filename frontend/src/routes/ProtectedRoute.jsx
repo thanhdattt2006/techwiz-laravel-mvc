@@ -9,9 +9,9 @@ export default function ProtectedRoute({ allowedRoles = [] }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#F5F8FC] flex flex-col items-center justify-center gap-3">
-        <Loader2 className="w-10 h-10 text-[#0B6EFD] animate-spin" />
-        <p className="text-sm font-medium text-[#6B7785]">Verifying medical clearance session...</p>
+      <div className="min-h-screen bg-[#F8FAF6] flex flex-col items-center justify-center gap-3">
+        <Loader2 className="w-10 h-10 text-[#16A34A] animate-spin" />
+        <p className="text-sm font-medium text-[#475569]">Verifying MarketLink security session...</p>
       </div>
     );
   }
