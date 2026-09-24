@@ -2,6 +2,14 @@
 
 **Mục tiêu**: Xây dựng toàn bộ giao diện Single Page Application (SPA) bằng **React.js + JavaScript + Vite** kết nối trực tiếp với Laravel REST Web API qua Axios. Thiết kế hiện đại 100% bằng **TailwindCSS**, chia tách module rõ ràng (DRY, SOLID) và tích hợp các tính năng đặc thù cho 3 vai trò (`admin`, `operator`, `user`).
 
+> [!IMPORTANT]
+> ### ⚠️ NGUYÊN TẮC BẮT BUỘC TRƯỚC KHI CODE DAY 4:
+> Developer và AI **BẮT BUỘC** phải đọc và tuân thủ tuyệt đối:
+> 1. [`RULE.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/RULE.md): Luật làm việc, bảng màu chuẩn Fresh Botanical & Harvest Gold, cấm Dark Theme, cấm để lại `console.log()`.
+> 2. [`ai/CONVENTION.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/CONVENTION.md): 100% Functional Components + React Hooks, TailwindCSS, Axios Interceptors, cấu trúc `src/` chuẩn, ModalContext React Portal.
+> 3. [`ai/WORKFLOW.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/WORKFLOW.md): Order State Machine 4 bước, luồng Pre-Order thanh toán tiền mặt tại sạp, không có giao hàng tận nhà.
+> 4. [`ai/PROGRESS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/PROGRESS.md) & [`ai/BUGS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/BUGS.md): Cập nhật tiến độ và ghi chép lỗi phát sinh.
+
 ---
 
 ## Phase 4.1: Xây Dựng Authentication & Protected Routing

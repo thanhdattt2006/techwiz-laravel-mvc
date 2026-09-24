@@ -6,6 +6,17 @@ RESTFUL WEB API SPECIFICATION & ROUTE ARCHITECTURE (18 TABLES)
 Tài liệu này đặc tả toàn bộ cấu trúc API Routes, quy tắc phân quyền Role-Based
 Access Control (RBAC), tiền tố URL và mô tả chi tiết từng Endpoint của hệ thống.
 
+--------------------------------------------------------------------------------
+QUY TẮC BẮT BUỘC TRƯỚC KHI LẬP TRÌNH HOẶC TEST HỆ THỐNG:
+- RULE.md:            Luật làm việc, quy tắc Git Conventional Commits, cấm rác debug.
+- ai/CONVENTION.md:   Quy chuẩn strict_types=1, envelope JSON, chống N+1, FormRequest.
+- ai/DATABASE_ERD.md: Sơ đồ CSDL 18 bảng & Data Dictionary chi tiết từng trường/FK.
+- ai/WORKFLOW.md:     Quy trình nghiệp vụ, Order State Machine, Time Slot & Cutoff logic.
+- ai/AGENTS.md:       Ràng buộc cứng SRS (không thanh toán online, không ship hàng).
+- ai/PROGRESS.md:     Theo dõi tiến độ phát triển từng ngày.
+- ai/BUGS.md:         Sổ theo dõi và xử lý lỗi hệ thống.
+--------------------------------------------------------------------------------
+
 Base URL Local:      http://127.0.0.1:8000/api/v1
 Base URL Production: https://techwiz-laravel-mvc.onrender.com/api/v1
 

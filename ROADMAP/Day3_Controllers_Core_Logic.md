@@ -5,6 +5,22 @@
 
 > **Lưu ý**: Sơ đồ cây phân nhóm Route tổng thể (`/api/v1/...`) đã được lưu trữ tập trung tại [`Document.txt`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/Document.txt) và [`README.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/README.md).
 
+> [!IMPORTANT]
+> ### ⚠️ NGUYÊN TẮC BẮT BUỘC TRƯỚC KHI CODE DAY 3:
+> Trước khi viết bất kỳ Controller, Form Request, JsonResource, Service hay Test nào, Developer và AI **BẮT BUỘC** phải đọc kỹ và tuân thủ tuyệt đối các tài liệu nền tảng:
+> 1. **[`RULE.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/RULE.md)**: Luật làm việc, quy tắc commit tiếng Anh chuẩn Conventional Commits, kiểm tra `git status`/`git diff`, tuyệt đối cấm để lại rác debug (`dd()`, `dump()`, `console.log()`).
+> 2. **[`ai/CONVENTION.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/CONVENTION.md)**:
+>    - Bắt buộc khai báo `declare(strict_types=1);` ở dòng đầu tiên của **100% các file PHP** (`app/...`).
+>    - Khai báo đầy đủ Type Hints cho toàn bộ parameters và return types (không có return type -> `void`).
+>    - Bắt buộc trả về JSON envelope chuẩn: `{ "success": bool, "message": string, "data": any, "errors": any }` qua Trait `ApiResponse`.
+>    - Chống triệt để lỗi N+1 Query bằng Eager Loading `with()` khi truy vấn quan hệ Eloquent.
+>    - Validate 100% dữ liệu đầu vào bằng Form Request classes (trả HTTP 422 JSON khi lỗi validate).
+>    - Bắt buộc transform dữ liệu qua `JsonResource`, tuyệt đối không return thô Eloquent Model.
+> 3. **[`ai/DATABASE_ERD.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/DATABASE_ERD.md)**: Đối chiếu chính xác tên cột, kiểu dữ liệu, quan hệ khóa ngoại (Foreign Keys) và ràng buộc (`UNIQUE`, `CHECK`, `default`) của 18 bảng CSDL.
+> 4. **[`ai/WORKFLOW.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/WORKFLOW.md)**: Tuân thủ chặt chẽ cỗ máy trạng thái đơn hàng (Order State Machine: `placed` -> `accepted` -> `ready_for_pickup` -> `completed` / `cancelled`), logic tính toán Cutoff Hours và sinh khung giờ Time Slot.
+> 5. **[`ai/AGENTS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/AGENTS.md)**: Nắm vững 3 vai trò RBAC (`admin`, `farmer`, `customer`) và các ràng buộc cứng SRS (không cổng thanh toán online, không giao hàng tận nhà).
+> 6. **[`ai/PROGRESS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/PROGRESS.md) & [`ai/BUGS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/BUGS.md)**: Đánh dấu tiến độ `[/]` khi bắt đầu, `[x]` khi hoàn thành và ghi chép bug phát sinh ngay lập tức để team tester theo dõi.
+
 ---
 
 ## Phase 3.1: Nền Tảng Middleware & Chuẩn Hóa Phản Hồi (API Base Foundation)
@@ -258,15 +274,6 @@
   - `ReviewModerationTest.php`: Kiểm tra ràng buộc review đơn completed, phản hồi của chủ sạp và admin ẩn review.
 - `[ ]` Kiểm tra HTTP Status Codes đồng nhất: `200`, `201`, `400`, `401`, `403`, `404`, `422`.
 - `[ ]` Đảm bảo CORS header phản hồi chính xác cho Frontend React Vite trên local và production Vercel.
-
----
-
-## Phân Công Nhiệm Vụ 4 Thành Viên Cho Day 3
-
-- **Thành viên 1**: Thực hiện **Phase 3.1** (Middleware/ApiResponse) & **Phase 3.2** (Nhóm 1: Auth & User Profile).
-- **Thành viên 2**: Thực hiện **Phase 3.3** (Nhóm 2: Chợ), **Phase 3.4** (Nhóm 3: Nông Dân), **Phase 3.5** (Nhóm 4: Sản Phẩm), **Phase 3.6** (Nhóm 5: Mẫu Kho Tuần).
-- **Thành viên 3**: Thực hiện **Phase 3.7** (Nhóm 6: Giỏ Hàng), **Phase 3.8** (Nhóm 7: Đặt Hàng Pre-Order & Checkout Service).
-- **Thành viên 4**: Thực hiện **Phase 3.9** (Nhóm 8: Review/Favorite), **Phase 3.10** (Nhóm 9: Notification/Announcement), **Phase 3.11** (Nhóm 10: Admin/Contact), **Phase 3.12** (Testing Suite).
 
 ---
 

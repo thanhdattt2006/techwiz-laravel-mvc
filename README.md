@@ -9,6 +9,22 @@ Dự án áp dụng mô hình phân tách hoàn toàn Client - Server:
 
 ---
 
+## ⚠️ QUY TẮC PHÁT TRIỂN & BỘ TÀI LIỆU BẮT BUỘC (MANDATORY GUIDELINES)
+
+Trước khi tiến hành lập trình hoặc kiểm thử, Developer, Tester và AI **BẮT BUỘC** phải đọc và tuân thủ nghiêm ngặt các tài liệu sau:
+
+1. **[`RULE.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/RULE.md)**: Luật làm việc, quy tắc nhận task, chuẩn commit Git tiếng Anh (Conventional Commits), kiểm tra `git status`/`git diff`, cấm để lại rác debug (`dd()`, `dump()`, `console.log()`).
+2. **Bộ tài liệu thiết yếu trong thư mục [`ai/`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai)**:
+   - **[`ai/CONVENTION.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/CONVENTION.md)**: Quy chuẩn lập trình Clean Code, SOLID, DRY, strict types `declare(strict_types=1);`, chuẩn phản hồi JSON envelope, Form Request validation, API Resource transformation, chống N+1 query.
+   - **[`ai/DATABASE_ERD.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/DATABASE_ERD.md)**: Sơ đồ ERD quan hệ 18 bảng và Data Dictionary chi tiết (kiểu dữ liệu, constraints, foreign keys).
+   - **[`ai/WORKFLOW.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/WORKFLOW.md)**: Quy trình nghiệp vụ 3 vai trò, Order State Machine 4 bước, logic tính khung giờ Time Slot & giờ chốt đơn Cutoff.
+   - **[`ai/AGENTS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/AGENTS.md)**: Hướng dẫn kỹ thuật cho AI, ràng buộc cứng SRS TechWiz (không thanh toán online, không giao hàng tận nhà, 1 giao diện nền sáng tươi mát).
+   - **[`ai/PROGRESS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/PROGRESS.md)**: Bảng theo dõi tiến độ chi tiết từng ngày thi.
+   - **[`ai/BUGS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/BUGS.md)**: Sổ ghi nhận và xử lý lỗi hệ thống.
+3. **Lộ trình thực hiện chi tiết trong [`ROADMAP/`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ROADMAP)**: Xem file tương ứng với ngày làm việc để nắm các phase cần hoàn thiện.
+
+---
+
 ## 📂 Cấu Trúc Thư Mục Dự Án (Project Structure)
 
 ```text

@@ -2,6 +2,14 @@
 
 **Mục tiêu**: Đóng băng code tính năng mới (Code Freeze). Toàn lực kiểm thử luồng nghiệp vụ End-to-End giữa Frontend (React trên Vercel) và Backend (Laravel API trên Render), sửa sạch mọi lỗi phát sinh, thiết lập dữ liệu mẫu chuẩn chỉ và sẵn sàng kịch bản thuyết trình chinh phục Ban Giám Khảo (BGK).
 
+> [!IMPORTANT]
+> ### ⚠️ NGUYÊN TẮC BẮT BUỘC TRƯỚC KHI TEST & POLISH DAY 5:
+> Team Tester và Developer **BẮT BUỘC** phải đọc và tuân thủ tuyệt đối:
+> 1. [`RULE.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/RULE.md): Quy trình commit, kiểm thử chéo và phối hợp ghi nhận bug.
+> 2. [`ai/WORKFLOW.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/WORKFLOW.md): Kiểm thử toàn bộ các kịch bản chuyển đổi trạng thái của Order State Machine, Time Slot và Cutoff logic.
+> 3. [`ai/BUGS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/BUGS.md): Ghi chép chi tiết mọi lỗi phát sinh (mã lỗi HTTP, network request, console log) để developer xử lý dứt điểm.
+> 4. [`ai/PROGRESS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/PROGRESS.md): Nghiệm thu từng hạng mục kiểm thử và cập nhật kết quả.
+
 ---
 
 ## Phase 5.1: Đóng Băng Code & Kiểm Thử Nghiệp Vụ End-to-End (E2E)

@@ -58,7 +58,7 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] Thiết kế sơ đồ CSDL quan hệ chuẩn 18 bảng (ERD Mermaid & Data Dictionary chi tiết) tại `ai/DATABASE_ERD.md`: `users`, `personal_access_tokens`, `markets`, `market_schedules`, `farmers`, `farmer_markets`, `categories`, `products`, `weekly_stock_templates`, `carts`, `cart_items`, `orders`, `order_items`, `favorites`, `reviews`, `notifications`, `announcements`, `contact_messages`.
 - [x] Đặc tả toàn bộ quy trình nghiệp vụ hệ thống, cỗ máy trạng thái đơn hàng (Order State Machine), logic Time Slot & Cutoff Time, mẫu kho định kỳ tuần (Weekly Stock Rollover) tại `ai/WORKFLOW.md`.
 - [x] Quy hoạch chi tiết Hợp đồng API RESTful (API Contract Specification 11 nhóm Endpoints) tại `ROADMAP/Day1_Analysis_Database_Design.md`.
-- [x] Thiết lập phân quyền RBAC và phân công nhiệm vụ 4 thành viên chuẩn bị cho Day 2.
+- [x] Thiết lập mô hình phân quyền RBAC (admin, farmer, customer) chuẩn bị cho Day 2.
 - Tình trạng: **100% HOÀN TẤT DAY 1**!
 
 ### Day 2: Migrations, Models, Relationships & Seeders

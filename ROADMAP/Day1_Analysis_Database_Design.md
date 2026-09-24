@@ -1,7 +1,16 @@
 # DAY 1: PHÂN TÍCH YÊU CẦU, THIẾT KẾ CSDL (ERD 17 BẢNG) & API CONTRACT
 # DỰ ÁN: MARKETLINK - EGREEN BASKET (SRS TECHWIZ 7)
 
-**Mục tiêu**: Phân tích toàn diện đề bài MarketLink, chốt mô hình phân quyền 3 roles (`admin`, `farmer`, `customer`), thiết kế sơ đồ CSDL quan hệ chuẩn 17 bảng (ERD & Data Dictionary), định nghĩa hợp đồng API RESTful (API Contract Specification) chi tiết giữa Backend và Frontend, và phân công nhiệm vụ cho 4 thành viên.
+**Mục tiêu**: Phân tích toàn diện đề bài MarketLink, chốt mô hình phân quyền 3 roles (`admin`, `farmer`, `customer`), thiết kế sơ đồ CSDL quan hệ chuẩn 17 bảng (ERD & Data Dictionary) và định nghĩa hợp đồng API RESTful (API Contract Specification) chi tiết giữa Backend và Frontend.
+
+> [!IMPORTANT]
+> ### ⚠️ NGUYÊN TẮC BẮT BUỘC TRƯỚC KHI THỰC HIỆN DAY 1:
+> Bắt buộc đọc và tuân thủ nghiêm ngặt các tài liệu:
+> - [`RULE.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/RULE.md): Luật làm việc, quy chuẩn Git Conventional Commits, cấm rác debug.
+> - [`ai/AGENTS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/AGENTS.md): Định hướng AI, Tech stack và ràng buộc cứng SRS MarketLink.
+> - [`ai/CONVENTION.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/CONVENTION.md): Quy chuẩn lập trình Clean Code, strict types, envelope JSON.
+> - [`ai/DATABASE_ERD.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/DATABASE_ERD.md): Sơ đồ CSDL chi tiết 18 bảng & Data Dictionary.
+> - [`ai/WORKFLOW.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/WORKFLOW.md): Quy trình nghiệp vụ 3 roles và Order State Machine.
 
 ---
 
@@ -127,27 +136,6 @@ Toàn bộ API tuân thủ envelope chuẩn JSON: `{ "success": boolean, "messag
 - `PATCH /farmers/{id}/approve`: Duyệt hồ sơ nông dân mở sạp.
 - `PATCH /users/{id}/status`: Khóa hoặc kích hoạt lại tài khoản người dùng vi phạm.
 - `PATCH /products/{id}/toggle-hidden`: Admin ẩn sản phẩm vi phạm quy định.
-
----
-
-## Phase 1.4: Phân Công Nhiệm Vụ 4 Thành Viên Cho Day 1 & Day 2
-
-- `[x]` **Thành viên 1 (Lead Backend - Database & Auth)**:
-  - Tạo 17 file Migrations theo đúng thứ tự an toàn tại [`ai/DATABASE_ERD.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/DATABASE_ERD.md).
-  - Cấu hình 17 Eloquent Models kèm quan hệ Relationships (`hasMany`, `belongsTo`, `morphMany`).
-  - Thiết lập Sanctum Auth, Form Requests validation (`StoreRegisterRequest`, `LoginRequest`).
-- `[ ]` **Thành viên 2 (Backend Core Logic - Catalog, Pre-Orders & Reviews)**:
-  - Xây dựng Controllers: `MarketController`, `ProductController`, `PreOrderController`, `ReviewController`.
-  - Viết logic tính toán tự động: Time Slot Generator, Cutoff Calculation, Snapshot Order Items, Aggregation Rating.
-  - Viết JsonResources chuẩn envelope format.
-- `[ ]` **Thành viên 3 (Lead Frontend - State Management & Customer Pre-Order)**:
-  - Kết nối `axiosClient.js` với các API Auth & Profile.
-  - Hoàn thiện luồng Giỏ hàng và Modal Đặt trước Pre-Order (chọn ngày chợ, chọn khung giờ slot, gửi đơn).
-  - Đồng bộ trang Tra cứu đơn hàng `OrderPickupTrackerPage.jsx` với API Backend thực tế.
-- `[ ]` **Thành viên 4 (Frontend Features - Farmer Stall & Admin Governance)**:
-  - Hoàn thiện giao diện Hàng chờ đơn Farmer (`FarmerDashboard.jsx`): duyệt, từ chối, báo sẵn sàng.
-  - Kết nối quản lý kho tuần `WeeklyStallStock` với API `weekly_stock_templates`.
-  - Kết nối Admin Panel: Phê duyệt nông dân, Quản lý chợ, Ẩn sản phẩm/đánh giá xấu.
 
 ---
 

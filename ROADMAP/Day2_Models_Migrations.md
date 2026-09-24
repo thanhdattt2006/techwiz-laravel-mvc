@@ -6,6 +6,14 @@
 2. Tạo 17 Eloquent Models tuân thủ tuyệt đối `declare(strict_types=1);`, Status/Role Constants, Mass Assignment protection (`$fillable`), Type-hinted relationships (`belongsTo`, `hasMany`, `hasOne`, `belongsToMany`, Polymorphic `morphMany`).
 3. Xây dựng bộ Database Seeders hoàn chỉnh với dữ liệu thực tế (6 chợ Chicago, sạp nông dân, 5 ngành hàng, 20+ nông sản, weekly stock templates, đơn pre-order mẫu, review, thông báo và tin nhắn liên hệ).
 
+> [!IMPORTANT]
+> ### ⚠️ NGUYÊN TẮC BẮT BUỘC TRƯỚC KHI THỰC HIỆN DAY 2:
+> Developer và AI **BẮT BUỘC** phải đọc và tuân thủ nghiêm ngặt:
+> - [`RULE.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/RULE.md): Quy chuẩn commit Git tiếng Anh, không vứt rác debug (`dd()`, `dump()`).
+> - [`ai/CONVENTION.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/CONVENTION.md): Bắt buộc `declare(strict_types=1);`, khai báo kiểu đầy đủ, `$fillable`, Type-hinted relationships, `SoftDeletes`.
+> - [`ai/DATABASE_ERD.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/DATABASE_ERD.md): Đối chiếu chính xác thứ tự tạo migration, tên cột, kiểu dữ liệu và ràng buộc của 18 bảng.
+> - [`ai/WORKFLOW.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/WORKFLOW.md): Nắm rõ quan hệ thực tế giữa các thực thể để viết Seeders chuẩn chỉ.
+
 ---
 
 ## Phase 2.1: Tạo 18 Migrations Theo Thứ Tự Quan Hệ Phụ Thuộc (Dependency Order)
