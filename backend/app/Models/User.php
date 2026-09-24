@@ -6,6 +6,8 @@ namespace App\Models;
 
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -18,10 +20,11 @@ class User extends Authenticatable
 
     // Role Constants
     public const ROLE_ADMIN = 'admin';
-    public const ROLE_OPERATOR = 'operator';
-    public const ROLE_USER = 'user';
+    public const ROLE_FARMER = 'farmer';
+    public const ROLE_CUSTOMER = 'customer';
 
     // Status Constants
+    public const STATUS_PENDING = 'pending';
     public const STATUS_ACTIVE = 'active';
     public const STATUS_INACTIVE = 'inactive';
     public const STATUS_BANNED = 'banned';
@@ -36,6 +39,7 @@ class User extends Authenticatable
         'username',
         'email',
         'phone',
+        'address',
         'role',
         'status',
         'password',
@@ -65,35 +69,65 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Check if user is an Administrator.
-     */
+    // Role Check Helpers
     public function isAdmin(): bool
     {
         return $this->role === self::ROLE_ADMIN;
     }
 
-    /**
-     * Check if user is an Operator / Dispatcher.
-     */
-    public function isOperator(): bool
+    public function isFarmer(): bool
     {
-        return $this->role === self::ROLE_OPERATOR;
+        return $this->role === self::ROLE_FARMER;
     }
 
-    /**
-     * Check if user is a standard User / Patient.
-     */
-    public function isUser(): bool
+    public function isCustomer(): bool
     {
-        return $this->role === self::ROLE_USER;
+        return $this->role === self::ROLE_CUSTOMER;
     }
 
-    /**
-     * Check if user account is currently active.
-     */
     public function isActive(): bool
     {
         return $this->status === self::STATUS_ACTIVE;
+    }
+
+    public function isPending(): bool
+    {
+        return $this->status === self::STATUS_PENDING;
+    }
+
+    // Relationships
+    public function farmer(): HasOne
+    {
+        return $this->hasOne(Farmer::class);
+    }
+
+    public function cart(): HasOne
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'customer_id');
+    }
+
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'customer_id');
+    }
+
+    public function favorites(): HasMany
+    {
+        return $this->hasMany(Favorite::class);
+    }
+
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    public function announcements(): HasMany
+    {
+        return $this->hasMany(Announcement::class, 'created_by');
     }
 }
