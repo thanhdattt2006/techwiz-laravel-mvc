@@ -1,0 +1,129 @@
+================================================================================
+MARKETLINK - EGREEN BASKET MARKETPLACE PORTAL
+RESTFUL WEB API SPECIFICATION & ROUTE ARCHITECTURE (18 TABLES)
+================================================================================
+
+Tài liệu này đặc tả toàn bộ cấu trúc API Routes, quy tắc phân quyền Role-Based
+Access Control (RBAC), tiền tố URL và mô tả chi tiết từng Endpoint của hệ thống.
+
+Base URL Local:      http://127.0.0.1:8000/api/v1
+Base URL Production: https://techwiz-laravel-mvc.onrender.com/api/v1
+
+Standard Response Envelope Format:
+--------------------------------------------------------------------------------
+{
+  "success": true,
+  "message": "Operation successful",
+  "data": { ... },
+  "errors": null
+}
+
+================================================================================
+1. SƠ ĐỒ CÂY PHÂN NHÓM ROUTE CHI TIẾT (API ROUTE TREE)
+================================================================================
+
+/api/v1/
+├── [PUBLIC ROUTES] (Không cần Bearer Token)
+│   ├── POST /auth/register                     -> Đăng ký tài khoản Khách hàng (bắt buộc phone, address)
+│   ├── POST /auth/register-farmer              -> Đăng ký mở sạp Nông dân (trạng thái ban đầu status='pending')
+│   ├── POST /auth/login                        -> Đăng nhập hệ thống, cấp Sanctum Token & User Role
+│   ├── GET  /markets                           -> Danh bạ chợ (lọc theo thứ họp chợ, khu vực, toạ độ)
+│   ├── GET  /markets/{id}                      -> Chi tiết chợ, lịch họp từng ngày, danh sách sạp đang bán
+│   ├── GET  /farmers                           -> Danh sách sạp nông dân công khai (tìm theo tên, rating)
+│   ├── GET  /farmers/{id}                      -> Chi tiết sạp, danh mục nông sản đang mở bán, review
+│   ├── GET  /categories                        -> Danh mục 5 ngành hàng nông sản sạch
+│   ├── GET  /products                          -> Catalog nông sản (lọc category, giá, chợ, sạp, search fulltext)
+│   ├── GET  /products/{id}                     -> Chi tiết nông sản, xuất xứ, tồn kho, review
+│   ├── GET  /reviews/product/{productId}       -> Danh sách đánh giá của sản phẩm kèm câu trả lời của chủ sạp
+│   ├── GET  /reviews/farmer/{farmerId}         -> Danh sách đánh giá của sạp nông dân
+│   ├── GET  /announcements/active              -> Thông báo hệ thống đang kích hoạt
+│   ├── POST /contact                           -> Khách vãng lai gửi phản ánh / liên hệ (Contact Us)
+│   └── GET  /orders/track/{orderCode}          -> Tra cứu tiến độ đơn hàng nhận tại sạp qua mã code
+│
+├── [SHARED PROTECTED] (Yêu cầu auth:sanctum)
+│   ├── GET  /auth/me                           -> Lấy thông tin tài khoản hiện tại + hồ sơ Farmer nếu có
+│   ├── PUT  /auth/profile                      -> Cập nhật thông tin cá nhân (fullname, phone, address)
+│   ├── PUT  /auth/change-password              -> Đổi mật khẩu tài khoản
+│   ├── POST /auth/logout                       -> Huỷ Bearer Token hiện tại
+│   ├── GET  /notifications                     -> Danh sách thông báo in-app (phân trang + unread_count)
+│   ├── PATCH /notifications/{id}/read          -> Đánh dấu đã đọc 1 thông báo
+│   └── PATCH /notifications/read-all           -> Đánh dấu đã đọc tất cả thông báo
+│
+├── [CUSTOMER ROUTES] (auth:sanctum + role:customer)
+│   ├── GET    /cart                            -> Lấy giỏ hàng hiện tại (nhóm theo sạp nông dân và chợ)
+│   ├── POST   /cart/items                      -> Thêm món vào giỏ (product_id, quantity)
+│   ├── PUT    /cart/items/{id}                 -> Cập nhật số lượng món trong giỏ
+│   ├── DELETE /cart/items/{id}                 -> Xoá 1 món khỏi giỏ hàng
+│   ├── DELETE /cart/clear                      -> Dọn sạch toàn bộ giỏ hàng
+│   ├── POST   /orders/checkout                 -> Đặt trước Pre-Order (tự động tách đơn theo sạp trong DB Transaction)
+│   ├── GET    /orders/my-orders                -> Lịch sử các đơn đặt trước của khách
+│   ├── GET    /orders/my-orders/{id}           -> Chi tiết đơn pre-order của khách
+│   ├── PATCH  /orders/{id}/cancel              -> Khách huỷ đơn trước giờ cutoff_at (tự động hoàn kho)
+│   ├── POST   /reviews                         -> Gửi đánh giá 1-5 sao sau khi đơn completed (XOR Farmer/Product)
+│   ├── GET    /favorites                       -> Danh sách mục yêu thích (chợ, sạp, sản phẩm)
+│   └── POST   /favorites/toggle                -> Thêm/Bỏ yêu thích nhanh (đa hình polymorphic)
+│
+├── [FARMER ROUTES] (auth:sanctum + role:farmer + EnsureFarmerActive)
+│   ├── GET    /farmer/dashboard-stats          -> Thống kê sạp: Tổng đơn, Đơn chờ, Doanh thu ước tính
+│   ├── GET    /farmer/profile                  -> Xem chi tiết hồ sơ sạp hàng
+│   ├── PUT    /farmer/profile                  -> Cập nhật mô tả sạp, hotline, ảnh đại diện, toạ độ
+│   ├── GET    /farmer/markets                  -> Danh sách chợ sạp đang đăng ký bán
+│   ├── POST   /farmer/markets                  -> Đăng ký bán tại chợ mới (farmer_markets)
+│   ├── PUT    /farmer/markets/{marketId}       -> Cấu hình vị trí gian, ngày pickup, slot 30p, cutoff 12h
+│   ├── DELETE /farmer/markets/{marketId}       -> Rút sạp khỏi chợ
+│   ├── GET    /farmer/products                 -> Quản lý nông sản của riêng sạp
+│   ├── POST   /farmer/products                 -> Đăng nông sản mới
+│   ├── PUT    /farmer/products/{id}            -> Sửa nông sản (tên, giá, đơn vị, ảnh, availability)
+│   ├── DELETE /farmer/products/{id}            -> Xoá mềm nông sản (Soft Delete)
+│   ├── GET    /farmer/products/{id}/template   -> Xem mẫu kho định kỳ tuần của sản phẩm
+│   ├── PUT    /farmer/products/{id}/template   -> Cấu hình số lượng mở bán định kỳ T7/CN
+│   ├── POST   /farmer/apply-weekly-templates   -> 1-Click áp dụng định mức kho tuần cho phiên chợ tới
+│   ├── GET    /farmer/orders                   -> Hàng chờ đơn đặt trước cần chuẩn bị (Incoming Pre-orders)
+│   ├── PATCH  /farmer/orders/{id}/accept       -> Nông dân duyệt đơn đặt trước
+│   ├── PATCH  /farmer/orders/{id}/decline      -> Nông dân từ chối đơn (+ lý do cancel_reason & hoàn kho)
+│   ├── PATCH  /farmer/orders/{id}/ready        -> Báo nông sản đã thu hoạch & đóng gói xong tại sạp
+│   ├── PATCH  /farmer/orders/{id}/complete     -> Xác nhận khách đã nhận hàng & thanh toán tiền mặt tại sạp
+│   └── POST   /farmer/reviews/{id}/reply       -> Nông dân trả lời đánh giá đối với sản phẩm của sạp mình
+│
+└── [ADMIN ROUTES] (auth:sanctum + role:admin)
+    ├── GET    /admin/stats/overview            -> Báo cáo sàn: Doanh thu, Đơn hàng, Top nông dân hoạt động
+    ├── GET    /admin/users                     -> Quản lý danh sách người dùng toàn sàn
+    ├── PATCH  /admin/users/{id}/status         -> Khóa/Mở khóa tài khoản (active/inactive/banned)
+    ├── GET    /admin/farmers/pending           -> Hàng chờ hồ sơ nông dân xin mở sạp
+    ├── PATCH  /admin/farmers/{id}/approve      -> Phê duyệt hồ sơ nông dân mở sạp
+    ├── PATCH  /admin/farmers/{id}/reject       -> Từ chối hồ sơ nông dân
+    ├── POST   /admin/markets                   -> Thêm chợ nông sản mới kèm toạ độ và lịch họp
+    ├── PUT    /admin/markets/{id}              -> Cập nhật thông tin chợ, toạ độ, bản đồ
+    ├── DELETE /admin/markets/{id}              -> Xoá mềm chợ
+    ├── POST   /admin/categories                -> Thêm ngành hàng nông sản mới
+    ├── PUT    /admin/categories/{id}           -> Cập nhật ngành hàng
+    ├── PATCH  /admin/products/{id}/toggle-hide -> Admin gỡ nông sản vi phạm chính sách (is_hidden)
+    ├── PATCH  /admin/reviews/{id}/toggle-hide  -> Admin ẩn review khiếm nhã/sai sự thật (is_hidden)
+    ├── GET    /admin/announcements             -> Quản lý thông báo toàn sàn
+    ├── POST   /admin/announcements             -> Phát thông báo mới (target_role: all, farmer, customer)
+    ├── PUT    /admin/announcements/{id}        -> Sửa thông báo
+    ├── DELETE /admin/announcements/{id}        -> Xoá thông báo
+    ├── GET    /admin/inquiries                 -> Hộp thư tiếp nhận liên hệ / phản ánh từ khách (Admin Inbox)
+    └── PATCH  /admin/inquiries/{id}/read       -> Đánh dấu đã xử lý phản ánh
+
+================================================================================
+2. DANH SÁCH 18 BẢNG CSDL QUAN HỆ TƯƠNG ỨNG
+================================================================================
+1.  users                    - Tài khoản 3 vai trò (admin, farmer, customer)
+2.  personal_access_tokens   - Sanctum Tokens cho REST API
+3.  markets                  - Danh bạ chợ nông sản địa phương
+4.  market_schedules         - Lịch họp theo ngày trong tuần của chợ (0=Sun..6=Sat)
+5.  farmers                  - Hồ sơ chủ sạp (1-1 với users)
+6.  farmer_markets           - Quan hệ Sạp - Chợ, stall_location, pickup slot, cutoff
+7.  categories               - 5 ngành hàng nông sản sạch
+8.  products                 - Sản phẩm niêm yết, giá, tồn kho, fulltext search
+9.  weekly_stock_templates   - Định mức kho mở bán hàng tuần theo thứ
+10. carts                    - Giỏ hàng người dùng (1-1 với users)
+11. cart_items               - Chi tiết từng món trong giỏ hàng
+12. orders                   - Đơn đặt trước Pre-Order, snapshot, pickup slot
+13. order_items              - Snapshot tên, đơn vị, giá mua lúc chốt đơn
+14. favorites                - Lưu yêu thích đa hình polymorphic (farmer, product, market)
+15. reviews                  - Đánh giá 1-5 sao, phân tách Farmer/Product, farmer_reply
+16. notifications            - Thông báo in-app đẩy sự kiện đơn hàng
+17. announcements            - Thông báo toàn sàn của Admin theo role mục tiêu
+18. contact_messages         - Hòm thư tiếp nhận liên hệ / phản ánh gửi Admin Inbox
