@@ -19,13 +19,16 @@ return new class extends Migration
             $table->string('username', 50)->unique();
             $table->string('email', 100)->unique();
             $table->string('phone', 20)->nullable();
-            $table->enum('role', ['admin', 'operator', 'user'])->default('user');
-            $table->enum('status', ['active', 'inactive', 'banned'])->default('active');
+            $table->text('address')->nullable();
+            $table->enum('role', ['admin', 'farmer', 'customer'])->default('customer');
+            $table->enum('status', ['pending', 'active', 'inactive', 'banned'])->default('active');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->index(['role', 'status']);
         });
     }
 
