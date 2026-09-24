@@ -36,14 +36,23 @@ File này chứa thông tin cấu hình và hướng dẫn bắt buộc dành ch
 2. **Farmer (Vendor / Chủ sạp)**: Chủ sạp nông dân, quản lý hồ sơ sạp hàng tại chợ, quản lý danh mục rau củ quả tươi sống, kiểm soát số lượng tồn sạp mở bán hàng tuần (Weekly Stock Inventory), tiếp nhận và cập nhật trạng thái đơn Pre-order của khách hàng.
 3. **Customer (Khách mua)**: Khách hàng mua nông sản, duyệt chợ gần nhà qua bản đồ, lọc nông sản theo danh mục/giá/hữu cơ, đặt trước giữ chỗ (Pre-order for pickup) chọn ngày và khung giờ nhận tại sạp, theo dõi mã đơn, thanh toán tiền mặt tại sạp, gửi đánh giá 1-5 sao sau khi nhận hàng.
 
-### 2.2. Các Bảng CSDL Cốt Lõi Thực Hành (SRS Section 1.8):
-- `users`: id, fullname, username, email, phone, role (`admin`, `farmer`, `customer`), status, avatar_url, password.
-- `markets`: id, name, slug, address, city, latitude, longitude, operating_days, opening_hours, image_url, description, status.
-- `products`: id, farmer_id, market_id, name, slug, category, origin_farm, harvest_date, is_organic, price, unit, stock_quantity, image_url, description, status.
-- `orders`: id, order_code, customer_id, farmer_id, market_id, product_id, quantity, unit_price, total_estimated_amount, pickup_date, pickup_time_slot, customer_name, customer_phone, pickup_notes, status.
-- `reviews`: id, customer_id, product_id, farmer_id, order_id, rating (1-5), comment, is_approved.
-- `reports`: id, reporter_id, reported_type, reported_id, reason, status, admin_notes.
-- `contact_messages`: id, name, email, subject, message, is_read.
+### 2.2. Kiến Trúc 18 Bảng Cơ Sở Dữ Liệu Chuẩn Hoá (Xem ai/DATABASE_ERD.md):
+- `users`: Tài khoản định danh 3 roles (admin, farmer, customer), phone, address, status, softDeletes.
+- `personal_access_tokens`: Token xác thực Sanctum cho RESTful Web API.
+- `markets`: Danh bạ chợ nông sản địa phương, toạ độ GPS, map embed.
+- `market_schedules`: Lịch họp theo ngày trong tuần của chợ (0=Sun..6=Sat).
+- `farmers`: Hồ sơ chủ sạp (1-1 với users), contact, avg_rating, review_count.
+- `farmer_markets`: Quan hệ Sạp - Chợ, stall_location, pickup_days, pickup_start_time, pickup_end_time, slot_minutes, cutoff_hours.
+- `categories`: Ngành hàng nông sản sạch (rau, quả, trứng sữa, đồ khô, mật ong).
+- `products`: Sản phẩm niêm yết, đơn giá, đơn vị tính, tồn kho, availability, is_hidden.
+- `weekly_stock_templates`: Định mức số lượng mở bán định kỳ theo thứ cho từng sản phẩm.
+- `carts` & `cart_items`: Giỏ hàng người dùng và chi tiết từng món.
+- `orders` & `order_items`: Đơn Pre-order giữ chỗ, snapshot thông tin sản phẩm và giá lúc đặt.
+- `favorites`: Lưu yêu thích đa hình (farmer, product, market).
+- `reviews`: Đánh giá 1-5 sao, phân tách rõ hoặc Farmer hoặc Product, farmer_reply cho sản phẩm.
+- `notifications`: Thông báo in-app đẩy sự kiện đơn hàng.
+- `announcements`: Thông báo toàn sàn của Admin theo role mục tiêu.
+- `contact_messages`: Hộp thư tiếp nhận liên hệ / phản ánh từ khách gửi đến Admin.
 
 ## 3. QUY TẮC CỐT LÕI (CORE RULES)
 - **Tuân thủ kiến trúc Web API + React Vite**: Backend CHỈ trả về dữ liệu JSON qua RESTful API, KHÔNG render Blade view cho ứng dụng chính. Frontend React Vite đảm nhiệm 100% hiển thị và tương tác.

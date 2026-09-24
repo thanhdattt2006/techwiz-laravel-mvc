@@ -52,21 +52,23 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] Hoàn thiện Phân hệ Account Settings & Change Password cho cả Khách hàng (Shopper Profile & Security) và Nông dân (Stall Master Settings & Operations), đồng bộ dữ liệu vào AuthContext và localStorage.
 - Tình trạng: **100% HOÀN TẤT TOÀN BỘ DAY 0 SETUP & REFACTOR ROADMAP (Phase 0.1 -> 0.17)**! Sẵn sàng 100% cho Day 1 (ERD & Backend Migrations).
 
-### Day 1: Phân Tích Đề Bài SRS, Thiết Kế ERD & Kiến Trúc 3 Roles
+### Day 1: Phân Tích Đề Bài SRS, Thiết Kế ERD (18 Bảng) & Kiến Trúc 3 Roles
 
-- `[x]` Đọc kỹ SRS MarketLink: nông dân đăng ký sạp, đưa hàng lên chợ tuần, khách pre-order giữ chỗ, nhận hàng tại sạp, feedback nông dân, không cổng thanh toán trực tuyến
-- `[ ]` Thiết kế sơ đồ CSDL (ERD) chi tiết cho 7 bảng cốt lõi: `users`, `markets`, `products`, `orders`, `order_items`, `reviews`, `reports`
-- `[ ]` Quy hoạch danh sách Endpoint REST API (`/api/v1/...`) chuẩn Envelope cho Products, Markets, Pre-Orders, Reviews
-- `[ ]` Xây dựng cấu trúc phân quyền RBAC (Sanctum Abilities, Middleware `admin`, `farmer`, `customer`)
-- Tình trạng: Đã sẵn sàng thực thi ngay sau Day 0
+- [x] Đọc kỹ và đối chiếu toàn bộ yêu cầu SRS MarketLink (`topic/MarketLink End-to-End Web Solutions_SRS(main).pdf`) và phân biệt rõ với CampusCoin.
+- [x] Thiết kế sơ đồ CSDL quan hệ chuẩn 18 bảng (ERD Mermaid & Data Dictionary chi tiết) tại `ai/DATABASE_ERD.md`: `users`, `personal_access_tokens`, `markets`, `market_schedules`, `farmers`, `farmer_markets`, `categories`, `products`, `weekly_stock_templates`, `carts`, `cart_items`, `orders`, `order_items`, `favorites`, `reviews`, `notifications`, `announcements`, `contact_messages`.
+- [x] Đặc tả toàn bộ quy trình nghiệp vụ hệ thống, cỗ máy trạng thái đơn hàng (Order State Machine), logic Time Slot & Cutoff Time, mẫu kho định kỳ tuần (Weekly Stock Rollover) tại `ai/WORKFLOW.md`.
+- [x] Quy hoạch chi tiết Hợp đồng API RESTful (API Contract Specification 11 nhóm Endpoints) tại `ROADMAP/Day1_Analysis_Database_Design.md`.
+- [x] Thiết lập phân quyền RBAC và phân công nhiệm vụ 4 thành viên chuẩn bị cho Day 2.
+- Tình trạng: **100% HOÀN TẤT DAY 1**!
 
 ### Day 2: Migrations, Models, Relationships & Seeders
 
-- `[ ]` Tạo Migrations cho `users` (3 roles: admin, farmer, customer), `markets`, `products`, `orders`, `order_items`, `reviews`, `reports`
-- `[ ]` Cấu hình Eloquent Models (`declare(strict_types=1);`, fillable, SoftDeletes, Status constants)
-- `[ ]` Thiết lập Eloquent Relationships (1-N giữa Market-Products, User-Orders, Product-OrderItems, Product-Reviews)
-- `[ ]` Tạo Seeders có sẵn 3 tài khoản demo cố định (`admin`, `operator/farmer`, `user/customer`) kèm mật khẩu mẫu `password123` và danh mục 6 chợ Chicago + 20 nông sản mẫu
-- Tình trạng: Chờ thực hiện sau Day 1
+- [x] Tạo đủ 18 file Migrations theo đúng thứ tự an toàn (`000001` đến `000018`) với đầy đủ Foreign Keys, Constraints (`CHECK`, `UNIQUE`, `JSON`, `FULLTEXT`), Indexes và `SoftDeletes`.
+- [x] Cấu hình 17 Eloquent Models tuân thủ nghiêm ngặt `declare(strict_types=1);`, Mass Assignment protection (`$fillable`), `$casts`, Constants và Helper methods.
+- [x] Thiết lập Eloquent Relationships (1-1, 1-N, N-N qua `farmer_markets`, Polymorphic `morphMany` cho `favorites`).
+- [x] Viết `DatabaseSeeder.php` hoàn chỉnh: 3 tài khoản demo cố định (`admin@marketlink.com`, `farmer@marketlink.com`, `customer@marketlink.com`), 6 chợ Chicago kèm lịch họp và toạ độ thực tế, 5 ngành hàng, sản phẩm, weekly stock templates, đơn mẫu, review, thông báo và contact messages.
+- [x] Kiểm tra cú pháp PHP (Linting) 100% các file migrations, models và seeder: **0 syntax errors**!
+- Tình trạng: **100% HOÀN TẤT DAY 2 CODEBASE**! Sẵn sàng cho Day 3 xây dựng RESTful API Controllers.
 
 ### Day 3: Laravel RESTful Controllers & Core Business Logic
 

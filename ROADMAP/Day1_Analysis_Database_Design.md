@@ -1,68 +1,158 @@
-# DAY 1: PHÂN TÍCH YÊU CẦU, THIẾT KẾ CSDL (ERD) & API CONTRACT
+# DAY 1: PHÂN TÍCH YÊU CẦU, THIẾT KẾ CSDL (ERD 17 BẢNG) & API CONTRACT
+# DỰ ÁN: MARKETLINK - EGREEN BASKET (SRS TECHWIZ 7)
 
-**Mục tiêu**: Phân tích đề bài, chốt mô hình phân quyền 3 roles (`admin`, `operator`, `user`), thiết kế sơ đồ CSDL quan hệ (ERD), định nghĩa hợp đồng API (API Contract Specification) giữa Backend và Frontend, và phân chia công việc cho team 4 người.
+**Mục tiêu**: Phân tích toàn diện đề bài MarketLink, chốt mô hình phân quyền 3 roles (`admin`, `farmer`, `customer`), thiết kế sơ đồ CSDL quan hệ chuẩn 17 bảng (ERD & Data Dictionary), định nghĩa hợp đồng API RESTful (API Contract Specification) chi tiết giữa Backend và Frontend, và phân công nhiệm vụ cho 4 thành viên.
 
 ---
 
 ## Phase 1.1: Phân Tích Yêu Cầu Đề Bài & Mô Hình 3 Roles
-- `[ ]` Đọc kỹ đề bài (Sử dụng mẫu tham khảo "Rapid Rescue" trong TechWiz 7 SRS hoặc đề thi thực tế).
-- `[ ]` Xác định 3 Actors chính và ma trận quyền hạn:
-  1. **`admin` (Quản trị viên)**:
-     - Toàn quyền quản lý người dùng, tài khoản operator, danh mục xe cứu thương / trang thiết bị, tài xế, bệnh viện liên kết.
-     - Xem báo cáo tổng quan, số lượng cuốc cấp cứu, thời gian phản hồi trung bình, tỷ lệ thành công.
-  2. **`operator` (Điều phối viên / Tổng đài viên)**:
-     - Nhận danh sách yêu cầu cấp cứu SOS thời gian thực từ người dân.
-     - Xem bản đồ vị trí các xe đang rảnh (Available) và vị trí của nạn nhân.
-     - Phân công (Assign) xe cứu thương gần nhất cho ca cấp cứu.
-     - Cập nhật tiến độ: Đã điều phối -> Xe đang tới -> Đã tới hiện trường -> Đang chở về viện -> Hoàn thành.
-  3. **`user` (Người dân / Bệnh nhân)**:
-     - Kích hoạt yêu cầu khẩn cấp 1-chạm (gửi kèm toạ độ GPS tự động lấy từ trình duyệt).
-     - Theo dõi xe cứu thương đang di chuyển tới vị trí của mình trên bản đồ theo thời gian thực.
-     - Quản lý hồ sơ y tế khẩn cấp cá nhân (nhóm máu, dị ứng, tiền sử bệnh, số điện thoại người thân).
-     - Xem lịch sử các lần gọi cứu trợ.
+- `[x]` Đọc kỹ SRS MarketLink (`topic/MarketLink End-to-End Web Solutions_SRS(main).pdf`).
+- `[x]` Xác định 3 Actors chính và ma trận quyền hạn:
+  1. **`admin` (Quản trị viên toàn sàn)**:
+     - Phê duyệt / tạm khóa hồ sơ nông dân mở sạp (`farmers`, `users.status = 'pending'`).
+     - Quản lý danh bạ chợ địa phương (`markets`), lịch họp chợ (`market_schedules`) và định vị OpenStreetMap.
+     - Kiểm duyệt nội dung vi phạm: gỡ sản phẩm (`products.is_hidden = 1`), ẩn đánh giá (`reviews.is_hidden = 1`).
+     - Phát thông báo / cảnh báo toàn sàn (`announcements`).
+     - Xem báo cáo phân tích toàn hệ thống (tổng doanh thu ước tính, sản lượng pre-order, top sạp hoạt động).
+  2. **`farmer` (Chủ sạp / Nông dân)**:
+     - Quản lý hồ sơ sạp hàng cá nhân (`farmers`), liên kết chợ và cài đặt khung giờ nhận hàng (`farmer_markets`).
+     - Quản lý sản phẩm (`products`), ngành hàng (`categories`), định mức mở bán hàng tuần (`weekly_stock_templates`).
+     - Xử lý hàng chờ đơn đặt trước (Incoming Pre-Orders): duyệt đơn (`accepted`), từ chối (`declined`), báo hàng sẵn sàng (`ready_for_pickup`).
+     - Xem lịch sử đơn, thống kê doanh số sạp, phản hồi review của khách hàng (`reviews.farmer_reply`).
+  3. **`customer` (Khách hàng mua nông sản)**:
+     - Bắt buộc đăng ký với đủ: `fullname`, `username`, `email`, `phone`, `address`.
+     - Tìm kiếm, lọc nông sản theo chợ, danh mục, khoảng giá, xem vị trí chợ và sạp trên bản đồ.
+     - Giỏ hàng (`carts`, `cart_items`) và Pre-Order giữ chỗ (tự động tách đơn theo từng sạp nông dân).
+     - Chọn ngày họp chợ và khung giờ đến nhận hàng (`pickup_date`, `pickup_time_slot`).
+     - Theo dõi tiến độ đơn hàng thời gian thực qua mã đơn (`order_code`).
+     - Lưu mục yêu thích (`favorites`), gửi đánh giá 1-5 sao sau khi đơn `completed`.
+     - **Ràng buộc SRS cốt lõi**: Thanh toán trực tiếp tại sạp (KHÔNG cổng thanh toán online), tự đến sạp lấy (KHÔNG giao hàng tận nhà).
 
-## Phase 1.2: Thiết Kế Sơ Đồ Cơ Sở Dữ Liệu (ERD)
-- `[ ]` **Bảng `users`**:
-  - `id`, `name`, `email`, `password`, `phone`, `role` (`enum('admin', 'operator', 'user')`), `avatar_url`, `status` (`active`, `suspended`), `created_at`, `updated_at`, `deleted_at`.
-- `[ ]` **Bảng `medical_profiles`** (1-1 với `users`):
-  - `id`, `user_id` (FK), `blood_type` (A, B, AB, O, Rh+/-), `allergies`, `chronic_conditions`, `emergency_contact_name`, `emergency_contact_phone`, `timestamps`.
-- `[ ]` **Bảng `ambulances`**:
-  - `id`, `vehicle_number` (Biển số xe), `model`, `equipment_level` (`basic`, `advanced`, `icu`), `current_status` (`available`, `dispatched`, `maintenance`, `offline`), `current_lat`, `current_lng`, `driver_name`, `driver_phone`, `timestamps`, `deleted_at`.
-- `[ ]` **Bảng `emergency_requests`**:
-  - `id`, `user_id` (FK nullable nếu hỗ trợ gọi vãng lai), `caller_name`, `caller_phone`, `pickup_address`, `pickup_lat`, `pickup_lng`, `severity_level` (`critical`, `moderate`, `low`), `notes`, `status` (`pending`, `assigned`, `en_route`, `arrived`, `transporting`, `completed`, `cancelled`), `timestamps`, `deleted_at`.
-- `[ ]` **Bảng `dispatches`**:
-  - `id`, `emergency_request_id` (FK), `ambulance_id` (FK), `operator_id` (FK to users), `dispatched_at`, `arrived_at`, `completed_at`, `hospital_destination`, `notes`, `timestamps`.
+---
 
-## Phase 1.3: Quy Hoạch API Contract (Endpoints Giữa Backend & Frontend)
-- `[ ]` **Nhóm Auth (`/api/v1/auth`)**:
-  - `POST /register`: Đăng ký tài khoản người dùng
-  - `POST /login`: Đăng nhập, trả về `{ token, user: { id, name, email, role } }`
-  - `GET /me`: Lấy thông tin tài khoản hiện tại (kèm role)
-  - `POST /logout`: Hủy token Sanctum
-- `[ ]` **Nhóm Emergency Request (`/api/v1/emergency-requests`)**:
-  - `POST /`: Tạo yêu cầu SOS khẩn cấp (User)
-  - `GET /`: Danh sách yêu cầu (Operator xem các ca `pending`, User xem lịch sử của mình)
-  - `GET /{id}`: Chi tiết ca cấp cứu kèm trạng thái và thông tin xe được điều phối
-  - `PATCH /{id}/cancel`: Hủy yêu cầu
-- `[ ]` **Nhóm Dispatch & Fleet (`/api/v1/dispatches`)**:
-  - `POST /assign`: Operator gán xe cứu thương cho ca cấp cứu
-  - `PATCH /{id}/status`: Cập nhật trạng thái chuyến đi (`en_route`, `arrived`, `completed`)
-  - `GET /active`: Danh sách các chuyến đang chạy thời gian thực
-- `[ ]` **Nhóm Ambulances (`/api/v1/ambulances`)**:
-  - `GET /`: Danh sách xe và trạng thái (Available / Dispatched / v.v.)
-  - `POST /` / `PUT /{id}` / `DELETE /{id}`: Admin quản lý đội xe
-  - `PATCH /{id}/location`: Cập nhật toạ độ GPS xe thời gian thực (giả lập hoặc từ GPS thiết bị)
-- `[ ]` **Nhóm Admin Analytics (`/api/v1/admin/stats`)**:
-  - `GET /overview`: Tổng số xe, số ca cấp cứu hôm nay, tỷ lệ phản hồi nhanh, biểu đồ theo tuần.
+## Phase 1.2: Thiết Kế Cơ Sở Dữ Liệu (ERD 17 Bảng)
+- `[x]` Đã hoàn thành sơ đồ Mermaid ERD và Data Dictionary chi tiết tại [`ai/DATABASE_ERD.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/DATABASE_ERD.md):
+  1. **`users`**: Tài khoản người dùng, phân quyền 3 roles (`admin`, `farmer`, `customer`), quản lý trạng thái, SoftDeletes.
+  2. **`personal_access_tokens`**: Token Sanctum xác thực Web API.
+  3. **`markets`**: Danh bạ chợ nông sản địa phương, tọa độ GPS (lat, lng), map embed.
+  4. **`market_schedules`**: Lịch mở/đóng cửa từng ngày trong tuần của chợ (`day_of_week`, `open_time`, `close_time`).
+  5. **`farmers`**: Hồ sơ chủ sạp (1-1 với `users`), tên sạp, hotline, đánh giá trung bình.
+  6. **`farmer_markets`**: Sạp bán ở chợ nào, vị trí gian, ngày nhận hàng (`pickup_days`), khung giờ, `slot_minutes`, `cutoff_hours`.
+  7. **`categories`**: Phân loại ngành hàng nông sản sạch.
+  8. **`products`**: Sản phẩm niêm yết, đơn giá, đơn vị tính, tồn kho, cờ ẩn admin, fulltext search.
+  9. **`weekly_stock_templates`**: Định mức tồn kho mở bán theo thứ trong tuần cho từng nông sản.
+  10. **`carts`**: Giỏ hàng của người dùng (1-1 với `users`).
+  11. **`cart_items`**: Chi tiết món và số lượng trong giỏ hàng.
+  12. **`orders`**: Đơn Pre-Order, mã đơn duy nhất, ngày giờ pickup, `cutoff_at`, tracking các mốc trạng thái.
+  13. **`order_items`**: Snapshot giá, tên và số lượng mặt hàng tại thời điểm đặt.
+  14. **`favorites`**: Lưu yêu thích đa hình (Farmer, Product, Market).
+  15. **`reviews`**: Đánh giá 1-5 sao, phân định hoặc Nông dân hoặc Sản phẩm, phản hồi của nông dân.
+  16. **`notifications`**: Thông báo đẩy in-app cho người dùng theo trạng thái đơn hàng.
+  17. **`announcements`**: Thông báo toàn sàn của Admin theo role mục tiêu.
 
-## Phase 1.4: Phân Công Nhiệm Vụ 4 Thành Viên
-- `[ ]` **Thành viên 1 (Lead Backend)**: Thiết kế Migrations, Models, Relationships & Sanctum Auth.
-- `[ ]` **Thành viên 2 (Backend Logic)**: Xây dựng REST API Controllers, Form Requests, JsonResources cho Emergency Requests & Dispatching.
-- `[ ]` **Thành viên 3 (Lead Frontend)**: Xây dựng Frontend khung: React Router, Axios Client, AuthContext, ProtectedRoute, Login/Register UI, User SOS Page.
-- `[ ]` **Thành viên 4 (Frontend Features)**: Xây dựng Operator Dispatch Dashboard (Live Queue & Map Tracking) & Admin Management Panel.
+---
+
+## Phase 1.3: Quy Hoạch Hợp Đồng API RESTful (API Contract Specification)
+
+Toàn bộ API tuân thủ envelope chuẩn JSON: `{ "success": boolean, "message": string, "data": any, "errors": any }`.
+
+### 1. Nhóm Xác Thực & Tài Khoản (`/api/v1/auth`)
+- `POST /register`: Đăng ký tài khoản khách hàng (yêu cầu bắt buộc: fullname, username, email, phone, address, password).
+- `POST /register-farmer`: Đăng ký tài khoản nông dân (gửi kèm thông tin sạp, trạng thái ban đầu `pending`).
+- `POST /login`: Đăng nhập hệ thống, trả về Token Sanctum, vai trò (`role`) và quyền truy cập.
+- `GET /me`: Lấy thông tin tài khoản hiện tại (kèm hồ sơ Farmer nếu có).
+- `PUT /profile`: Cập nhật thông tin cá nhân / sạp hàng.
+- `PUT /change-password`: Đổi mật khẩu tài khoản.
+- `POST /logout`: Hủy token Sanctum hiện tại.
+
+### 2. Nhóm Chợ Nông Sản (`/api/v1/markets`)
+- `GET /`: Danh sách chợ kèm lịch họp và tọa độ bản đồ (hỗ trợ lọc theo ngày trong tuần, khu vực).
+- `GET /{id}`: Chi tiết chợ, lịch họp chi tiết, danh sách các sạp nông dân (`farmers`) đang hoạt động tại chợ.
+- `POST /` / `PUT /{id}` / `DELETE /{id}`: Admin quản lý danh bạ chợ.
+
+### 3. Nhóm Nông Dân & Sạp Hàng (`/api/v1/farmers`)
+- `GET /`: Danh sách sạp nông dân công khai (tìm kiếm theo tên, chợ tham gia, điểm đánh giá).
+- `GET /{id}`: Hồ sơ chi tiết sạp, danh sách chợ bán, danh mục sản phẩm đang mở bán, reviews nhận được.
+- `PUT /stall-settings`: Nông dân cập nhật mô tả, hotline, vị trí sạp.
+- `POST /markets`: Nông dân liên kết sạp vào chợ mới (`farmer_markets`).
+- `PUT /markets/{marketId}`: Cập nhật vị trí gian, ngày pickup, khung giờ, `cutoff_hours`, `slot_minutes`.
+
+### 4. Nhóm Sản Phẩm & Định Mức Kho (`/api/v1/products`)
+- `GET /`: Danh mục nông sản công khai (hỗ trợ lọc đa tiêu chí: `category`, `market_id`, `farmer_id`, `min_price`, `max_price`, `search`).
+- `GET /{id}`: Chi tiết sản phẩm, xuất xứ trang trại, tồn kho hiện tại, đánh giá của khách hàng.
+- `POST /` / `PUT /{id}` / `DELETE /{id}`: Nông dân quản lý sản phẩm của sạp mình.
+- `GET /{id}/stock-template`: Xem mẫu tồn kho hàng tuần của sản phẩm.
+- `PUT /{id}/stock-template`: Cấu hình số lượng mở bán định kỳ cho từng ngày họp chợ.
+- `POST /apply-stock-templates`: Nông dân áp dụng nhanh mẫu kho cho phiên chợ tới.
+
+### 5. Nhóm Giỏ Hàng (`/api/v1/cart`)
+- `GET /`: Lấy toàn bộ sản phẩm trong giỏ hàng hiện tại, nhóm theo từng nông dân/chợ.
+- `POST /items`: Thêm sản phẩm vào giỏ hàng (`product_id`, `quantity`).
+- `PUT /items/{id}`: Cập nhật số lượng món trong giỏ.
+- `DELETE /items/{id}`: Xóa món khỏi giỏ hàng.
+- `DELETE /clear`: Dọn sạch giỏ hàng.
+
+### 6. Nhóm Pre-Order Giữ Chỗ (`/api/v1/orders`)
+- `POST /checkout`: Đặt trước nông sản từ giỏ hàng (chọn `market_id`, `pickup_date`, `pickup_time_slot`, ghi chú). Tự động tách đơn theo sạp.
+- `GET /customer`: Khách hàng xem danh sách đơn hàng của mình (lọc theo trạng thái `placed`, `accepted`, `ready_for_pickup`, `completed`, `cancelled`).
+- `GET /farmer`: Nông dân xem hàng chờ đơn đặt trước cần chuẩn bị.
+- `GET /{id}`: Xem chi tiết đơn hàng, snapshot mặt hàng, mã đơn, hướng dẫn nhận tại sạp.
+- `PATCH /{id}/status`: Cập nhật trạng thái đơn:
+  - Farmer: Chấp nhận (`accepted`), Từ chối (`declined` + `cancel_reason`), Báo sẵn sàng (`ready_for_pickup`), Xác nhận đã nhận tiền mặt & giao hàng (`completed`).
+  - Customer: Hủy đơn (`cancelled` + `cancel_reason`) trước giờ `cutoff_at`.
+
+### 7. Nhóm Đánh Giá & Phản Hồi (`/api/v1/reviews`)
+- `POST /`: Khách gửi đánh giá 1-5 sao cho đơn hàng đã `completed` (hoặc đánh giá sạp hoặc đánh giá sản phẩm).
+- `POST /{id}/reply`: Nông dân gửi phản hồi đối với review sản phẩm của sạp mình.
+- `GET /product/{productId}`: Lấy danh sách review của sản phẩm kèm câu trả lời của nông dân.
+- `GET /farmer/{farmerId}`: Lấy danh sách review của sạp nông dân.
+- `PATCH /{id}/moderate`: Admin ẩn/hiện review vi phạm (`is_hidden`).
+
+### 8. Nhóm Yêu Thích & Đa Hình (`/api/v1/favorites`)
+- `GET /`: Danh sách yêu thích của khách hàng (phân loại: farmer, product, market).
+- `POST /toggle`: Thêm / Xóa nhanh yêu thích (`favoritable_type`, `favoritable_id`).
+
+### 9. Nhóm Thông Báo & Cảnh Báo (`/api/v1/notifications`)
+- `GET /`: Danh sách thông báo in-app của người dùng, phân trang và đếm số lượng chưa đọc.
+- `PATCH /{id}/read`: Đánh dấu thông báo đã đọc.
+- `PATCH /read-all`: Đánh dấu đã đọc toàn bộ thông báo.
+
+### 10. Nhóm Thông Báo Toàn Sàn (`/api/v1/announcements`)
+- `GET /active`: Lấy các thông báo đang kích hoạt theo vai trò của người dùng hiện tại.
+- `POST /` / `PUT /{id}` / `DELETE /{id}`: Admin quản trị danh sách thông báo toàn sàn.
+
+### 11. Nhóm Quản Trị & Báo Cáo Thống Kê (`/api/v1/admin`)
+- `GET /stats/overview`: Thống kê tổng hợp: Tổng nông dân, tổng khách hàng, tổng chợ, tổng số đơn pre-order, doanh thu ước tính.
+- `GET /farmers/pending`: Danh sách sạp nông dân chờ phê duyệt.
+- `PATCH /farmers/{id}/approve`: Duyệt hồ sơ nông dân mở sạp.
+- `PATCH /users/{id}/status`: Khóa hoặc kích hoạt lại tài khoản người dùng vi phạm.
+- `PATCH /products/{id}/toggle-hidden`: Admin ẩn sản phẩm vi phạm quy định.
+
+---
+
+## Phase 1.4: Phân Công Nhiệm Vụ 4 Thành Viên Cho Day 1 & Day 2
+
+- `[x]` **Thành viên 1 (Lead Backend - Database & Auth)**:
+  - Tạo 17 file Migrations theo đúng thứ tự an toàn tại [`ai/DATABASE_ERD.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/DATABASE_ERD.md).
+  - Cấu hình 17 Eloquent Models kèm quan hệ Relationships (`hasMany`, `belongsTo`, `morphMany`).
+  - Thiết lập Sanctum Auth, Form Requests validation (`StoreRegisterRequest`, `LoginRequest`).
+- `[ ]` **Thành viên 2 (Backend Core Logic - Catalog, Pre-Orders & Reviews)**:
+  - Xây dựng Controllers: `MarketController`, `ProductController`, `PreOrderController`, `ReviewController`.
+  - Viết logic tính toán tự động: Time Slot Generator, Cutoff Calculation, Snapshot Order Items, Aggregation Rating.
+  - Viết JsonResources chuẩn envelope format.
+- `[ ]` **Thành viên 3 (Lead Frontend - State Management & Customer Pre-Order)**:
+  - Kết nối `axiosClient.js` với các API Auth & Profile.
+  - Hoàn thiện luồng Giỏ hàng và Modal Đặt trước Pre-Order (chọn ngày chợ, chọn khung giờ slot, gửi đơn).
+  - Đồng bộ trang Tra cứu đơn hàng `OrderPickupTrackerPage.jsx` với API Backend thực tế.
+- `[ ]` **Thành viên 4 (Frontend Features - Farmer Stall & Admin Governance)**:
+  - Hoàn thiện giao diện Hàng chờ đơn Farmer (`FarmerDashboard.jsx`): duyệt, từ chối, báo sẵn sàng.
+  - Kết nối quản lý kho tuần `WeeklyStallStock` với API `weekly_stock_templates`.
+  - Kết nối Admin Panel: Phê duyệt nông dân, Quản lý chợ, Ẩn sản phẩm/đánh giá xấu.
 
 ---
 
 ## Tổng Kết Day 1
-- `[ ]` Toàn team thống nhất 100% ERD và API Contract trước khi gõ dòng code nào.
-- `[ ]` Không có sự mập mờ giữa Frontend và Backend.
+- `[x]` Đã đọc và đối chiếu toàn bộ yêu cầu SRS TechWiz 7.
+- `[x]` Thống nhất 100% kiến trúc 17 bảng Cơ sở dữ liệu và Data Dictionary chi tiết.
+- `[x]` Hoàn tất sơ đồ Mermaid ERD và tài liệu Quy trình nghiệp vụ [`ai/WORKFLOW.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/WORKFLOW.md).
+- `[x]` Chốt trọn vẹn Hợp đồng API RESTful 11 nhóm Endpoints sẵn sàng cho Day 2 triển khai Migrations & Models.
