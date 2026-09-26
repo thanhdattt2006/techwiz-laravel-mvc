@@ -1,4 +1,5 @@
 # DAY 3: RESTFUL API CONTROLLERS, SANCTUM AUTH & CORE BUSINESS LOGIC
+
 # DỰ ÁN: MARKETLINK - EGREEN BASKET (SRS TECHWIZ 7)
 
 **Mục tiêu**: Hiện thực hóa toàn bộ logic nghiệp vụ Backend cho hệ thống 18 bảng CSDL qua RESTful Web API chuẩn hóa. Để đảm bảo tốc độ và tránh quá tải khi thực thi nhiều Controller cùng lúc, Day 3 được chia nhỏ thành **10 nhóm tính năng chuyên biệt (Phase 3.1 -> Phase 3.11)** kèm bộ kiểm thử API (Phase 3.12). Mỗi nhóm đóng gói đầy đủ: Routes, Controller, Form Requests, JsonResources và Core Services tương ứng.
@@ -6,8 +7,11 @@
 > **Lưu ý**: Sơ đồ cây phân nhóm Route tổng thể (`/api/v1/...`) đã được lưu trữ tập trung tại [`Document.txt`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/Document.txt) và [`README.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/README.md).
 
 > [!IMPORTANT]
+>
 > ### ⚠️ NGUYÊN TẮC BẮT BUỘC TRƯỚC KHI CODE DAY 3:
+>
 > Trước khi viết bất kỳ Controller, Form Request, JsonResource, Service hay Test nào, Developer và AI **BẮT BUỘC** phải đọc kỹ và tuân thủ tuyệt đối các tài liệu nền tảng:
+>
 > 1. **[`RULE.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/RULE.md)**: Luật làm việc, quy tắc commit tiếng Anh chuẩn Conventional Commits, kiểm tra `git status`/`git diff`, tuyệt đối cấm để lại rác debug (`dd()`, `dump()`, `console.log()`).
 > 2. **[`ai/CONVENTION.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/CONVENTION.md)**:
 >    - Bắt buộc khai báo `declare(strict_types=1);` ở dòng đầu tiên của **100% các file PHP** (`app/...`).
@@ -41,7 +45,7 @@
 
 ## Phase 3.2: Nhóm 1 - Xác Thực & Quản Lý Tài Khoản (Auth & User Profile)
 
-- `[ ]` **Endpoints**:
+- `[x]` **Endpoints**:
   - `POST /api/v1/auth/register` (Public: Đăng ký khách hàng)
   - `POST /api/v1/auth/register-farmer` (Public: Đăng ký mở sạp nông dân, status=`pending`)
   - `POST /api/v1/auth/login` (Public: Đăng nhập cấp Sanctum token)
@@ -49,18 +53,19 @@
   - `PUT  /api/v1/auth/profile` (Protected: Cập nhật thông tin cá nhân)
   - `PUT  /api/v1/auth/change-password` (Protected: Đổi mật khẩu)
   - `POST /api/v1/auth/logout` (Protected: Thu hồi token hiện tại)
-- `[ ]` **Controller**: `AuthController.php` (`app/Http/Controllers/Api/V1/AuthController.php`).
-- `[ ]` **Form Requests**:
+- `[x]` **Controller**: `AuthController.php` (`app/Http/Controllers/Api/V1/AuthController.php`).
+- `[x]` **Form Requests**:
   - `StoreRegisterRequest`: Validate `fullname`, `username` (unique), `email` (unique), `phone` (bắt buộc), `address` (bắt buộc), `password` (min: 8).
   - `StoreFarmerRegisterRequest`: Validate user info + `stall_name`, `contact_person`, `contact_phone`, `address`.
   - `LoginRequest`: Validate `login` (email/username), `password`.
   - `UpdateProfileRequest`: Validate `fullname`, `phone`, `address`.
   - `ChangePasswordRequest`: Validate `current_password`, `new_password` (min: 8, confirmed).
-- `[ ]` **JsonResource**: `UserResource.php` (Ẩn password, format datetime, kèm farmer profile nếu có).
-- `[ ]` **Nghiệp vụ cốt lõi**:
+- `[x]` **JsonResource**: `UserResource.php` (Ẩn password, format datetime, kèm farmer profile nếu có).
+- `[x]` **Nghiệp vụ cốt lõi**:
   - Bắt buộc kiểm tra `status === 'active'` khi đăng nhập (tài khoản `banned` hoặc `pending` sẽ bị từ chối).
   - Khách hàng đăng ký thành công tự động khởi tạo 1 bản ghi giỏ hàng rỗng (`carts`).
-- `[ ]` **Đưa danh sách API và data mẫu để test**
+- `[x]` **Đưa danh sách API và data mẫu để test**:
+  - Đã tạo Feature Test `tests/Feature/AuthApiTest.php` với 15 test cases bao phủ toàn diện (100% pass).
 
 ---
 
@@ -290,6 +295,7 @@
 ---
 
 ## Tổng Kết Day 3
+
 - `[ ]` 10 nhóm tính năng được chia nhỏ và hoàn thành độc lập, không bị chồng chéo code.
 - `[ ]` Toàn bộ 11 Controllers, 18 Form Requests và 15 JsonResources hoạt động mượt mà.
 - `[ ]` Sẵn sàng bàn giao bộ API chuẩn hóa cho Day 4 kết nối Frontend React Vite.
