@@ -94,7 +94,7 @@
 
 ## Phase 3.4: Nhóm 3 - Hồ Sơ Nông Dân & Cấu Hình Sạp Chợ (Farmers & FarmerMarkets)
 
-- `[ ]` **Endpoints**:
+- `[x]` **Endpoints**:
   - `GET    /api/v1/farmers` (Public: Danh bạ sạp nông dân, tìm theo tên, sắp xếp theo `avg_rating`)
   - `GET    /api/v1/farmers/{id}` (Public: Chi tiết sạp, danh sách chợ bán, nông sản đang bán, review)
   - `GET    /api/v1/farmer/profile` (Farmer: Xem hồ sơ sạp cá nhân)
@@ -103,15 +103,17 @@
   - `POST   /api/v1/farmer/markets` (Farmer: Đăng ký bán tại chợ mới)
   - `PUT    /api/v1/farmer/markets/{marketId}` (Farmer: Cấu hình vị trí gian, ngày pickup, slot 30p, cutoff 12h)
   - `DELETE /api/v1/farmer/markets/{marketId}` (Farmer: Rút sạp khỏi chợ)
-- `[ ]` **Controller**: `FarmerController.php` (`app/Http/Controllers/Api/V1/FarmerController.php`).
-- `[ ]` **Form Requests**:
+- `[x]` **Controller**: `FarmerController.php` (`app/Http/Controllers/Api/V1/FarmerController.php`).
+- `[x]` **Form Requests**:
   - `UpdateStallRequest`: Validate `stall_name`, `contact_person`, `contact_phone`, `address`, `description`, `logo`.
   - `LinkMarketRequest`: Validate `market_id`, `stall_location`, `pickup_days` (array), `pickup_start_time`, `pickup_end_time`, `slot_minutes`, `cutoff_hours`.
   - `UpdateFarmerMarketRequest`: Validate cập nhật khung giờ và slot nhận hàng.
-- `[ ]` **JsonResources**:
+- `[x]` **JsonResources**:
   - `FarmerResource.php`: Thông tin sạp, điểm `avg_rating`, `review_count`, danh sách chợ tham gia.
   - `FarmerMarketResource.php`: Vị trí gian `stall_location`, mảng `pickup_days`, khung giờ, slot và cutoff hours.
-- `[ ]` **Đưa danh sách API và data mẫu để test**
+- `[x]` **Đưa danh sách API và data mẫu để test**:
+  - Đã xuất bản danh sách API và dữ liệu mẫu test tại [`BackEndApiTest.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/BackEndApiTest.md#3-farmers--market-stall-configuration-phase-34).
+  - Đã tạo Feature Test `tests/Feature/FarmerApiTest.php` với 12 test cases bao phủ toàn diện (100% pass).
 
 ---
 

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\FarmerController;
 use App\Http\Controllers\Api\V1\MarketController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,10 +33,22 @@ Route::prefix('v1/auth')->group(function () {
     });
 });
 
-// Public Market routes
+// Public Directory routes (Markets & Farmers)
 Route::prefix('v1')->group(function () {
     Route::get('/markets', [MarketController::class, 'index']);
     Route::get('/markets/{id}', [MarketController::class, 'show']);
+    Route::get('/farmers', [FarmerController::class, 'index']);
+    Route::get('/farmers/{id}', [FarmerController::class, 'show']);
+});
+
+// Farmer Protected routes (requires active farmer stall)
+Route::prefix('v1/farmer')->middleware(['auth:sanctum', 'role:farmer', 'farmer.active'])->group(function () {
+    Route::get('/profile', [FarmerController::class, 'profile']);
+    Route::put('/profile', [FarmerController::class, 'updateProfile']);
+    Route::get('/markets', [FarmerController::class, 'markets']);
+    Route::post('/markets', [FarmerController::class, 'linkMarket']);
+    Route::put('/markets/{marketId}', [FarmerController::class, 'updateMarket']);
+    Route::delete('/markets/{marketId}', [FarmerController::class, 'unlinkMarket']);
 });
 
 // Admin Protected Market routes
