@@ -22,8 +22,6 @@ return new class extends Migration
             $table->decimal('unit_price', 10, 2); // Snapshot price at purchase time
             $table->decimal('quantity', 10, 2);
             $table->decimal('subtotal', 10, 2);
-
-            $table->check('quantity > 0');
             $table->index('order_id');
             $table->index('product_id');
         });

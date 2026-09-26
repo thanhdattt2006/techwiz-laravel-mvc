@@ -21,7 +21,6 @@ return new class extends Migration
             $table->time('close_time');
 
             $table->unique(['market_id', 'day_of_week']);
-            $table->check('open_time < close_time');
         });
     }
 

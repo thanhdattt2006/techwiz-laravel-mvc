@@ -32,8 +32,6 @@ return new class extends Migration
             $table->dateTime('completed_at')->nullable();
             $table->dateTime('cancelled_at')->nullable();
             $table->timestamps();
-
-            $table->check('total_amount >= 0');
             $table->index(['customer_id', 'status']);
             $table->index(['farmer_id', 'status']);
             $table->index('pickup_date');

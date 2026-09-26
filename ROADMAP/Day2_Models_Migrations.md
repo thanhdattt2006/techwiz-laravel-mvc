@@ -2,7 +2,7 @@
 # DỰ ÁN: MARKETLINK - EGREEN BASKET (SRS TECHWIZ 7)
 
 **Mục tiêu**: Hiện thực hóa 100% thiết kế sơ đồ CSDL 18 bảng thành mã nguồn Laravel Framework 13 chuẩn mực:
-1. Viết 18 file Migrations với đầy đủ Foreign Keys, Constraints (`CHECK`, `UNIQUE`, `JSON`, `FULLTEXT`), Indexes và `SoftDeletes`.
+1. Viết 18 file Migrations với đầy đủ Foreign Keys, Constraints (`UNIQUE`, `JSON`, `FULLTEXT`), Indexes và `SoftDeletes` chuẩn Laravel Schema.
 2. Tạo 17 Eloquent Models tuân thủ tuyệt đối `declare(strict_types=1);`, Status/Role Constants, Mass Assignment protection (`$fillable`), Type-hinted relationships (`belongsTo`, `hasMany`, `hasOne`, `belongsToMany`, Polymorphic `morphMany`).
 3. Xây dựng bộ Database Seeders hoàn chỉnh với dữ liệu thực tế (6 chợ Chicago, sạp nông dân, 5 ngành hàng, 20+ nông sản, weekly stock templates, đơn pre-order mẫu, review, thông báo và tin nhắn liên hệ).
 
@@ -10,7 +10,7 @@
 > ### ⚠️ NGUYÊN TẮC BẮT BUỘC TRƯỚC KHI THỰC HIỆN DAY 2:
 > Developer và AI **BẮT BUỘC** phải đọc và tuân thủ nghiêm ngặt:
 > - [`RULE.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/RULE.md): Quy chuẩn commit Git tiếng Anh, không vứt rác debug (`dd()`, `dump()`).
-> - [`ai/CONVENTION.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/CONVENTION.md): Bắt buộc `declare(strict_types=1);`, khai báo kiểu đầy đủ, `$fillable`, Type-hinted relationships, `SoftDeletes`.
+> - [`ai/CONVENTION.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/CONVENTION.md): Bắt buộc `declare(strict_types=1);`, khai báo kiểu đầy đủ, `$fillable`, Type-hinted relationships, `SoftDeletes`. Validation nghiệp vụ (số dương, khoảng thời gian) bắt buộc xử lý qua FormRequest (422), không dùng syntax lạ trong Laravel Schema.
 > - [`ai/DATABASE_ERD.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/DATABASE_ERD.md): Đối chiếu chính xác thứ tự tạo migration, tên cột, kiểu dữ liệu và ràng buộc của 18 bảng.
 > - [`ai/WORKFLOW.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/WORKFLOW.md): Nắm rõ quan hệ thực tế giữa các thực thể để viết Seeders chuẩn chỉ.
 
@@ -27,34 +27,34 @@
   - Index: `(status)`, `(latitude, longitude)`.
 - `[x]` **Migration 4**: `2026_01_01_000004_create_market_schedules_table.php`:
   - `id`, `market_id` (FK `markets.id` cascade), `day_of_week` (tinyint 0-6), `open_time`, `close_time`.
-  - Constraints: `UNIQUE (market_id, day_of_week)`, `CHECK (open_time < close_time)`.
+  - Constraints: `UNIQUE (market_id, day_of_week)` (Ràng buộc logic `open_time < close_time` validate qua FormRequest).
 - `[x]` **Migration 5**: `2026_01_01_000005_create_farmers_table.php`:
   - `id`, `user_id` (FK `users.id` cascade, unique), `stall_name`, `contact_person`, `contact_phone`, `address`, `latitude` (nullable), `longitude` (nullable), `description` (nullable), `logo` (nullable), `avg_rating` (decimal 3,2 default 0.00), `review_count` (int unsigned default 0), `timestamps()`, `softDeletes()`.
 - `[x]` **Migration 6**: `2026_01_01_000006_create_farmer_markets_table.php`:
   - `id`, `farmer_id` (FK `farmers.id` cascade), `market_id` (FK `markets.id` cascade), `stall_location` (nullable), `pickup_days` (json), `pickup_start_time`, `pickup_end_time`, `slot_minutes` (default 30), `cutoff_hours` (default 12), `is_active` (default 1), `timestamps()`.
-  - Constraints: `UNIQUE (farmer_id, market_id)`, `CHECK (pickup_start_time < pickup_end_time)`.
+  - Constraints: `UNIQUE (farmer_id, market_id)` (Ràng buộc logic `pickup_start_time < pickup_end_time` validate qua FormRequest).
   - Index: `(market_id)`.
 - `[x]` **Migration 7**: `2026_01_01_000007_create_categories_table.php`:
   - `id`, `name` (unique), `slug` (unique), `description` (nullable), `is_active` (default 1), `timestamps()`.
 - `[x]` **Migration 8**: `2026_01_01_000008_create_products_table.php`:
   - `id`, `farmer_id` (FK `farmers.id` cascade), `category_id` (FK `categories.id` restrict), `name`, `description` (nullable), `price` (decimal 10,2), `unit`, `stock_quantity` (decimal 10,2 default 0), `availability` (`available`, `sold_out`, `unavailable` default `available`), `image` (nullable), `is_hidden` (default 0), `avg_rating` (decimal 3,2 default 0.00), `review_count` (int default 0), `timestamps()`, `softDeletes()`.
-  - Constraints: `CHECK (price >= 0)`, `CHECK (stock_quantity >= 0)`.
+  - Ràng buộc giá và tồn kho không âm: validate qua `StoreProductRequest` (`numeric|min:0`).
   - Index: `(farmer_id)`, `(category_id)`, `(price)`, `FULLTEXT (name, description)`.
 - `[x]` **Migration 9**: `2026_01_01_000009_create_weekly_stock_templates_table.php`:
   - `id`, `product_id` (FK `products.id` cascade), `day_of_week` (tinyint 0-6), `default_quantity` (decimal 10,2), `is_active` (default 1).
-  - Constraints: `UNIQUE (product_id, day_of_week)`, `CHECK (default_quantity >= 0)`.
+  - Constraints: `UNIQUE (product_id, day_of_week)` (validate `default_quantity >= 0` qua FormRequest).
 - `[x]` **Migration 10**: `2026_01_01_000010_create_carts_table.php`:
   - `id`, `user_id` (FK `users.id` cascade, unique), `timestamps()`.
 - `[x]` **Migration 11**: `2026_01_01_000011_create_cart_items_table.php`:
   - `id`, `cart_id` (FK `carts.id` cascade), `product_id` (FK `products.id` cascade), `quantity` (decimal 10,2), `timestamps()`.
-  - Constraints: `UNIQUE (cart_id, product_id)`, `CHECK (quantity > 0)`.
+  - Constraints: `UNIQUE (cart_id, product_id)` (validate `quantity > 0` qua FormRequest).
 - `[x]` **Migration 12**: `2026_01_01_000012_create_orders_table.php`:
   - `id`, `order_code` (unique), `customer_id` (FK `users.id` restrict), `farmer_id` (FK `farmers.id` restrict), `market_id` (FK `markets.id` restrict), `pickup_date`, `pickup_start_time`, `pickup_end_time`, `status` (`placed`, `accepted`, `declined`, `ready_for_pickup`, `completed`, `cancelled` default `placed`), `total_amount` (decimal 10,2), `note` (nullable), `cancel_reason` (nullable), `cutoff_at` (datetime), `accepted_at` (nullable), `ready_at` (nullable), `completed_at` (nullable), `cancelled_at` (nullable), `timestamps()`.
-  - Constraints: `CHECK (total_amount >= 0)`.
+  - Ràng buộc: `total_amount >= 0` bảo đảm qua `PreOrderCheckoutService`.
   - Index: `(customer_id, status)`, `(farmer_id, status)`, `(pickup_date)`, `(market_id)`.
 - `[x]` **Migration 13**: `2026_01_01_000013_create_order_items_table.php`:
   - `id`, `order_id` (FK `orders.id` cascade), `product_id` (FK `products.id` restrict), `product_name`, `unit`, `unit_price` (decimal 10,2), `quantity` (decimal 10,2), `subtotal` (decimal 10,2).
-  - Constraints: `CHECK (quantity > 0)`.
+  - Ràng buộc: `quantity > 0` bảo đảm qua FormRequest và Checkout Service.
   - Index: `(order_id)`, `(product_id)`.
 - `[x]` **Migration 14**: `2026_01_01_000014_create_favorites_table.php`:
   - `id`, `user_id` (FK `users.id` cascade), `favoritable_type` (`farmer`, `product`, `market`), `favoritable_id` (bigint unsigned), `created_at`.
@@ -62,7 +62,8 @@
   - Index: `(favoritable_type, favoritable_id)`.
 - `[x]` **Migration 15**: `2026_01_01_000015_create_reviews_table.php`:
   - `id`, `customer_id` (FK `users.id` cascade), `order_id` (FK `orders.id` cascade), `farmer_id` (nullable, FK `farmers.id` cascade), `product_id` (nullable, FK `products.id` cascade), `rating` (tinyint 1-5), `comment` (nullable), `farmer_reply` (nullable), `farmer_replied_at` (nullable), `is_hidden` (default 0), `timestamps()`, `softDeletes()`.
-  - Constraints: `CHECK ((farmer_id IS NULL) <> (product_id IS NULL))`, `CHECK (rating BETWEEN 1 AND 5)`.
+  - Constraints: `UNIQUE (customer_id, order_id, farmer_id, product_id)`.
+  - Ràng buộc nghiệp vụ: `rating BETWEEN 1 AND 5` và `XOR (farmer_id, product_id)` bảo đảm qua `StoreReviewRequest`.
 - `[x]` **Migration 16**: `2026_01_01_000016_create_notifications_table.php`:
   - `id`, `user_id` (FK `users.id` cascade), `type`, `title`, `message`, `order_id` (nullable, FK `orders.id` set null), `is_read` (default 0), `created_at`.
   - Index: `(user_id, is_read)`.

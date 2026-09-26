@@ -27,7 +27,6 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['farmer_id', 'market_id']);
-            $table->check('pickup_start_time < pickup_end_time');
             $table->index('market_id');
         });
     }

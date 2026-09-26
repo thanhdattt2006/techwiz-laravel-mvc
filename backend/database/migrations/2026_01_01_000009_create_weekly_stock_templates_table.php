@@ -21,7 +21,6 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
 
             $table->unique(['product_id', 'day_of_week']);
-            $table->check('default_quantity >= 0');
         });
     }
 

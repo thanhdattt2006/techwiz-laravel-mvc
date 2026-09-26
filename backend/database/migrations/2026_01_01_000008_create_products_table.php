@@ -29,9 +29,6 @@ return new class extends Migration
             $table->unsignedInteger('review_count')->default(0);
             $table->timestamps();
             $table->softDeletes();
-
-            $table->check('price >= 0');
-            $table->check('stock_quantity >= 0');
             $table->index('farmer_id');
             $table->index('category_id');
             $table->index('price');

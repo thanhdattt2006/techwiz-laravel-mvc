@@ -26,9 +26,6 @@ return new class extends Migration
             $table->boolean('is_hidden')->default(false); // Admin moderation
             $table->timestamps();
             $table->softDeletes();
-
-            $table->check('rating >= 1 AND rating <= 5');
-            $table->check('(farmer_id IS NULL AND product_id IS NOT NULL) OR (farmer_id IS NOT NULL AND product_id IS NULL)');
             $table->unique(['customer_id', 'order_id', 'farmer_id', 'product_id']);
         });
     }
