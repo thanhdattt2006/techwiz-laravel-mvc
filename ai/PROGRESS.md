@@ -72,12 +72,11 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 
 ### Day 3: Laravel RESTful Controllers & Core Business Logic
 
-- `[ ]` API Auth: Register, Login (trả Sanctum Token & User Role), Logout, Get Current User (`/api/v1/auth/me`)
-- `[ ]` API Catalog & Filter: Tìm kiếm nông sản theo chợ, danh mục, khoảng giá, mùa vụ
-- `[ ]` API Pre-Orders: Tạo đơn pre-order giữ chỗ nông sản (không thanh toán), cập nhật trạng thái đơn (Placed -> Packed -> Ready -> Completed)
-- `[ ]` Form Requests validation an toàn, JsonResources chuẩn hoá dữ liệu trả về
-- `[ ]` Xử lý chống N+1 query (`with(...)`), phân quyền qua Controller & Policy
-- Tình trạng: Chờ thực hiện sau Day 2
+- [x] **Phase 3.1 Nền tảng Middleware & Response**: Hoàn thành `ApiResponse` trait, `RoleMiddleware`, `EnsureFarmerActive`, đăng ký aliases trong `bootstrap/app.php` và 9 unit/feature tests passed 100%.
+- `[ ]` **Phase 3.2 Nhóm 1 Auth & Profile**: Register, Login (trả Sanctum Token & User Role), Logout, Get Current User (`/api/v1/auth/me`), Đổi mật khẩu
+- `[ ]` **Phase 3.3 - 3.11**: Danh bạ chợ, Sạp nông dân, Catalog sản phẩm, Kho tuần, Giỏ hàng, Pre-Orders, Reviews, Notifications, Admin
+- `[ ]` **Phase 3.12**: Bộ kiểm thử tích hợp API (Feature Tests) & Zero N+1 Query
+- Tình trạng: Đang thực hiện Day 3 (Đã xong Phase 3.1)
 
 ### Day 4: Tích Hợp Frontend React Với Backend API
 

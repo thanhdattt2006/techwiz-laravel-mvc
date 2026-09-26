@@ -25,15 +25,17 @@
 
 ## Phase 3.1: Nền Tảng Middleware & Chuẩn Hóa Phản Hồi (API Base Foundation)
 
-- `[ ]` Tạo Trait `ApiResponse.php` (`app/Traits/ApiResponse.php`) chuẩn hóa envelope JSON:
+- `[x]` Tạo Trait `ApiResponse.php` (`app/Traits/ApiResponse.php`) chuẩn hóa envelope JSON:
   - `successResponse($data, string $message = '', int $statusCode = 200)`
   - `errorResponse(string $message, int $statusCode = 400, $errors = null)`
-- `[ ]` Tạo Middleware `RoleMiddleware.php` (`app/Http/Middleware/RoleMiddleware.php`):
+- `[x]` Tạo Middleware `RoleMiddleware.php` (`app/Http/Middleware/RoleMiddleware.php`):
   - Nhận tham số vai trò: `role:admin`, `role:farmer`, `role:customer` (hoặc kết hợp `role:admin,farmer`).
   - Trả HTTP `403 Forbidden` nếu người dùng không đủ quyền hạn.
-- `[ ]` Tạo Middleware `EnsureFarmerActive.php` (`app/Http/Middleware/EnsureFarmerActive.php`):
+- `[x]` Tạo Middleware `EnsureFarmerActive.php` (`app/Http/Middleware/EnsureFarmerActive.php`):
   - Kiểm tra `users.role === 'farmer'` và `users.status === 'active'`. Nếu đang `pending` hoặc `inactive` $\rightarrow$ chặn mở sạp và đăng bán nông sản (HTTP `403 Forbidden`).
-- `[ ]` Đăng ký alias Middleware vào `bootstrap/app.php`.
+- `[x]` Đăng ký alias Middleware vào `bootstrap/app.php`.
+- `[x]` **Đưa danh sách API và data mẫu để test**:
+  - Đã tạo Unit Test `tests/Unit/ApiResponseTraitTest.php` và Feature Test `tests/Feature/MiddlewareFoundationTest.php` (9 tests pass 100%).
 
 ---
 
@@ -58,6 +60,7 @@
 - `[ ]` **Nghiệp vụ cốt lõi**:
   - Bắt buộc kiểm tra `status === 'active'` khi đăng nhập (tài khoản `banned` hoặc `pending` sẽ bị từ chối).
   - Khách hàng đăng ký thành công tự động khởi tạo 1 bản ghi giỏ hàng rỗng (`carts`).
+- `[ ]` **Đưa danh sách API và data mẫu để test**
 
 ---
 
@@ -78,6 +81,7 @@
   - `MarketScheduleResource.php`: Format thứ trong tuần (0 $\rightarrow$ Sunday.. 6 $\rightarrow$ Saturday) và giờ mở/đóng.
 - `[ ]` **Nghiệp vụ cốt lõi**:
   - Tối ưu Eager Loading chống N+1: `Market::with(['schedules', 'farmers'])->where('status', 'active')`.
+- `[ ]` **Đưa danh sách API và data mẫu để test**
 
 ---
 
@@ -100,6 +104,7 @@
 - `[ ]` **JsonResources**:
   - `FarmerResource.php`: Thông tin sạp, điểm `avg_rating`, `review_count`, danh sách chợ tham gia.
   - `FarmerMarketResource.php`: Vị trí gian `stall_location`, mảng `pickup_days`, khung giờ, slot và cutoff hours.
+- `[ ]` **Đưa danh sách API và data mẫu để test**
 
 ---
 
@@ -128,6 +133,7 @@
 - `[ ]` **Nghiệp vụ cốt lõi**:
   - Tự động loại bỏ các sản phẩm có `is_hidden = 1` hoặc `availability = 'unavailable'` khỏi catalog công khai.
   - Tìm kiếm fulltext MySQL: `WHERE MATCH(name, description) AGAINST(? IN BOOLEAN MODE)`.
+- `[ ]` **Đưa danh sách API và data mẫu để test**
 
 ---
 
@@ -143,6 +149,7 @@
 - `[ ]` **JsonResource**: `WeeklyStockTemplateResource.php`.
 - `[ ]` **Nghiệp vụ cốt lõi**:
   - **Nút 1-Click trên Farmer Dashboard**: Khi nông dân bấm "Áp Dụng Định Mức Kho Tuần", hệ thống lấy `default_quantity` tương ứng với thứ của phiên chợ sắp tới và cập nhật vào `products.stock_quantity`, đồng thời chuyển `availability = 'available'`.
+- `[ ]` **Đưa danh sách API và data mẫu để test**
 
 ---
 
@@ -164,6 +171,7 @@
 - `[ ]` **Nghiệp vụ cốt lõi**:
   - Kiểm tra tồn kho trước khi cho thêm vào giỏ: `quantity <= stock_quantity`.
   - Tự động cộng dồn số lượng nếu sản phẩm đã có sẵn trong giỏ.
+- `[ ]` **Đưa danh sách API và data mẫu để test**
 
 ---
 
@@ -195,6 +203,7 @@
   - **Khóa dòng & Trừ kho**: Giảm `stock_quantity`, nếu về 0 thì set `availability = 'sold_out'`.
   - **Hoàn kho tự động**: Khi đơn bị `declined` hoặc `cancelled`, hoàn lại đúng số lượng vào `stock_quantity`.
   - **Thông báo tự động**: Bắn in-app notification cho đối phương ở mỗi mốc đổi trạng thái.
+- `[ ]` **Đưa danh sách API và data mẫu để test**
 
 ---
 
@@ -218,6 +227,7 @@
   - `ReplyReviewRequest`: Validate `farmer_reply`.
   - `ToggleFavoriteRequest`: Validate `favoritable_type` (`farmer`, `product`, `market`), `favoritable_id`.
 - `[ ]` **JsonResources**: `ReviewResource.php`, `FavoriteResource.php`.
+- `[ ]` **Đưa danh sách API và data mẫu để test**
 
 ---
 
@@ -238,6 +248,7 @@
 - `[ ]` **Form Request**:
   - `StoreAnnouncementRequest`: Validate `title`, `content`, `target_role` (`all`, `farmer`, `customer`), `is_active`.
 - `[ ]` **JsonResources**: `NotificationResource.php`, `AnnouncementResource.php`.
+- `[ ]` **Đưa danh sách API và data mẫu để test**
 
 ---
 
@@ -261,6 +272,7 @@
   - `UpdateUserStatusRequest`: Validate `status` (`active`, `inactive`, `banned`).
   - `RejectFarmerRequest`: Validate lý do từ chối.
 - `[ ]` **JsonResource**: `ContactMessageResource.php`.
+- `[ ]` **Đưa danh sách API và data mẫu để test**
 
 ---
 
