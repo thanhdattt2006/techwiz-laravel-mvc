@@ -8,6 +8,8 @@ Access Control (RBAC), tiền tố URL và mô tả chi tiết từng Endpoint c
 
 --------------------------------------------------------------------------------
 QUY TẮC BẮT BUỘC TRƯỚC KHI LẬP TRÌNH HOẶC TEST HỆ THỐNG:
+- QUY ĐỊNH NGÔN NGỮ:  Source code, comments, API/error messages, test -> 100% TIẾNG ANH.
+                      Tài liệu dự án (MD) & Implementation Plan -> BẮT BUỘC TIẾNG VIỆT.
 - RULE.md:            Luật làm việc, quy tắc Git Conventional Commits, cấm rác debug.
 - ai/CONVENTION.md:   Quy chuẩn strict_types=1, envelope JSON, chống N+1, FormRequest.
 - ai/DATABASE_ERD.md: Sơ đồ CSDL 18 bảng & Data Dictionary chi tiết từng trường/FK.

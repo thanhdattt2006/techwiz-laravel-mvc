@@ -34,6 +34,9 @@ Dự án này áp dụng mô hình phân tách hoàn toàn Client - Server:
 ## 2. QUY CHUẨN BACKEND (LARAVEL REST WEB API)
 
 ### 2.1. Điều Kiện Ràng Buộc Cứng (Strict Constraints)
+- **Ngôn ngữ (100% Tiếng Anh trong Code)**: Toàn bộ mã nguồn (Backend PHP, Frontend React/JS, JSX, CSS), tên biến, tên hàm, tên class, comments, docblocks, chuỗi thông báo lỗi (Exceptions, FormRequest validation messages, API response messages), test cases và Git commit messages **BẮT BUỘC 100% VIẾT BẰNG TIẾNG ANH**. Tuyệt đối không viết tiếng Việt trong source code.
+  - *Tài liệu dự án*: Các file Markdown (`ai/*.md`, `RULE.md`, `ROADMAP/*.md`, `Document.txt`) viết bằng Tiếng Việt.
+  - *Kế hoạch thực thi (Implementation Plan)*: Khi User yêu cầu lập kế hoạch trước khi làm, bản Implementation Plan **BẮT BUỘC VIẾT BẰNG TIẾNG VIỆT**.
 - **Strict Types**: BẮT BUỘC thêm `declare(strict_types=1);` ở đầu TẤT CẢ các file PHP (`app/...`).
 - **Type Hinting**: BẮT BUỘC khai báo kiểu dữ liệu cho toàn bộ param và return type của hàm. Không có return type -> `void`.
 - **Superglobals**: TUYỆT ĐỐI không dùng `$_GET`, `$_POST`, `$_REQUEST`. Dùng `$request` object của Laravel.

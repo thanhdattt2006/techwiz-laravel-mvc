@@ -39,6 +39,10 @@ Trước khi bắt tay vào code bất kỳ tính năng nào hoặc tiến hành
 
 ## 2. QUY TẮC VIẾT CODE CƠ BẢN
 
+- **QUY ĐỊNH NGÔN NGỮ (BẮT BUỘC & NGHIÊM NGẶT)**:
+  - **100% TIẾNG ANH CHO SOURCE CODE**: Toàn bộ mã nguồn (Backend Laravel/PHP, Frontend React/JS, CSS, HTML), tên class, tên hàm, tên biến, inline comments, docblocks, thông báo lỗi (exceptions/validation messages), chuỗi trả về trong API response envelope, test cases và Git commit messages **BẮT BUỘC 100% VIẾT BẰNG TIẾNG ANH**. Tuyệt đối không để sót bất kỳ từ tiếng Việt nào trong source code!
+  - **TIẾNG VIỆT CHO TÀI LIỆU DỰ ÁN**: Các file tài liệu đặc tả, hướng dẫn Markdown (`ai/*.md`, `RULE.md`, `ROADMAP/*.md`, `README.md`, `Document.txt`) được viết bằng tiếng Việt để phục vụ toàn bộ thành viên dự án và tester.
+  - **KẾ HOẠCH THỰC THI (IMPLEMENTATION PLAN) VIẾT BẰNG TIẾNG VIỆT**: Bất cứ khi nào lập kế hoạch thực hiện trước khi code theo yêu cầu của User, toàn bộ bản kế hoạch (Implementation Plan) **BẮT BUỘC PHẢI VIẾT BẰNG TIẾNG VIỆT**.
 - **Không vứt rác debug**: Tuyệt đối KHÔNG ĐỂ LẠI `dd()`, `dump()`, `print_r()`, `var_dump()` ở Backend hay `console.log()` ở Frontend trước khi commit. Bắt buộc rà soát sạch sẽ!
 - **CSS & Giao diện**: 100% sử dụng **TailwindCSS**. Cấm viết CSS tay vào file `.css` hoặc thẻ `<style>` trừ trường hợp bất khả kháng.
 - **BẢNG MÀU CHUẨN NÔNG SẢN XANH (Fresh Botanical & Harvest Gold Theme)**:

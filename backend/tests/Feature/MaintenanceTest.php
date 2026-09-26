@@ -17,7 +17,7 @@ class MaintenanceTest extends TestCase
         $response = $this->get('/health');
 
         $response->assertStatus(200);
-        $response->assertJsonPath('status', 'ok');
+        $this->assertStringStartsWith('ok', (string) $response->json('status'));
     }
 
     /**

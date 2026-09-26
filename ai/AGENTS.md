@@ -55,6 +55,10 @@ File này chứa thông tin cấu hình và hướng dẫn bắt buộc dành ch
 - `contact_messages`: Hộp thư tiếp nhận liên hệ / phản ánh từ khách gửi đến Admin.
 
 ## 3. QUY TẮC CỐT LÕI (CORE RULES)
+- **Quy định ngôn ngữ bắt buộc (Strict Language Policy)**:
+  - **100% TIẾNG ANH CHO SOURCE CODE**: Mọi mã nguồn (Backend PHP, Frontend React/JS, CSS, HTML), tên class, function, variable, comments, docblocks, chuỗi API message/exceptions, validation errors, tests và Git commit messages **BẮT BUỘC 100% BẰNG TIẾNG ANH**. Tuyệt đối không để sót tiếng Việt trong code.
+  - **TIẾNG VIỆT CHO TÀI LIỆU DỰ ÁN**: Toàn bộ tài liệu đặc tả, hướng dẫn Markdown (`ai/*.md`, `RULE.md`, `ROADMAP/*.md`, `README.md`, `Document.txt`) viết bằng TIẾNG VIỆT.
+  - **IMPLEMENTATION PLAN BẰNG TIẾNG VIỆT**: Khi User yêu cầu lập kế hoạch thực thi trước khi code, bản Implementation Plan **BẮT BUỘC VIẾT BẰNG TIẾNG VIỆT**.
 - **Tuân thủ kiến trúc Web API + React Vite**: Backend CHỈ trả về dữ liệu JSON qua RESTful API, KHÔNG render Blade view cho ứng dụng chính. Frontend React Vite đảm nhiệm 100% hiển thị và tương tác.
 - **Ràng buộc SRS MarketLink (Bắt buộc)**:
   - **TUYỆT ĐỐI KHÔNG TÍCH HỢP CỔNG THANH TOÁN (No payment gateways required)**: Khách trả tiền mặt trực tiếp khi đến nhận hàng tại sạp.
