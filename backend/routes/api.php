@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\MarketController;
 use Illuminate\Support\Facades\Route;
 
 // Health check endpoint
@@ -29,4 +30,17 @@ Route::prefix('v1/auth')->group(function () {
         Route::put('/change-password', [AuthController::class, 'changePassword']);
         Route::post('/logout', [AuthController::class, 'logout']);
     });
+});
+
+// Public Market routes
+Route::prefix('v1')->group(function () {
+    Route::get('/markets', [MarketController::class, 'index']);
+    Route::get('/markets/{id}', [MarketController::class, 'show']);
+});
+
+// Admin Protected Market routes
+Route::prefix('v1/admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    Route::post('/markets', [MarketController::class, 'store']);
+    Route::put('/markets/{id}', [MarketController::class, 'update']);
+    Route::delete('/markets/{id}', [MarketController::class, 'destroy']);
 });

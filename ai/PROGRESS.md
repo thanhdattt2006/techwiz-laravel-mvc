@@ -74,9 +74,10 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 
 - [x] **Phase 3.1 Nền tảng Middleware & Response**: Hoàn thành `ApiResponse` trait, `RoleMiddleware`, `EnsureFarmerActive`, đăng ký aliases trong `bootstrap/app.php` và 9 unit/feature tests passed 100%.
 - [x] **Phase 3.2 Nhóm 1 Auth & Profile**: Register (Customer kèm tự động tạo Cart rỗng, Farmer pending phê duyệt), Login (email hoặc username, kiểm tra status active/pending/banned, cấp Sanctum token), Logout, Get Current User (`/api/v1/auth/me`), Update Profile (`/api/v1/auth/profile`), Change Password (`/api/v1/auth/change-password`). Tạo 15 Feature Tests pass 100%.
-- `[ ]` **Phase 3.3 - 3.11**: Danh bạ chợ, Sạp nông dân, Catalog sản phẩm, Kho tuần, Giỏ hàng, Pre-Orders, Reviews, Notifications, Admin
+- [x] **Phase 3.3 Nhóm 2 Danh Bạ Chợ & Lịch Họp Chợ (Markets & Schedules)**: Public list markets (lọc search, day_of_week), get single market details (schedules, active farmer stalls), Admin CRUD markets & operating schedules, soft-delete. 11 Feature Tests pass 100%.
+- `[ ]` **Phase 3.4 - 3.11**: Sạp nông dân, Catalog sản phẩm, Kho tuần, Giỏ hàng, Pre-Orders, Reviews, Notifications, Admin
 - `[ ]` **Phase 3.12**: Bộ kiểm thử tích hợp API (Feature Tests) & Zero N+1 Query
-- Tình trạng: Đang thực hiện Day 3 (Đã xong Phase 3.1 & Phase 3.2)
+- Tình trạng: Đang thực hiện Day 3 (Đã xong Phase 3.1, Phase 3.2, Phase 3.3)
 
 ### Day 4: Tích Hợp Frontend React Với Backend API
 

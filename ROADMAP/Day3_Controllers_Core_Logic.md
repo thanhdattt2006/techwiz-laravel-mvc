@@ -71,22 +71,24 @@
 
 ## Phase 3.3: Nhóm 2 - Danh Bạ Chợ & Lịch Họp Chợ (Markets & Schedules)
 
-- `[ ]` **Endpoints**:
+- `[x]` **Endpoints**:
   - `GET    /api/v1/markets` (Public: Danh sách chợ, hỗ trợ lọc theo `day_of_week`, tìm kiếm tên/địa chỉ)
   - `GET    /api/v1/markets/{id}` (Public: Chi tiết chợ, lịch họp từng ngày, danh sách sạp đang hoạt động)
   - `POST   /api/v1/admin/markets` (Admin: Tạo chợ mới kèm lịch họp)
   - `PUT    /api/v1/admin/markets/{id}` (Admin: Sửa chợ, toạ độ GPS, embed map)
   - `DELETE /api/v1/admin/markets/{id}` (Admin: Xoá mềm chợ)
-- `[ ]` **Controller**: `MarketController.php` (`app/Http/Controllers/Api/V1/MarketController.php`).
-- `[ ]` **Form Requests**:
+- `[x]` **Controller**: `MarketController.php` (`app/Http/Controllers/Api/V1/MarketController.php`).
+- `[x]` **Form Requests**:
   - `StoreMarketRequest`: Validate `name`, `address`, `latitude`, `longitude`, `map_provider`, `schedules` (array of `day_of_week`, `open_time`, `close_time`).
   - `UpdateMarketRequest`: Validate thông tin cập nhật chợ và lịch họp.
-- `[ ]` **JsonResources**:
+- `[x]` **JsonResources**:
   - `MarketResource.php`: Thông tin chợ, toạ độ, URL bản đồ, eager load `schedules` và đếm số lượng sạp.
   - `MarketScheduleResource.php`: Format thứ trong tuần (0 $\rightarrow$ Sunday.. 6 $\rightarrow$ Saturday) và giờ mở/đóng.
-- `[ ]` **Nghiệp vụ cốt lõi**:
+- `[x]` **Nghiệp vụ cốt lõi**:
   - Tối ưu Eager Loading chống N+1: `Market::with(['schedules', 'farmers'])->where('status', 'active')`.
-- `[ ]` **Đưa danh sách API và data mẫu để test**
+- `[x]` **Đưa danh sách API và data mẫu để test**:
+  - Đã xuất bản tài liệu kiểm thử chi tiết bằng tiếng Anh tại [`backend-api-test.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/backend-api-test.md#2-farmers-markets-directory--schedules-apis-phase-33).
+  - Đã xây dựng bộ Feature Test toàn diện `tests/Feature/MarketApiTest.php` với 11 test cases pass 100%.
 
 ---
 
