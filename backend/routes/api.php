@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\FarmerController;
 use App\Http\Controllers\Api\V1\MarketController;
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\WeeklyStockController;
 use Illuminate\Support\Facades\Route;
 
 // Health check endpoint
@@ -59,6 +60,9 @@ Route::prefix('v1/farmer')->middleware(['auth:sanctum', 'role:farmer', 'farmer.a
     Route::post('/products', [ProductController::class, 'store']);
     Route::put('/products/{id}', [ProductController::class, 'update']);
     Route::delete('/products/{id}', [ProductController::class, 'destroy']);
+    Route::get('/products/{id}/template', [WeeklyStockController::class, 'getTemplates']);
+    Route::put('/products/{id}/template', [WeeklyStockController::class, 'updateTemplates']);
+    Route::post('/apply-weekly-templates', [WeeklyStockController::class, 'applyWeeklyTemplates']);
 });
 
 // Admin Protected Management routes

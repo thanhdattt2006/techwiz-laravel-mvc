@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin \App\Models\MarketSchedule
+ * @mixin \App\Models\WeeklyStockTemplate
  */
-class MarketScheduleResource extends JsonResource
+class WeeklyStockTemplateResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,10 +24,11 @@ class MarketScheduleResource extends JsonResource
 
         return [
             'id' => $this->id,
+            'product_id' => $this->product_id,
             'day_of_week' => $dayOfWeek,
             'day_name' => DayOfWeek::nameOf($dayOfWeek),
-            'open_time' => substr((string) $this->open_time, 0, 5),
-            'close_time' => substr((string) $this->close_time, 0, 5),
+            'default_quantity' => (float) $this->default_quantity,
+            'is_active' => (bool) $this->is_active,
         ];
     }
 }

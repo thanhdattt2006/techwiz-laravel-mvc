@@ -151,17 +151,19 @@
 
 ## Phase 3.6: Nhóm 5 - Mẫu Tồn Kho Mở Bán Định Kỳ Tuần (Weekly Stock Templates)
 
-- `[ ]` **Endpoints**:
+- `[x]` **Endpoints**:
   - `GET  /api/v1/farmer/products/{id}/template` (Farmer: Xem mẫu định mức kho theo thứ của sản phẩm)
   - `PUT  /api/v1/farmer/products/{id}/template` (Farmer: Cấu hình số lượng mở bán định kỳ T7/CN)
   - `POST /api/v1/farmer/apply-weekly-templates` (Farmer: 1-Click áp dụng mẫu kho cho phiên chợ tới)
-- `[ ]` **Controller**: `WeeklyStockController.php` (`app/Http/Controllers/Api/V1/WeeklyStockController.php`).
-- `[ ]` **Form Request**:
+- `[x]` **Controller**: `WeeklyStockController.php` (`app/Http/Controllers/Api/V1/WeeklyStockController.php`).
+- `[x]` **Form Request**:
   - `UpdateWeeklyStockRequest`: Validate mảng `templates` gồm `day_of_week` (0-6) và `default_quantity` (>= 0).
-- `[ ]` **JsonResource**: `WeeklyStockTemplateResource.php`.
-- `[ ]` **Nghiệp vụ cốt lõi**:
-  - **Nút 1-Click trên Farmer Dashboard**: Khi nông dân bấm "Áp Dụng Định Mức Kho Tuần", hệ thống lấy `default_quantity` tương ứng với thứ của phiên chợ sắp tới và cập nhật vào `products.stock_quantity`, đồng thời chuyển `availability = 'available'`.
-- `[ ]` **Đưa danh sách API và data mẫu để test**
+- `[x]` **JsonResource**: `WeeklyStockTemplateResource.php`.
+- `[x]` **Nghiệp vụ cốt lõi**:
+  - **Nút 1-Click trên Farmer Dashboard**: Khi nông dân bấm "Áp Dụng Định Mức Kho Tuần", hệ thống tự động xác định thứ của phiên chợ sắp tới (hoặc theo ngày/thứ được truyền), lấy `default_quantity` và cập nhật vào `products.stock_quantity`, đồng thời chuyển `availability = 'available'`.
+- `[x]` **Đưa danh sách API và data mẫu để test**:
+  - Đã xuất bản danh sách API và dữ liệu mẫu test tại [`BackEndApiTest.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/BackEndApiTest.md#5-weekly-stock-templates-phase-36).
+  - Đã tạo Feature Test `tests/Feature/WeeklyStockApiTest.php` với 9 test cases bao phủ toàn diện (100% pass, tổng 92/92 tests toàn dự án).
 
 ---
 

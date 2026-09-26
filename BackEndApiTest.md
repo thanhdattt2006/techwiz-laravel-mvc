@@ -457,4 +457,69 @@ Authorization: Bearer <farmer_token>
 Authorization: Bearer <admin_token>
 ```
 
+---
+
+## 5. Weekly Stock Templates (Phase 3.6)
+
+### 5.1. View Product Weekly Stock Template [Farmer Only]
+- **Method**: `GET /api/v1/farmer/products/{id}/template`
+*(Example: `GET /api/v1/farmer/products/1/template`)*
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+```
+
+---
+
+### 5.2. Configure Weekly Stock Template [Farmer Only]
+- **Method**: `PUT /api/v1/farmer/products/{id}/template`
+*(Example: `PUT /api/v1/farmer/products/1/template`)*
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+```
+- **Body**:
+```json
+{
+  "templates": [
+    {
+      "day_of_week": 6,
+      "default_quantity": 60.00,
+      "is_active": true
+    },
+    {
+      "day_of_week": 0,
+      "default_quantity": 40.00,
+      "is_active": true
+    }
+  ]
+}
+```
+
+---
+
+### 5.3. 1-Click Apply Weekly Stock Templates [Farmer Only]
+- **Method**: `POST /api/v1/farmer/apply-weekly-templates`
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+```
+- **Body Option 1 (Auto-detect upcoming market day)**:
+```json
+{}
+```
+- **Body Option 2 (Explicit target day: 0=Sun ... 6=Sat)**:
+```json
+{
+  "target_day": 6
+}
+```
+- **Body Option 3 (Specific target date)**:
+```json
+{
+  "target_date": "2026-09-27"
+}
+```
+
+
 
