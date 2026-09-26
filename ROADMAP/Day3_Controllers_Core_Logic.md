@@ -119,10 +119,11 @@
 
 ## Phase 3.5: Nhóm 4 - Ngành Hàng & Danh Mục Nông Sản (Categories & Products)
 
-- `[ ]` **Endpoints**:
+- `[x]` **Endpoints**:
   - `GET    /api/v1/categories` (Public: 5 ngành hàng nông sản sạch kèm số lượng sản phẩm)
   - `POST   /api/v1/admin/categories` (Admin: Thêm ngành hàng mới)
   - `PUT    /api/v1/admin/categories/{id}` (Admin: Sửa ngành hàng)
+  - `DELETE /api/v1/admin/categories/{id}` (Admin: Xóa ngành hàng rỗng)
   - `GET    /api/v1/products` (Public: Catalog nông sản, lọc theo category, price, market, farmer, search)
   - `GET    /api/v1/products/{id}` (Public: Chi tiết nông sản, tồn kho, xuất xứ trang trại)
   - `GET    /api/v1/farmer/products` (Farmer: Quản lý nông sản của riêng sạp)
@@ -130,19 +131,21 @@
   - `PUT    /api/v1/farmer/products/{id}` (Farmer: Sửa giá, đơn vị, ảnh, tình trạng còn/hết hàng)
   - `DELETE /api/v1/farmer/products/{id}` (Farmer: Xoá mềm nông sản)
   - `PATCH  /api/v1/admin/products/{id}/toggle-hide` (Admin: Gỡ nông sản vi phạm quy định)
-- `[ ]` **Controllers**:
+- `[x]` **Controllers**:
   - `CategoryController.php` (`app/Http/Controllers/Api/V1/CategoryController.php`)
   - `ProductController.php` (`app/Http/Controllers/Api/V1/ProductController.php`)
-- `[ ]` **Form Requests**:
+- `[x]` **Form Requests**:
   - `StoreCategoryRequest` & `UpdateCategoryRequest`: Validate `name` (unique), `description`.
   - `StoreProductRequest` & `UpdateProductRequest`: Validate `category_id`, `name`, `price` (>= 0), `unit`, `stock_quantity` (>= 0), `availability`, `image`.
-- `[ ]` **JsonResources**:
+- `[x]` **JsonResources**:
   - `CategoryResource.php`: ID, tên ngành hàng, slug, mô tả, đếm sản phẩm.
   - `ProductResource.php`: Chi tiết nông sản, sạp sở hữu, ngành hàng, tình trạng tồn kho, rating.
-- `[ ]` **Nghiệp vụ cốt lõi**:
+- `[x]` **Nghiệp vụ cốt lõi**:
   - Tự động loại bỏ các sản phẩm có `is_hidden = 1` hoặc `availability = 'unavailable'` khỏi catalog công khai.
   - Tìm kiếm fulltext MySQL: `WHERE MATCH(name, description) AGAINST(? IN BOOLEAN MODE)`.
-- `[ ]` **Đưa danh sách API và data mẫu để test**
+- `[x]` **Đưa danh sách API và data mẫu để test**:
+  - Đã xuất bản danh sách API và dữ liệu mẫu test tại [`BackEndApiTest.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/BackEndApiTest.md#4-categories--produce-catalog-phase-35).
+  - Đã tạo Feature Test `tests/Feature/CategoryApiTest.php` (8 test cases) và `tests/Feature/ProductApiTest.php` (18 test cases) bao phủ toàn diện (100% pass, tổng 79/79 tests toàn dự án).
 
 ---
 

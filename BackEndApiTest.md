@@ -305,3 +305,156 @@ Authorization: Bearer <farmer_token>
 Authorization: Bearer <farmer_token>
 ```
 
+---
+
+## 4. Categories & Produce Catalog (Phase 3.5)
+
+### 4.1. List Categories
+- **Method**: `GET /api/v1/categories`
+
+---
+
+### 4.2. Get Category Details
+- **Method**: `GET /api/v1/categories/{id}`
+*(Example: `GET /api/v1/categories/1`)*
+
+---
+
+### 4.3. Create Category [Admin Only]
+- **Method**: `POST /api/v1/admin/categories`
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+```
+- **Body**:
+```json
+{
+  "name": "Microgreens & Shoots",
+  "description": "Nutrient-dense indoor microgreens, sunflower shoots, and pea tendrils.",
+  "is_active": true
+}
+```
+
+---
+
+### 4.4. Update Category [Admin Only]
+- **Method**: `PUT /api/v1/admin/categories/{id}`
+*(Example: `PUT /api/v1/admin/categories/1`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+```
+- **Body**:
+```json
+{
+  "name": "Fresh Organic Vegetables",
+  "description": "Heirloom greens, roots, heirloom tomatoes, and freshly harvested seasonal brassicas.",
+  "is_active": true
+}
+```
+
+---
+
+### 4.5. Delete Category [Admin Only]
+- **Method**: `DELETE /api/v1/admin/categories/{id}`
+*(Example: `DELETE /api/v1/admin/categories/6`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+```
+
+---
+
+### 4.6. List Products Catalog (Public)
+- **Method**: `GET /api/v1/products`
+- **Query Params (Optional)**:
+  - `?category_id=1`
+  - `?category_slug=fresh-vegetables`
+  - `?market_id=1`
+  - `?farmer_id=1`
+  - `?min_price=2&max_price=10`
+  - `?search=Honey`
+  - `?in_stock_only=true`
+  - `?sort_by=price_asc` (Options: `price_asc`, `price_desc`, `rating_desc`, `name_asc`, `latest`)
+
+---
+
+### 4.7. Get Product Details (Public)
+- **Method**: `GET /api/v1/products/{id}`
+*(Example: `GET /api/v1/products/1`)*
+
+---
+
+### 4.8. List Stall Products [Farmer Only]
+- **Method**: `GET /api/v1/farmer/products`
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+```
+- **Query Params (Optional)**:
+  - `?category_id=1`
+  - `?availability=available`
+  - `?search=Kale`
+
+---
+
+### 4.9. Add Product to Stall [Farmer Only]
+- **Method**: `POST /api/v1/farmer/products`
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+```
+- **Body**:
+```json
+{
+  "category_id": 1,
+  "name": "Heirloom Cherokee Purple Tomatoes",
+  "description": "Rich, sweet heirloom beefsteak tomatoes harvested at peak ripeness.",
+  "price": 5.50,
+  "unit": "kg",
+  "stock_quantity": 35,
+  "availability": "available",
+  "image": "https://images.unsplash.com/photo-1592924357228-91a4daadcfea?auto=format&fit=crop&w=600&q=80"
+}
+```
+
+---
+
+### 4.10. Update Stall Product [Farmer Only]
+- **Method**: `PUT /api/v1/farmer/products/{id}`
+*(Example: `PUT /api/v1/farmer/products/1`)*
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+```
+- **Body**:
+```json
+{
+  "name": "Heirloom Cherokee Purple Tomatoes (Large)",
+  "price": 6.00,
+  "stock_quantity": 25,
+  "availability": "available"
+}
+```
+
+---
+
+### 4.11. Delete Product [Farmer Only]
+- **Method**: `DELETE /api/v1/farmer/products/{id}`
+*(Example: `DELETE /api/v1/farmer/products/1`)*
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+```
+
+---
+
+### 4.12. Toggle Product Moderation Hide [Admin Only]
+- **Method**: `PATCH /api/v1/admin/products/{id}/toggle-hide`
+*(Example: `PATCH /api/v1/admin/products/1/toggle-hide`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+```
+
+

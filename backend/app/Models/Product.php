@@ -53,6 +53,30 @@ class Product extends Model
             && ! $this->is_hidden;
     }
 
+    /**
+     * Scope a query to only include public catalog products (not hidden and not unavailable).
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePublicCatalog(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
+    {
+        return $query->where('is_hidden', false)
+            ->where('availability', '!=', self::AVAILABILITY_UNAVAILABLE);
+    }
+
+    /**
+     * Scope a query to apply dynamic filters via QueryFilter.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param \App\Filters\QueryFilter $filter
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFilter(\Illuminate\Database\Eloquent\Builder $query, \App\Filters\QueryFilter $filter): \Illuminate\Database\Eloquent\Builder
+    {
+        return $filter->apply($query);
+    }
+
     public function farmer(): BelongsTo
     {
         return $this->belongsTo(Farmer::class);

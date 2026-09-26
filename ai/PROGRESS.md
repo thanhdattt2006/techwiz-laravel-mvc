@@ -76,9 +76,10 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] **Phase 3.2 Nhóm 1 Auth & Profile**: Register (Customer kèm tự động tạo Cart rỗng, Farmer pending phê duyệt), Login (email hoặc username, kiểm tra status active/pending/banned, cấp Sanctum token), Logout, Get Current User (`/api/v1/auth/me`), Update Profile (`/api/v1/auth/profile`), Change Password (`/api/v1/auth/change-password`). Tạo 15 Feature Tests pass 100%.
 - [x] **Phase 3.3 Nhóm 2 Danh Bạ Chợ & Lịch Họp Chợ (Markets & Schedules)**: Public list markets (lọc search, day_of_week), get single market details (schedules, active farmer stalls), Admin CRUD markets & operating schedules, soft-delete. 11 Feature Tests pass 100%.
 - [x] **Phase 3.4 Nhóm 3 Hồ Sơ Nông Dân & Cấu Hình Sạp Chợ (Farmers & FarmerMarkets)**: Public list farmers (search, sort, filter by market), get single farmer details, Farmer xem/cập nhật hồ sơ sạp, xem chợ đã đăng ký, đăng ký bán tại chợ mới, cấu hình ngày/khung giờ/slot 15-60p/cutoff 1-72h, rút sạp khỏi chợ. 12 Feature Tests pass 100%.
-- `[ ]` **Phase 3.5 - 3.11**: Ngành hàng, Catalog sản phẩm, Kho tuần, Giỏ hàng, Pre-Orders, Reviews, Notifications, Admin
+- [x] **Phase 3.5 Nhóm 4 Ngành Hàng & Catalog Nông Sản (Categories & Products)**: Public list categories kèm đếm sản phẩm active, Admin CRUD categories, Public catalog sản phẩm với bộ lọc đa tiêu chí (danh mục, sạp nông dân, chợ, khoảng giá, fulltext search, availability, sort), ẩn sản phẩm vi phạm khỏi public, Farmer CRUD nông sản sạp riêng, kiểm soát quyền sở hữu đa sạp, Admin toggle hide. 26 Feature Tests mới (8 Category + 18 Product), tổng 79/79 Feature/Unit Tests passed 100%.
+- `[ ]` **Phase 3.6 - 3.11**: Kho tuần, Giỏ hàng, Pre-Orders, Reviews, Notifications, Admin
 - `[ ]` **Phase 3.12**: Bộ kiểm thử tích hợp API (Feature Tests) & Zero N+1 Query
-- Tình trạng: Đang thực hiện Day 3 (Đã xong Phase 3.1, Phase 3.2, Phase 3.3, Phase 3.4)
+- Tình trạng: Đang thực hiện Day 3 (Đã xong Phase 3.1 -> Phase 3.5)
 
 ### Day 4: Tích Hợp Frontend React Với Backend API
 

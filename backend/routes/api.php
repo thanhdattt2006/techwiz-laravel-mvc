@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\FarmerController;
 use App\Http\Controllers\Api\V1\MarketController;
+use App\Http\Controllers\Api\V1\ProductController;
 use Illuminate\Support\Facades\Route;
 
 // Health check endpoint
@@ -33,12 +35,16 @@ Route::prefix('v1/auth')->group(function () {
     });
 });
 
-// Public Directory routes (Markets & Farmers)
+// Public Directory & Catalog routes (Markets, Farmers, Categories, Products)
 Route::prefix('v1')->group(function () {
     Route::get('/markets', [MarketController::class, 'index']);
     Route::get('/markets/{id}', [MarketController::class, 'show']);
     Route::get('/farmers', [FarmerController::class, 'index']);
     Route::get('/farmers/{id}', [FarmerController::class, 'show']);
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories/{id}', [CategoryController::class, 'show']);
+    Route::get('/products', [ProductController::class, 'index']);
+    Route::get('/products/{id}', [ProductController::class, 'show']);
 });
 
 // Farmer Protected routes (requires active farmer stall)
@@ -49,11 +55,19 @@ Route::prefix('v1/farmer')->middleware(['auth:sanctum', 'role:farmer', 'farmer.a
     Route::post('/markets', [FarmerController::class, 'linkMarket']);
     Route::put('/markets/{marketId}', [FarmerController::class, 'updateMarket']);
     Route::delete('/markets/{marketId}', [FarmerController::class, 'unlinkMarket']);
+    Route::get('/products', [ProductController::class, 'farmerProducts']);
+    Route::post('/products', [ProductController::class, 'store']);
+    Route::put('/products/{id}', [ProductController::class, 'update']);
+    Route::delete('/products/{id}', [ProductController::class, 'destroy']);
 });
 
-// Admin Protected Market routes
+// Admin Protected Management routes
 Route::prefix('v1/admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::post('/markets', [MarketController::class, 'store']);
     Route::put('/markets/{id}', [MarketController::class, 'update']);
     Route::delete('/markets/{id}', [MarketController::class, 'destroy']);
+    Route::post('/categories', [CategoryController::class, 'store']);
+    Route::put('/categories/{id}', [CategoryController::class, 'update']);
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+    Route::patch('/products/{id}/toggle-hide', [ProductController::class, 'toggleHide']);
 });
