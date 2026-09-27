@@ -229,20 +229,20 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.5: Danh Bạ Chợ & Lịch Họp Chợ Phiên (Markets Directory Page)
+### Phase 4.5: Danh Bạ Chợ & Lịch Họp Chợ Phiên (Markets Directory Page) [x]
 
 - **Mục tiêu**: Kết nối Trang Danh Bạ Chợ với API Backend, lọc theo thứ trong tuần chuẩn hóa và hiển thị danh sách sạp đang hoạt động tại chợ.
 - **Files tác động**:
   - `frontend/src/pages/public/MarketsPage.jsx`
   - `frontend/src/components/common/MarketCard.jsx`
 - **Checklist công việc**:
-  - `[ ]` `MarketsPage.jsx`:
+  - `[x]` `MarketsPage.jsx`:
     - Thay thế `markets.json` bằng `marketApi.getMarkets()`.
     - Bộ lọc tìm kiếm theo từ khóa (tên chợ, địa chỉ).
     - Bộ lọc theo thứ họp chợ trong tuần (`day_of_week`: 0 = Chủ Nhật, ..., 6 = Thứ Bảy) chuẩn hóa theo helper bảng thứ.
     - Hiển thị danh sách các sạp nông dân đang hoạt động tại chợ và lịch họp cụ thể từ API.
-  - `[ ]` Tích hợp nút Thả tim yêu thích chợ kết nối `favoriteApi.toggleFavorite('market', market.id)`.
-  - `[ ]` Giữ nguyên bản đồ định vị GPS OpenStreetMap chất lượng cao.
+  - `[x]` Tích hợp nút Thả tim yêu thích chợ kết nối `favoriteApi.toggleFavorite('market', market.id)`.
+  - `[x]` Giữ nguyên bản đồ định vị GPS OpenStreetMap chất lượng cao.
 - **Tiêu chí hoàn thành**: Tìm kiếm và lọc chợ hoạt động mượt mà với dữ liệu API thật.
 
 ---

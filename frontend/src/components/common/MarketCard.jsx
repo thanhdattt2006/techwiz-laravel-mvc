@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Calendar, Clock, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { MapPin, Calendar, Clock, ArrowRight, CheckCircle2, Heart } from 'lucide-react';
 
 /**
  * MarketCard Component
@@ -9,11 +9,15 @@ import { MapPin, Calendar, Clock, ArrowRight, CheckCircle2 } from 'lucide-react'
  * @param {object} market - Market details
  * @param {boolean} isSelected - Whether market is actively selected on map
  * @param {function} onSelect - Optional click handler to focus map
+ * @param {boolean} isFavorited - Whether current user has favorited this market
+ * @param {function} onToggleFavorite - Optional callback to toggle favorite
  */
 export default function MarketCard({
   market,
   isSelected = false,
   onSelect = null,
+  isFavorited = false,
+  onToggleFavorite = null,
   className = '',
 }) {
   if (!market) return null;
@@ -51,6 +55,23 @@ export default function MarketCard({
                 {stallsCount} Certified Stalls
               </span>
             </div>
+            {onToggleFavorite && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleFavorite(market.id, e);
+                }}
+                className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur transition shadow-xs cursor-pointer ${
+                  isFavorited
+                    ? 'bg-rose-50/95 text-rose-600 border border-rose-200'
+                    : 'bg-white/80 hover:bg-white text-slate-500 hover:text-rose-500'
+                }`}
+                title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-rose-500 text-rose-500' : ''}`} />
+              </button>
+            )}
             <div className="absolute bottom-3 left-3 right-3 p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-b-xl text-white">
               <h3 className="text-base font-bold leading-snug drop-shadow-xs">
                 {market.name}
@@ -62,10 +83,27 @@ export default function MarketCard({
             </div>
           </div>
         ) : (
-          <div className="p-6 bg-gradient-to-br from-[#16A34A] to-emerald-800 text-white space-y-2">
+          <div className="p-6 bg-gradient-to-br from-[#16A34A] to-emerald-800 text-white space-y-2 relative">
             <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur border border-white/20 inline-block">
               {stallsCount} Artisan Stalls
             </span>
+            {onToggleFavorite && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleFavorite(market.id, e);
+                }}
+                className={`absolute top-4 right-4 p-2 rounded-full backdrop-blur transition shadow-xs cursor-pointer ${
+                  isFavorited
+                    ? 'bg-rose-50 text-rose-600'
+                    : 'bg-white/20 hover:bg-white/30 text-white'
+                }`}
+                title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+              >
+                <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-rose-500 text-rose-500' : ''}`} />
+              </button>
+            )}
             <h3 className="text-lg font-black leading-snug group-hover:text-amber-200 transition">
               {market.name}
             </h3>
