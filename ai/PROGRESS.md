@@ -85,14 +85,30 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] **Phase 3.12 Kiểm Thử Tích Hợp API (API Testing Suite & Zero N+1 Query)**: Kiểm thử CORS pre-flight, tính nhất quán HTTP status codes (`200`, `201`, `400`, `401`, `403`, `404`, `422`), xác thực Zero N+1 query (`ZeroNPlusOneIntegrationTest.php`), và kiểm thử tích hợp E2E toàn diện vòng đời đơn pre-order & review (`CustomerOrderLifecycleIntegrationTest.php`). 13 Feature Tests mới, tổng 177/177 Feature/Unit Tests passed 100%.
 - Tình trạng: **100% HOÀN TẤT DAY 3!** Toàn bộ 12 Phases, 11 Controllers, 18 Form Requests, 15 JsonResources và 177 Feature/Unit Tests hoạt động hoàn hảo. Sẵn sàng cho Day 4 kết nối Frontend React Vite.
 
-### Day 4: Tích Hợp Frontend React Với Backend API
+### Day 4: Tích Hợp Frontend React Vite Với Backend REST API (17 Phases Chuyên Biệt)
 
-- `[ ]` Kết nối React Frontend với Laravel REST API thông qua `axiosClient.js`
-- `[ ]` Màn hình Customer: Danh mục sản phẩm, đặt trước nông sản (Pre-Order Modal), xem lịch sử đơn và đánh giá 1-5 sao
-- `[ ]` Màn hình Farmer: Quản lý hàng chờ pre-order của khách, bấm duyệt đóng gói và báo hàng đã sẵn sàng tại sạp, quản lý kho tuần
-- `[ ]` Màn hình Admin: Quản lý danh mục chợ, phê duyệt nông dân mở sạp, kiểm duyệt đánh giá xấu
-- `[ ]` Xử lý Loading states, Toast Notifications, Error Handlers
-- Tình trạng: Chờ thực hiện sau Day 3
+- `[x]` **Rà Soát Codebase & Ma Trận Khoảng Trống (Gap Analysis)**:
+  - Đối chiếu 100% components Frontend với 10 nhóm Backend Endpoints.
+  - Lập danh sách chi tiết các UI thừa/mock rác cần gỡ bỏ: `GoogleSignInButton.jsx` (không có Social OAuth), `ForgotPasswordPage.jsx` (OTP giả lập), các nút 1-Click Autofill/Demo Fill rác, tab `PREFERENCES` lưu localStorage không có trong DB schema, form Pre-Order mock trực tiếp trên `ProductDetailPage.jsx`.
+  - Tái cấu trúc thành **17 Phases chuyên biệt** tại `ROADMAP/Day4_Views_Frontend.md`.
+- `[ ]` **Phase 4.1**: Tầng Dịch Vụ API Client Độc Lập (13 API modules `src/api/*`).
+- `[ ]` **Phase 4.2**: Chuẩn Hóa Xác Thực, 1-Click Demo Login & Gỡ Bỏ UI Thừa (Google Login).
+- `[ ]` **Phase 4.3**: Nâng Cấp Trang Đăng Ký Tài Khoản & Mở Sạp Nông Dân (`RegisterPage.jsx`).
+- `[ ]` **Phase 4.4**: Tích Hợp Trang Chủ & Trang Liên Hệ (`HomePage.jsx`, `ContactPage.jsx`, `AnnouncementBanner.jsx`).
+- `[ ]` **Phase 4.5**: Danh Bạ Chợ & Lịch Họp Chợ Phiên (`MarketsPage.jsx`, helper day of week, GPS map).
+- `[ ]` **Phase 4.6**: Catalog Nông Sản & Bộ Lọc Đa Tiêu Chí (`ProductsPage.jsx`, categories API, pipeline filters).
+- `[ ]` **Phase 4.7**: Chi Tiết Nông Sản & Gỡ Bỏ Form Pre-Order Autofill (`ProductDetailPage.jsx`, reviews, quantity picker).
+- `[ ]` **Phase 4.8**: Xây Dựng Hệ Thống Giỏ Hàng Toàn Cục (`CartContext.jsx`, `CartDrawer.jsx` gom nhóm theo sạp).
+- `[ ]` **Phase 4.9**: Quy Trình Đặt Hàng Pre-Order & Chọn Khung Giờ (`PreOrderCheckoutModal.jsx`, slots, cutoff).
+- `[ ]` **Phase 4.10**: Cổng Khách Hàng - Lịch Sử Đơn Hàng & Tra Cứu Tiến Độ (`CustomerOrdersPage.jsx`, `OrderPickupTrackerPage.jsx`).
+- `[ ]` **Phase 4.11**: Cổng Khách Hàng - Đánh Giá 5 Sao, Hồ Sơ & Mục Yêu Thích (`ReviewModal.jsx`, `CustomerProfilePage.jsx` gỡ preferences rác).
+- `[ ]` **Phase 4.12**: Cổng Nông Dân - Hàng Đợi Duyệt Đơn Pre-Order (`FarmerDashboard.jsx` Queue: accept, ready, complete, decline reason).
+- `[ ]` **Phase 4.13**: Cổng Nông Dân - Quản Lý Kho & Mẫu Kho Tuần 7 Ngày (`FarmerDashboard.jsx` Inventory CRUD & Weekly Stock Rollover).
+- `[ ]` **Phase 4.14**: Cổng Nông Dân - Cấu Hình Sạp Chợ & Phản Hồi Đánh Giá (`FarmerMarketsTab`, `FarmerReviewsTab`).
+- `[ ]` **Phase 4.15**: Cổng Admin - Thống Kê KPIs, Phê Duyệt Nông Dân & Quản Trị Users (`AdminDashboard.jsx`: overview stats, pending farmers, users active/banned).
+- `[ ]` **Phase 4.16**: Cổng Admin - Quản Lý Chợ, Danh Mục, Ẩn/Hiện, Thông Báo & Hộp Thư (`AdminDashboard.jsx`: markets, categories, toggle-hide, announcements, inquiries).
+- `[ ]` **Phase 4.17**: Thông Báo In-App, Đánh Bóng UX/UI & Kiểm Thử Tích Hợp (`NotificationDropdown.jsx`, responsive, 0 console.log).
+- Tình trạng: **Đã tái cấu trúc hoàn tất 17 Phases Day 4**. Sẵn sàng thực thi Phase 4.1.
 
 ### Day 5: End-to-End Testing, Polish, Deploy Vercel + Render & Chuẩn Bị Demo
 
