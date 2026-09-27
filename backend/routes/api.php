@@ -6,9 +6,11 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\FarmerController;
+use App\Http\Controllers\Api\V1\FavoriteController;
 use App\Http\Controllers\Api\V1\MarketController;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ProductController;
+use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\Api\V1\WeeklyStockController;
 use Illuminate\Support\Facades\Route;
 
@@ -70,6 +72,7 @@ Route::prefix('v1/farmer')->middleware(['auth:sanctum', 'role:farmer', 'farmer.a
     Route::patch('/orders/{id}/decline', [OrderController::class, 'decline']);
     Route::patch('/orders/{id}/ready', [OrderController::class, 'ready']);
     Route::patch('/orders/{id}/complete', [OrderController::class, 'complete']);
+    Route::post('/reviews/{id}/reply', [ReviewController::class, 'reply']);
 });
 
 // Customer Shopping Cart routes
@@ -100,4 +103,20 @@ Route::prefix('v1/admin')->middleware(['auth:sanctum', 'role:admin'])->group(fun
     Route::put('/categories/{id}', [CategoryController::class, 'update']);
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
     Route::patch('/products/{id}/toggle-hide', [ProductController::class, 'toggleHide']);
+    Route::patch('/reviews/{id}/toggle-hide', [ReviewController::class, 'toggleHide']);
+});
+
+// Public Review routes
+Route::get('v1/reviews/product/{productId}', [ReviewController::class, 'productReviews']);
+Route::get('v1/reviews/farmer/{farmerId}', [ReviewController::class, 'farmerReviews']);
+
+// Customer Protected Review routes
+Route::prefix('v1/reviews')->middleware(['auth:sanctum', 'role:customer,admin'])->group(function () {
+    Route::post('/', [ReviewController::class, 'store']);
+});
+
+// Customer Protected Favorite routes
+Route::prefix('v1/favorites')->middleware(['auth:sanctum', 'role:customer,admin'])->group(function () {
+    Route::get('/', [FavoriteController::class, 'index']);
+    Route::post('/toggle', [FavoriteController::class, 'toggle']);
 });

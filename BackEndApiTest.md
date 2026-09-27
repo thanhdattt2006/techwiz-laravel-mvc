@@ -709,6 +709,106 @@ Authorization: Bearer <farmer_token>
 ### 7.11. Generate Available Pickup Slots [Public / Customer]
 - **Method**: `GET /api/v1/orders/slots?farmer_id=1&market_id=1&pickup_date=2026-10-03`
 
+---
+
+## 8. Reviews & Favorites (Phase 3.9)
+
+### 8.1. Submit Review for Completed Order [Customer Only]
+- **Method**: `POST /api/v1/reviews`
+- **Headers**:
+```http
+Authorization: Bearer <customer_token>
+Content-Type: application/json
+```
+- **Body (Review a Farmer Stall)**:
+```json
+{
+  "order_id": 1,
+  "farmer_id": 1,
+  "product_id": null,
+  "rating": 5,
+  "comment": "Wonderful fresh produce and super welcoming farmer!"
+}
+```
+- **Body (Review a Specific Produce Item)**:
+```json
+{
+  "order_id": 1,
+  "farmer_id": null,
+  "product_id": 2,
+  "rating": 4,
+  "comment": "Crisp and flavorful apples."
+}
+```
+
+---
+
+### 8.2. Get Public Reviews for a Produce Item [Public]
+- **Method**: `GET /api/v1/reviews/product/{productId}`
+*(Example: `GET /api/v1/reviews/product/2`)*
+
+---
+
+### 8.3. Get Public Reviews for a Farmer Stall [Public]
+- **Method**: `GET /api/v1/reviews/farmer/{farmerId}`
+*(Example: `GET /api/v1/reviews/farmer/1`)*
+
+---
+
+### 8.4. Respond to Produce Review [Farmer Only]
+- **Method**: `POST /api/v1/farmer/reviews/{id}/reply`
+*(Example: `POST /api/v1/farmer/reviews/1/reply`)*
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+Content-Type: application/json
+```
+- **Body**:
+```json
+{
+  "farmer_reply": "Thank you for supporting our orchard! Look forward to seeing you at the stall."
+}
+```
+
+---
+
+### 8.5. Moderate Review Visibility [Admin Only]
+- **Method**: `PATCH /api/v1/admin/reviews/{id}/toggle-hide`
+*(Example: `PATCH /api/v1/admin/reviews/1/toggle-hide`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+```
+
+---
+
+### 8.6. List Customer Favorites [Customer Only]
+- **Method**: `GET /api/v1/favorites`
+*(Or filter by type: `GET /api/v1/favorites?type=product` | `GET /api/v1/favorites?type=farmer` | `GET /api/v1/favorites?type=market`)*
+- **Headers**:
+```http
+Authorization: Bearer <customer_token>
+```
+
+---
+
+### 8.7. Toggle Favorite Item (Polymorphic) [Customer Only]
+- **Method**: `POST /api/v1/favorites/toggle`
+- **Headers**:
+```http
+Authorization: Bearer <customer_token>
+Content-Type: application/json
+```
+- **Body**:
+```json
+{
+  "favoritable_type": "product",
+  "favoritable_id": 1
+}
+```
+*(Supports `favoritable_type`: `"farmer"`, `"product"`, `"market"`)*
+
+
 
 
 

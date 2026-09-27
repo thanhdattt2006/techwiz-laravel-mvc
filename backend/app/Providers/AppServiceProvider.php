@@ -23,5 +23,11 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('production') || config('app.env') === 'production') {
             URL::forceScheme('https');
         }
+
+        \Illuminate\Database\Eloquent\Relations\Relation::morphMap([
+            'farmer' => \App\Models\Farmer::class,
+            'product' => \App\Models\Product::class,
+            'market' => \App\Models\Market::class,
+        ]);
     }
 }

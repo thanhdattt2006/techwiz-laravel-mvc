@@ -228,7 +228,7 @@
 
 ## Phase 3.9: Nhóm 8 - Đánh Giá & Mục Yêu Thích (Reviews & Favorites)
 
-- `[ ]` **Endpoints**:
+- `[x]` **Endpoints**:
   - `POST  /api/v1/reviews` (Customer: Đánh giá 1-5 sao sau khi đơn completed)
   - `POST  /api/v1/farmer/reviews/{id}/reply` (Farmer: Chủ sạp trả lời đánh giá sản phẩm)
   - `GET   /api/v1/reviews/product/{productId}` (Public: Xem review của sản phẩm)
@@ -236,17 +236,19 @@
   - `PATCH /api/v1/admin/reviews/{id}/toggle-hide` (Admin: Ẩn/Hiện review vi phạm)
   - `GET   /api/v1/favorites` (Customer: Xem danh sách mục yêu thích)
   - `POST  /api/v1/favorites/toggle` (Customer: Thêm/Bỏ yêu thích nhanh đa hình)
-- `[ ]` **Controllers**:
+- `[x]` **Controllers**:
   - `ReviewController.php` (`app/Http/Controllers/Api/V1/ReviewController.php`)
   - `FavoriteController.php` (`app/Http/Controllers/Api/V1/FavoriteController.php`)
-- `[ ]` **Service**:
+- `[x]` **Service**:
   - `RatingCalculationService.php`: Thuật toán tự động tính lại `avg_rating` và `review_count` cho Product và Farmer.
-- `[ ]` **Form Requests**:
+- `[x]` **Form Requests**:
   - `StoreReviewRequest`: Validate `order_id` (phải completed, thuộc về user), `farmer_id`, `product_id`, `rating` (1-5), `comment`. Ràng buộc XOR chặn review cả 2 đối tượng cùng lúc.
   - `ReplyReviewRequest`: Validate `farmer_reply`.
   - `ToggleFavoriteRequest`: Validate `favoritable_type` (`farmer`, `product`, `market`), `favoritable_id`.
-- `[ ]` **JsonResources**: `ReviewResource.php`, `FavoriteResource.php`.
-- `[ ]` **Đưa danh sách API và data mẫu để test**
+- `[x]` **JsonResources**: `ReviewResource.php`, `FavoriteResource.php`.
+- `[x]` **Đưa danh sách API và data mẫu để test**:
+  - Đã xuất bản danh sách API và dữ liệu mẫu test tại [`BackEndApiTest.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/BackEndApiTest.md#8-reviews--favorites-phase-39).
+  - Đã tạo Feature Test `tests/Feature/ReviewAndFavoriteApiTest.php` với 17 test cases bao phủ toàn diện (100% pass, tổng 141/141 tests toàn dự án).
 
 ---
 
