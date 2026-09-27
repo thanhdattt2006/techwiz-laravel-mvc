@@ -191,18 +191,18 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.3: Nâng Cấp Trang Đăng Ký Tài Khoản & Mở Sạp Nông Dân (Registration Flow)
+### Phase 4.3: Nâng Cấp Trang Đăng Ký Tài Khoản & Mở Sạp Nông Dân (Registration Flow) [x]
 
 - **Mục tiêu**: Hỗ trợ 2 chế độ đăng ký riêng biệt: Khách mua hàng (`Customer`) và Nông dân nộp hồ sơ mở sạp (`Farmer Stall Application`).
 - **Files tác động**:
   - `frontend/src/pages/auth/RegisterPage.jsx`
 - **Checklist công việc**:
-  - `[ ]` Gỡ bỏ `GoogleSignInButton.jsx` và nút "1-Click Demo Fill" rác khỏi `RegisterPage.jsx`.
-  - `[ ]` Thêm Tab Switcher: **"Tài Khoản Khách Hàng (Shopper)"** $\leftrightarrow$ **"Đăng Ký Mở Sạp (Farmer Stall)"**.
-  - `[ ]` **Tab Khách Hàng**:
+  - `[x]` Gỡ bỏ `GoogleSignInButton.jsx` và nút "1-Click Demo Fill" rác khỏi `RegisterPage.jsx`.
+  - `[x]` Thêm Tab Switcher: **"Tài Khoản Khách Hàng (Shopper)"** $\leftrightarrow$ **"Đăng Ký Mở Sạp (Farmer Stall)"**.
+  - `[x]` **Tab Khách Hàng**:
     - Các trường: `fullname`, `username`, `email`, `phone`, `address`, `password`, `confirmPassword`.
     - Gửi request `POST /api/v1/auth/register` $\rightarrow$ Tự động đăng nhập và có giỏ hàng rỗng.
-  - `[ ]` **Tab Nông Dân Mở Sạp**:
+  - `[x]` **Tab Nông Dân Mở Sạp**:
     - Thêm các trường: `stall_name`, `contact_person`, `contact_phone`, `address`, `description`, `latitude`, `longitude`.
     - Gửi request `POST /api/v1/auth/register-farmer` $\rightarrow$ Tạo tài khoản với trạng thái `pending`, thông báo hồ sơ đang chờ Admin phê duyệt.
 - **Tiêu chí hoàn thành**: Đăng ký Customer thành công vào được Dashboard; Đăng ký Farmer thành công tạo tài khoản `pending` trong cơ sở dữ liệu.

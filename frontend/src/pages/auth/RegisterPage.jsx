@@ -9,314 +9,309 @@ import {
   KeyRound,
   User,
   ArrowLeft,
-  CheckCircle2,
   Sprout,
-  ShoppingBag,
-  Store,
   MapPin,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  Tractor,
+  ArrowRight,
 } from 'lucide-react';
 
 export default function RegisterPage() {
-  const { register } = useAuth();
-  const { showAlert } = useModal();
   const navigate = useNavigate();
+  const { register } = useAuth();
+  const { alert } = useModal();
 
   const [formData, setFormData] = useState({
     fullname: '',
     username: '',
     email: '',
     phone: '',
+    address: '',
     password: '',
     confirmPassword: '',
   });
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    if (error) setError('');
+    if (error) setError(null);
   };
 
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const { fullname, username, email, phone, password, confirmPassword } = formData;
+    setError(null);
 
-    if (!fullname.trim() || !username.trim() || !email.trim() || !phone.trim() || !password) {
-      setError('All fields are required for shopper registration.');
+    // Client-side validations
+    if (formData.password.length < 8) {
+      setError('Password must be at least 8 characters long.');
       return;
     }
 
-    if (!email.includes('@') || !email.includes('.')) {
-      setError('Please provide a valid email address.');
-      return;
-    }
-
-    if (password.length < 6) {
-      setError('Password must contain at least 6 characters.');
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError('Passwords do not match. Please verify.');
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match.');
       return;
     }
 
     setSubmitting(true);
-    const result = await register({
-      fullname,
-      username,
-      email,
-      phone,
-      password,
-    });
-    setSubmitting(false);
+    try {
+      const payload = {
+        fullname: formData.fullname.trim(),
+        username: formData.username.trim(),
+        email: formData.email.trim(),
+        phone: formData.phone.trim(),
+        address: formData.address.trim(),
+        password: formData.password,
+      };
 
-    if (result.success) {
-      showAlert({
-        title: 'Registration Complete!',
-        message: `Welcome to MarketLink, ${result.user.fullname}! Your shopper account is active.`,
-        type: 'success',
-        confirmText: false,
-        autoCloseMs: 1600,
-      });
+      const result = await register(payload);
 
-      setTimeout(() => {
+      if (result.success) {
+        await alert({
+          title: 'Welcome to MarketLink!',
+          message: 'Your shopper account was created successfully. You are now signed in.',
+          type: 'success',
+        });
         navigate('/customer/dashboard');
-      }, 400);
-    } else {
-      showAlert({
-        title: 'Registration Error',
-        message: result.message || 'Registration could not be completed.',
-        type: 'danger',
-      });
+      } else {
+        setError(result.error || 'Registration failed. Please check your credentials.');
+      }
+    } catch (err) {
+      setError(err?.response?.data?.message || err.message || 'An unexpected error occurred.');
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAF6] text-[#0F172A] flex flex-col items-center justify-center p-4 sm:p-8 font-sans">
-      <div className="w-full max-w-4xl space-y-6">
-        {/* Navigation & Header Brand */}
-        <div className="flex items-center justify-between pb-2">
+    <div className="min-h-screen bg-[#F8FAF6] py-12 px-4 sm:px-6 lg:px-8 flex flex-col justify-center items-center font-sans antialiased text-[#0F172A]">
+      <div className="w-full max-w-xl">
+        {/* Back Link */}
+        <div className="mb-4">
           <Link
             to="/"
-            className="flex items-center gap-1.5 text-xs font-semibold text-[#16A34A] hover:underline"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#475569] hover:text-[#16A34A] transition"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>Return to Fresh Marketplace</span>
+            Back to Public Marketplace
           </Link>
-          <div className="flex items-center gap-2">
-            <Sprout className="w-5 h-5 text-[#16A34A]" />
-            <span className="text-sm font-black tracking-tight text-[#0F172A]">
-              Market<span className="text-[#16A34A]">Link</span> Community Registration
-            </span>
-          </div>
         </div>
 
-        {/* 2-Column Register Container */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          {/* Left Column: Why Register & 1-Click Demo Fill (5 cols) */}
-          <section className="md:col-span-5 bg-white border border-[#E2E8DF] rounded-2xl p-6 sm:p-8 flex flex-col justify-between shadow-xs space-y-6">
-            <div className="space-y-4">
+        {/* Header */}
+        <div className="text-center mb-6">
+          <Link to="/" className="inline-flex items-center gap-2 mb-3">
+            <div className="w-10 h-10 rounded-xl bg-[#16A34A] flex items-center justify-center text-white shadow-xs">
+              <Sprout className="w-6 h-6" />
+            </div>
+            <div className="text-left">
+              <div className="text-xl font-bold tracking-tight text-[#0F172A]">MarketLink</div>
+              <div className="text-[10px] uppercase tracking-wider text-[#16A34A] font-semibold">
+                Farm Fresh Hub
+              </div>
+            </div>
+          </Link>
+          <h1 className="text-2xl font-bold text-[#0F172A]">Create Shopper Account</h1>
+          <p className="text-xs text-[#475569] mt-1 max-w-md mx-auto">
+            Join MarketLink to discover and pre-order fresh seasonal produce directly from local family farms.
+          </p>
+        </div>
+
+        {/* Main Card */}
+        <div className="bg-white border border-[#E2E8DF] rounded-2xl shadow-xs p-6 sm:p-8">
+          {/* Error Banner */}
+          {error && (
+            <div className="mb-5 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2.5">
+              <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+              <div className="flex-1">{error}</div>
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+              {/* Full Name */}
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-emerald-100 text-[#15803D]">
-                  Shopper & Food Lover Portal
-                </span>
-                <h2 className="text-lg font-bold text-[#0F172A] mt-2">
-                  Farm Fresh Community Membership
-                </h2>
-                <p className="text-xs text-[#475569] mt-1 leading-relaxed">
-                  Pre-order fresh organic produce ahead of market day, connect directly with certified family farms, and inspect produce before paying at the stall.
-                </p>
+                <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                  Full Name <span className="text-[#DC2626]">*</span>
+                </label>
+                <div className="relative">
+                  <User className="w-4 h-4 text-[#475569] absolute left-3 top-2.5" />
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Elena Vance"
+                    value={formData.fullname}
+                    onChange={(e) => handleInputChange('fullname', e.target.value)}
+                    className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
+                  />
+                </div>
               </div>
 
-              {/* Benefits list */}
-              <div className="space-y-3 pt-2">
-                <div className="flex items-start gap-3 text-xs">
-                  <div className="p-1.5 rounded-lg bg-emerald-50 text-[#16A34A] shrink-0 mt-0.5">
-                    <ShoppingBag className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="font-bold text-[#0F172A] block">Exclusive Weekend Pre-Orders</span>
-                    <span className="text-[#475569] text-[11px]">Reserve peak seasonal crops before market day with 0 online payment fees.</span>
-                  </div>
+              {/* Username */}
+              <div>
+                <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                  Username <span className="text-[#DC2626]">*</span>
+                </label>
+                <div className="relative">
+                  <span className="text-[#475569] absolute left-3 top-2 text-xs font-medium">@</span>
+                  <input
+                    type="text"
+                    required
+                    placeholder="elenavance"
+                    value={formData.username}
+                    onChange={(e) => handleInputChange('username', e.target.value)}
+                    className="w-full pl-8 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
+                  />
                 </div>
+              </div>
 
-                <div className="flex items-start gap-3 text-xs">
-                  <div className="p-1.5 rounded-lg bg-emerald-50 text-[#16A34A] shrink-0 mt-0.5">
-                    <Store className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="font-bold text-[#0F172A] block">Direct Farm Verification</span>
-                    <span className="text-[#475569] text-[11px]">Connect directly with independent local growers and harvest origins.</span>
-                  </div>
+              {/* Email */}
+              <div>
+                <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                  Email Address <span className="text-[#DC2626]">*</span>
+                </label>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-[#475569] absolute left-3 top-2.5" />
+                  <input
+                    type="email"
+                    required
+                    placeholder="elena@example.com"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
+                  />
                 </div>
+              </div>
 
-                <div className="flex items-start gap-3 text-xs">
-                  <div className="p-1.5 rounded-lg bg-emerald-50 text-[#16A34A] shrink-0 mt-0.5">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="font-bold text-[#0F172A] block">Stall Pickup & In-Person Pay</span>
-                    <span className="text-[#475569] text-[11px]">Inspect produce freshness in person and pay at your preferred stall.</span>
-                  </div>
+              {/* Phone */}
+              <div>
+                <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                  Phone Number <span className="text-[#DC2626]">*</span>
+                </label>
+                <div className="relative">
+                  <Phone className="w-4 h-4 text-[#475569] absolute left-3 top-2.5" />
+                  <input
+                    type="tel"
+                    required
+                    placeholder="(312) 555-0192"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange('phone', e.target.value)}
+                    className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
+                  />
+                </div>
+              </div>
+
+              {/* Address */}
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                  Physical Address / Neighborhood <span className="text-[#DC2626]">*</span>
+                </label>
+                <div className="relative">
+                  <MapPin className="w-4 h-4 text-[#475569] absolute left-3 top-2.5" />
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. 742 Evergreen Terrace, Chicago, IL"
+                    value={formData.address}
+                    onChange={(e) => handleInputChange('address', e.target.value)}
+                    className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
+                  />
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="text-xs font-semibold text-[#0F172A]">
+                    Password <span className="text-[#DC2626]">*</span>
+                  </label>
+                  <span className="text-[10px] text-[#475569]">Min. 8 characters</span>
+                </div>
+                <div className="relative">
+                  <KeyRound className="w-4 h-4 text-[#475569] absolute left-3 top-2.5" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    className="w-full pl-9 pr-8 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2.5 top-2 text-[#475569] hover:text-[#0F172A] transition"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <label className="block text-xs font-semibold text-[#0F172A] mb-1">
+                  Confirm Password <span className="text-[#DC2626]">*</span>
+                </label>
+                <div className="relative">
+                  <KeyRound className="w-4 h-4 text-[#475569] absolute left-3 top-2.5" />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    required
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                    className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
+                  />
                 </div>
               </div>
             </div>
-          </section>
 
-          {/* Right Column: Registration Form (7 cols) */}
-          <section className="md:col-span-7 bg-white border border-[#E2E8DF] rounded-2xl p-6 sm:p-8 shadow-xs">
-            <form onSubmit={handleRegister} className="space-y-4">
-              <div>
-                <div className="flex items-center gap-2 mb-1 text-[#16A34A]">
-                  <UserPlus className="w-5 h-5" />
-                  <h2 className="text-lg font-bold text-[#0F172A]">Create Shopper Account</h2>
-                </div>
-                <p className="text-xs text-[#475569]">
-                  Fill in your details below to create your MarketLink shopper profile.
-                </p>
+            {/* Submit Button */}
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="w-full py-2.5 px-4 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer disabled:opacity-50"
+              >
+                <UserPlus className="w-4 h-4" />
+                <span>{submitting ? 'Registering Account...' : 'Create Shopper Account'}</span>
+              </button>
+            </div>
+
+            {/* Sign In Link */}
+            <div className="pt-3 border-t border-[#E2E8DF] text-center text-xs text-[#475569]">
+              Already have an account?{' '}
+              <Link to="/login" className="font-bold text-[#16A34A] hover:underline">
+                Sign In Here
+              </Link>
+            </div>
+          </form>
+        </div>
+
+        {/* Farmer Application Callout Box */}
+        <div className="mt-6 p-4 rounded-2xl bg-white border border-[#E2E8DF] flex flex-col sm:flex-row items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-center gap-3 text-center sm:text-left">
+            <div className="w-10 h-10 rounded-xl bg-[#F8FAF6] border border-[#E2E8DF] flex items-center justify-center text-[#16A34A] shrink-0">
+              <Tractor className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="text-xs font-bold text-[#0F172A]">Are you a farmer or local producer?</div>
+              <div className="text-[11px] text-[#475569]">
+                Register your stall to publish weekly stock and take pre-orders.
               </div>
-
-              {/* Error banner */}
-              {error && (
-                <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-[#DC2626] text-xs font-semibold">
-                  {error}
-                </div>
-              )}
-
-              {/* Full Name & Username */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-[#0F172A] mb-1">
-                    Full Name <span className="text-[#DC2626]">*</span>
-                  </label>
-                  <div className="relative">
-                    <User className="w-4 h-4 text-[#475569] absolute left-3 top-3" />
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Elena Rostova"
-                      value={formData.fullname}
-                      onChange={(e) => handleInputChange('fullname', e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#0F172A] mb-1">
-                    Username <span className="text-[#DC2626]">*</span>
-                  </label>
-                  <div className="relative">
-                    <span className="text-[#475569] font-mono text-xs absolute left-3 top-2.5">@</span>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. elena_shopper"
-                      value={formData.username}
-                      onChange={(e) => handleInputChange('username', e.target.value)}
-                      className="w-full pl-8 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Email & Phone */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-[#0F172A] mb-1">
-                    Email Address <span className="text-[#DC2626]">*</span>
-                  </label>
-                  <div className="relative">
-                    <Mail className="w-4 h-4 text-[#475569] absolute left-3 top-3" />
-                    <input
-                      type="email"
-                      required
-                      placeholder="e.g. elena@gmail.com"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#0F172A] mb-1">
-                    Phone Number <span className="text-[#DC2626]">*</span>
-                  </label>
-                  <div className="relative">
-                    <Phone className="w-4 h-4 text-[#475569] absolute left-3 top-3" />
-                    <input
-                      type="tel"
-                      required
-                      placeholder="e.g. (312) 555-8819"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Password & Confirm */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-semibold text-[#0F172A] mb-1">
-                    Password <span className="text-[#DC2626]">*</span>
-                  </label>
-                  <div className="relative">
-                    <KeyRound className="w-4 h-4 text-[#475569] absolute left-3 top-3" />
-                    <input
-                      type="password"
-                      required
-                      placeholder="Min 6 characters"
-                      value={formData.password}
-                      onChange={(e) => handleInputChange('password', e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#0F172A] mb-1">
-                    Confirm Password <span className="text-[#DC2626]">*</span>
-                  </label>
-                  <div className="relative">
-                    <CheckCircle2 className="w-4 h-4 text-[#475569] absolute left-3 top-3" />
-                    <input
-                      type="password"
-                      required
-                      placeholder="Re-enter password"
-                      value={formData.confirmPassword}
-                      onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                      className="w-full pl-9 pr-3 py-2 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Submit Button */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="w-full py-2.5 px-4 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer disabled:opacity-50"
-                >
-                  <UserPlus className="w-4 h-4" />
-                  <span>{submitting ? 'Registering Account...' : 'Create Shopper Account'}</span>
-                </button>
-              </div>
-
-              {/* Sign In Link */}
-              <div className="pt-3 border-t border-[#E2E8DF] text-center text-xs text-[#475569]">
-                Already have an account?{' '}
-                <Link to="/login" className="font-bold text-[#16A34A] hover:underline">
-                  Sign In Here
-                </Link>
-              </div>
-            </form>
-          </section>
+            </div>
+          </div>
+          <Link
+            to="/register-farmer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F8FAF6] hover:bg-[#E2E8DF] text-[#16A34A] hover:text-[#15803D] border border-[#E2E8DF] font-semibold text-xs transition shrink-0"
+          >
+            <span>Apply for Stall</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
       </div>
     </div>

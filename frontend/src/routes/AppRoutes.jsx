@@ -27,6 +27,7 @@ import NotFoundPage from '../pages/public/NotFoundPage';
 // Auth Pages
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
+import FarmerRegisterPage from '../pages/auth/FarmerRegisterPage';
 import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
 import UnauthorizedPage from '../pages/auth/UnauthorizedPage';
 
@@ -60,6 +61,7 @@ export default function AppRoutes() {
         {/* 2. Authentication & Access Restriction Routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/register-farmer" element={<FarmerRegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
 

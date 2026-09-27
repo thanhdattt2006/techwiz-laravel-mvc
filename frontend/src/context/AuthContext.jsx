@@ -284,8 +284,10 @@ export const AuthProvider = ({ children }) => {
         return { success: false, message: response?.message || 'Registration failed.' };
       } catch (error) {
         setIsLoading(false);
-        const message = error.response?.data?.message || 'Unable to connect to registration server.';
-        return { success: false, message };
+        const errors = error.response?.data?.errors;
+        const firstError = errors ? Object.values(errors).flat()[0] : null;
+        const message = firstError || error.response?.data?.message || 'Unable to connect to registration server.';
+        return { success: false, message, errors };
       }
     }
 
@@ -312,6 +314,53 @@ export const AuthProvider = ({ children }) => {
     setIsLoading(false);
 
     return { success: true, user: newUser };
+  };
+
+  /**
+   * Register a new farmer stall application (pending admin approval).
+   */
+  const registerFarmer = async (data) => {
+    if (USE_BACKEND_API) {
+      try {
+        setIsLoading(true);
+        const payload = {
+          fullname: data.fullname.trim(),
+          username: data.username.trim().toLowerCase(),
+          email: data.email.trim().toLowerCase(),
+          phone: data.phone.trim(),
+          password: data.password,
+          password_confirmation: data.password_confirmation || data.confirmPassword || data.password,
+          stall_name: data.stall_name.trim(),
+          contact_person: (data.contact_person || data.fullname).trim(),
+          contact_phone: (data.contact_phone || data.phone).trim(),
+          address: data.address.trim(),
+          description: data.description?.trim() || null,
+          latitude: data.latitude ? parseFloat(data.latitude) : null,
+          longitude: data.longitude ? parseFloat(data.longitude) : null,
+        };
+
+        const response = await authApi.registerFarmer(payload);
+        setIsLoading(false);
+        if (response && response.success) {
+          return { success: true, user: response.data?.user, message: response.message };
+        }
+        return { success: false, message: response?.message || 'Farmer application failed.' };
+      } catch (error) {
+        setIsLoading(false);
+        const errors = error.response?.data?.errors;
+        const firstError = errors ? Object.values(errors).flat()[0] : null;
+        const message = firstError || error.response?.data?.message || 'Unable to submit farmer stall application.';
+        return { success: false, message, errors };
+      }
+    }
+
+    setIsLoading(true);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    setIsLoading(false);
+    return {
+      success: true,
+      message: 'Farmer stall application submitted for evaluation.',
+    };
   };
 
   /**
@@ -438,6 +487,7 @@ export const AuthProvider = ({ children }) => {
     isLoading,
     login,
     register,
+    registerFarmer,
     logout,
     quickDemoLogin,
     updateProfile,
