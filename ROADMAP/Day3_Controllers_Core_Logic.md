@@ -303,19 +303,21 @@
 
 ## Phase 3.12: Kiểm Thử Tích Hợp API (API Testing Suite & Zero N+1)
 
-- `[ ]` Viết Feature Tests (`tests/Feature/`):
-  - `AuthApiTest.php`: Kiểm tra đăng ký Customer, đăng ký Farmer, đăng nhập sai/đúng, lấy profile `/me`.
-  - `ProductCatalogApiTest.php`: Kiểm tra lọc nông sản theo category, giá, chợ và search fulltext.
-  - `PreOrderCheckoutTest.php`: Kiểm tra luồng checkout tách đơn, trừ kho, chặn khi hết hàng và chặn khi quá giờ cutoff.
-  - `OrderStatusTransitionTest.php`: Kiểm tra luồng Farmer duyệt đơn, báo sẵn sàng, giao hàng và hoàn kho khi huỷ.
-  - `ReviewModerationTest.php`: Kiểm tra ràng buộc review đơn completed, phản hồi của chủ sạp và admin ẩn review.
-- `[ ]` Kiểm tra HTTP Status Codes đồng nhất: `200`, `201`, `400`, `401`, `403`, `404`, `422`.
-- `[ ]` Đảm bảo CORS header phản hồi chính xác cho Frontend React Vite trên local và production Vercel.
+- `[x]` Viết Feature Tests (`tests/Feature/`):
+  - `AuthApiTest.php`: Kiểm tra đăng ký Customer, đăng ký Farmer, đăng nhập sai/đúng, lấy profile `/me`. (15 test cases, 100% pass)
+  - `ProductApiTest.php`: Kiểm tra lọc nông sản theo category, giá, chợ và search fulltext. (18 test cases, 100% pass)
+  - `OrderApiTest.php`: Kiểm tra luồng checkout tách đơn, trừ kho, chặn khi hết hàng và chặn khi quá giờ cutoff, Farmer duyệt đơn, báo sẵn sàng, giao hàng và hoàn kho khi huỷ. (17 test cases, 100% pass)
+  - `ReviewAndFavoriteApiTest.php`: Kiểm tra ràng buộc review đơn completed, phản hồi của chủ sạp và admin ẩn review. (17 test cases, 100% pass)
+  - `CustomerOrderLifecycleIntegrationTest.php`: Kiểm tra tích hợp E2E trọn vẹn luồng Khách đăng ký -> Thêm giỏ hàng -> Pre-order chọn slot -> Nông dân accept -> Ready -> Complete -> Khách review 5 sao -> Nông dân reply -> Doanh thu admin cập nhật. (100% pass)
+- `[x]` Kiểm tra HTTP Status Codes đồng nhất: `200`, `201`, `400`, `401`, `403`, `404`, `422` tại `CorsAndHttpStatusApiTest.php` (7 test cases, 100% pass).
+- `[x]` Đảm bảo CORS header phản hồi chính xác (`OPTIONS` 204, `Access-Control-Allow-Origin`, `Access-Control-Allow-Methods`, `Access-Control-Allow-Headers`) cho Frontend React Vite trên local và production Vercel.
+- `[x]` Xác thực Zero N+1 Queries tại `ZeroNPlusOneIntegrationTest.php` (5 test cases, 100% pass): Eager loading triệt để với quan hệ lồng nhau (`farmer.markets`, `items.product`, `schedules`), số lượng queries không đổi khi $N$ tăng lên.
 
 ---
 
 ## Tổng Kết Day 3
 
-- `[ ]` 10 nhóm tính năng được chia nhỏ và hoàn thành độc lập, không bị chồng chéo code.
-- `[ ]` Toàn bộ 11 Controllers, 18 Form Requests và 15 JsonResources hoạt động mượt mà.
-- `[ ]` Sẵn sàng bàn giao bộ API chuẩn hóa cho Day 4 kết nối Frontend React Vite.
+- `[x]` 10 nhóm tính năng cốt lõi (12 Phases) được chia nhỏ và hoàn thành độc lập, 100% sạch sẽ và không bị chồng chéo code.
+- `[x]` Toàn bộ 11 Controllers, 18 Form Requests và 15 JsonResources hoạt động mượt mà, đạt 100% kiểm thử tự động (177/177 tests passed, 1271 assertions).
+- `[x]` Bộ API Contract hoàn thiện, chuẩn hóa Envelope JSON và tài liệu hoá mẫu request/response tại `BackEndApiTest.md`.
+- `[x]` Sẵn sàng 100% bàn giao bộ API cho Day 4 kết nối Frontend React Vite.

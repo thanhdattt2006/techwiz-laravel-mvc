@@ -186,7 +186,7 @@ class OrderController extends Controller
             return $this->errorResponse('Farmer stall profile not found.', 404);
         }
 
-        $query = Order::with(['items.product', 'market', 'customer'])
+        $query = Order::with(['items.product', 'farmer.markets', 'market', 'customer'])
             ->where('farmer_id', $farmer->id);
 
         if ($request->filled('status')) {
