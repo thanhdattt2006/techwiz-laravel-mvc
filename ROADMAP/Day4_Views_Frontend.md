@@ -247,42 +247,48 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.6: Catalog Nông Sản & Bộ Lọc Đa Tiêu Chí (Produce Catalog Page)
+### Phase 4.6: Catalog Nông Sản & Bộ Lọc Đa Tiêu Chí (Produce Catalog Page) [x]
 
 - **Mục tiêu**: Kết nối Trang Danh Mục Nông Sản với Backend Filter Pipeline, load danh mục thật và tích hợp nút yêu thích/thêm giỏ hàng.
 - **Files tác động**:
   - `frontend/src/pages/public/ProductsPage.jsx`
   - `frontend/src/components/common/ProductCard.jsx`
   - `frontend/src/components/common/FilterSidebar.jsx`
+  - `frontend/src/hooks/useProducts.js`
 - **Checklist công việc**:
-  - `[ ]` `ProductsPage.jsx`:
+  - `[x]` `ProductsPage.jsx`:
     - Thay thế `products.json` bằng `productApi.getProducts(filterParams)`.
     - Load danh mục thực tế từ `categoryApi.getCategories()`.
     - Load danh sách chợ từ `marketApi.getMarkets()` vào bộ lọc.
     - Đồng bộ bộ lọc với query params Backend: `category_id`, `market_id`, `farmer_id`, `min_price`, `max_price`, `in_stock`, `sort_by` (`price_asc`, `price_desc`, `rating_desc`, `name_asc`).
-  - `[ ]` `ProductCard.jsx`:
+  - `[x]` `ProductCard.jsx`:
     - Map đúng các trường từ `ProductResource`: `stall_name`, `price`, `unit`, `avg_rating`, `reviews_count`, `stock_quantity`.
     - Thêm nút Thả tim yêu thích gọi `favoriteApi.toggleFavorite('product', product.id)`.
+  - `[x]` Tách logic fetching sang Custom Hook `useProducts.js` (~180 dòng), tối giản `ProductsPage.jsx` xuống còn ~180 dòng.
 - **Tiêu chí hoàn thành**: Lọc nông sản theo danh mục, chợ, khoảng giá và sắp xếp hoạt động chính xác với Backend.
 
 ---
 
-### Phase 4.7: Chi Tiết Nông Sản & Gỡ Bỏ Form Pre-Order Autofill (Product Detail Page)
+### Phase 4.7: Chi Tiết Nông Sản & Gỡ Bỏ Form Pre-Order Autofill (Product Detail Page) [x]
 
 - **Mục tiêu**: Kết nối trang Chi Tiết Nông Sản với API, hiển thị đánh giá thực tế của khách và gỡ bỏ hoàn toàn form pre-order autofill mock Eleanor Vance.
 - **Files tác động**:
   - `frontend/src/pages/public/ProductDetailPage.jsx`
+  - `frontend/src/hooks/useProductDetail.js`
+  - `frontend/src/components/products/ProductStallInfoCard.jsx`
+  - `frontend/src/components/products/ProductReviewsList.jsx`
 - **Checklist công việc**:
-  - `[ ]` Gọi `productApi.getProduct(id)` để load dữ liệu nông sản thật.
-  - `[ ]` Gọi `reviewApi.getProductReviews(id)` để hiển thị danh sách đánh giá của khách kèm phản hồi của chủ sạp.
-  - `[ ]` **Gỡ bỏ triệt để**:
+  - `[x]` Gọi `productApi.getProduct(id)` để load dữ liệu nông sản thật.
+  - `[x]` Gọi `reviewApi.getProductReviews(id)` để hiển thị danh sách đánh giá của khách kèm phản hồi của chủ sạp.
+  - `[x]` **Gỡ bỏ triệt để**:
     - Nút `handleDemoFill` autofill Eleanor Vance.
     - Hàm `handlePreOrderSubmit` tự sinh mã `MLB-2026-XXXX`.
     - Form đặt hàng trực tiếp giả lập ở cột phải.
-  - `[ ]` **Thay thế bằng**:
+  - `[x]` **Thay thế bằng**:
     - Bộ chọn số lượng (Quantity Picker) có giới hạn tối đa bằng tồn kho `stock_quantity`.
-    - Nút **"Thêm Vào Giỏ Hàng" (Add to Cart)**.
-    - Nút **"Đặt Trước Ngay" (Pre-Order Now)** tự động thêm món và mở luồng đặt hàng.
+    - Nút **"Thêm Vào Giỏ Hàng" (Add to Cart)** gọi `cartApi.addItem`.
+    - Nút **"Đặt Trước Ngay" (Pre-Order Now)** tự động thêm món và mở luồng đơn hàng.
+    - Tách logic vào Custom Hook `useProductDetail.js` và subcomponents (`ProductStallInfoCard`, `ProductReviewsList`), giữ `ProductDetailPage.jsx` gọn gàng ~240 dòng tuân thủ S.O.L.I.D.
 - **Tiêu chí hoàn thành**: Hiển thị đầy đủ thông tin nông sản, xuất xứ sạp, rating thực tế; Không còn bất kỳ mã mock autofill nào.
 
 ---
