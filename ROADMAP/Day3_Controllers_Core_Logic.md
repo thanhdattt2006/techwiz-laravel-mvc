@@ -169,23 +169,25 @@
 
 ## Phase 3.7: Nhóm 6 - Giỏ Hàng Mua Sắm (Shopping Cart)
 
-- `[ ]` **Endpoints**:
+- `[x]` **Endpoints**:
   - `GET    /api/v1/cart` (Customer: Lấy giỏ hàng, tự động nhóm các món theo từng sạp và chợ)
   - `POST   /api/v1/cart/items` (Customer: Thêm món vào giỏ kèm số lượng)
   - `PUT    /api/v1/cart/items/{id}` (Customer: Cập nhật số lượng món trong giỏ)
   - `DELETE /api/v1/cart/items/{id}` (Customer: Xoá 1 món khỏi giỏ)
   - `DELETE /api/v1/cart/clear` (Customer: Dọn sạch toàn bộ giỏ hàng)
-- `[ ]` **Controller**: `CartController.php` (`app/Http/Controllers/Api/V1/CartController.php`).
-- `[ ]` **Form Requests**:
+- `[x]` **Controller**: `CartController.php` (`app/Http/Controllers/Api/V1/CartController.php`).
+- `[x]` **Form Requests**:
   - `AddCartItemRequest`: Validate `product_id` (tồn tại, không bị ẩn), `quantity` (> 0).
   - `UpdateCartItemRequest`: Validate `quantity` (> 0).
-- `[ ]` **JsonResources**:
+- `[x]` **JsonResources**:
   - `CartResource.php`: Danh sách món nhóm theo sạp nông dân, tính tạm tính tổng tiền.
   - `CartItemResource.php`: Thông tin món, đơn giá, số lượng, thành tiền, tồn kho hiện tại.
-- `[ ]` **Nghiệp vụ cốt lõi**:
+- `[x]` **Nghiệp vụ cốt lõi**:
   - Kiểm tra tồn kho trước khi cho thêm vào giỏ: `quantity <= stock_quantity`.
   - Tự động cộng dồn số lượng nếu sản phẩm đã có sẵn trong giỏ.
-- `[ ]` **Đưa danh sách API và data mẫu để test**
+- `[x]` **Đưa danh sách API và data mẫu để test**:
+  - Đã xuất bản danh sách API và dữ liệu mẫu test tại [`BackEndApiTest.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/BackEndApiTest.md#6-shopping-cart-phase-37).
+  - Đã tạo Feature Test `tests/Feature/CartApiTest.php` với 12 test cases bao phủ toàn diện (100% pass, tổng 107/107 tests toàn dự án).
 
 ---
 

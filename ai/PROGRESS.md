@@ -78,9 +78,10 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] **Phase 3.4 Nhóm 3 Hồ Sơ Nông Dân & Cấu Hình Sạp Chợ (Farmers & FarmerMarkets)**: Public list farmers (search, sort, filter by market), get single farmer details, Farmer xem/cập nhật hồ sơ sạp, xem chợ đã đăng ký, đăng ký bán tại chợ mới, cấu hình ngày/khung giờ/slot 15-60p/cutoff 1-72h, rút sạp khỏi chợ. 12 Feature Tests pass 100%.
 - [x] **Phase 3.5 Nhóm 4 Ngành Hàng & Catalog Nông Sản (Categories & Products)**: Public list categories kèm đếm sản phẩm active, Admin CRUD categories, Public catalog sản phẩm với bộ lọc đa tiêu chí (danh mục, sạp nông dân, chợ, khoảng giá, fulltext search, availability, sort), ẩn sản phẩm vi phạm khỏi public, Farmer CRUD nông sản sạp riêng, kiểm soát quyền sở hữu đa sạp, Admin toggle hide. 26 Feature Tests mới (8 Category + 18 Product), tổng 79/79 Feature/Unit Tests passed 100%.
 - [x] **Phase 3.6 Nhóm 5 Mẫu Tồn Kho Mở Bán Định Kỳ Tuần (Weekly Stock Templates)**: Nông dân cấu hình định mức kho theo từng thứ họp chợ (T7/CN), xem danh sách mẫu theo nông sản, 1-Click áp dụng mẫu kho cho phiên chợ tới (tự động nhận diện thứ hoặc theo ngày chỉ định) cập nhật `stock_quantity` và bật `available`. 9 Feature Tests mới, tổng 92/92 Feature/Unit Tests passed 100%.
-- `[ ]` **Phase 3.7 - 3.11**: Giỏ hàng, Pre-Orders, Reviews, Notifications, Admin
+- [x] **Phase 3.7 Nhóm 6 Giỏ Hàng Mua Sắm (Shopping Cart)**: Khách hàng quản lý giỏ hàng mua sắm, tự động nhóm các món theo từng sạp nông dân (kèm tính tạm tính theo sạp và danh sách chợ sạp tham gia), thêm món (tự động cộng dồn số lượng, kiểm tra tồn kho, chặn sản phẩm bị ẩn/hết hàng), cập nhật số lượng, xoá món và dọn sạch giỏ. 12 Feature Tests mới, tổng 107/107 Feature/Unit Tests passed 100%.
+- `[ ]` **Phase 3.8 - 3.11**: Pre-Orders, Reviews, Notifications, Admin
 - `[ ]` **Phase 3.12**: Bộ kiểm thử tích hợp API (Feature Tests) & Zero N+1 Query
-- Tình trạng: Đang thực hiện Day 3 (Đã xong Phase 3.1 -> Phase 3.6)
+- Tình trạng: Đang thực hiện Day 3 (Đã xong Phase 3.1 -> Phase 3.7)
 
 ### Day 4: Tích Hợp Frontend React Với Backend API
 

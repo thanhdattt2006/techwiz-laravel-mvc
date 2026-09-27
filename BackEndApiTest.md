@@ -521,5 +521,68 @@ Authorization: Bearer <farmer_token>
 }
 ```
 
+---
+
+## 6. Shopping Cart (Phase 3.7)
+
+### 6.1. Get Shopping Cart [Customer Only]
+- **Method**: `GET /api/v1/cart`
+- **Headers**:
+```http
+Authorization: Bearer <customer_token>
+```
+
+---
+
+### 6.2. Add Item to Cart [Customer Only]
+- **Method**: `POST /api/v1/cart/items`
+- **Headers**:
+```http
+Authorization: Bearer <customer_token>
+```
+- **Body**:
+```json
+{
+  "product_id": 1,
+  "quantity": 2
+}
+```
+
+---
+
+### 6.3. Update Cart Item Quantity [Customer Only]
+- **Method**: `PUT /api/v1/cart/items/{id}`
+*(Example: `PUT /api/v1/cart/items/1`)*
+- **Headers**:
+```http
+Authorization: Bearer <customer_token>
+```
+- **Body**:
+```json
+{
+  "quantity": 4
+}
+```
+
+---
+
+### 6.4. Remove Single Item from Cart [Customer Only]
+- **Method**: `DELETE /api/v1/cart/items/{id}`
+*(Example: `DELETE /api/v1/cart/items/1`)*
+- **Headers**:
+```http
+Authorization: Bearer <customer_token>
+```
+
+---
+
+### 6.5. Clear Entire Cart [Customer Only]
+- **Method**: `DELETE /api/v1/cart/clear`
+- **Headers**:
+```http
+Authorization: Bearer <customer_token>
+```
+
+
 
 

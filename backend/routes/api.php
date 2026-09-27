@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\FarmerController;
 use App\Http\Controllers\Api\V1\MarketController;
@@ -63,6 +64,15 @@ Route::prefix('v1/farmer')->middleware(['auth:sanctum', 'role:farmer', 'farmer.a
     Route::get('/products/{id}/template', [WeeklyStockController::class, 'getTemplates']);
     Route::put('/products/{id}/template', [WeeklyStockController::class, 'updateTemplates']);
     Route::post('/apply-weekly-templates', [WeeklyStockController::class, 'applyWeeklyTemplates']);
+});
+
+// Customer Shopping Cart routes
+Route::prefix('v1/cart')->middleware(['auth:sanctum', 'role:customer,admin'])->group(function () {
+    Route::get('/', [CartController::class, 'index']);
+    Route::post('/items', [CartController::class, 'addItem']);
+    Route::put('/items/{id}', [CartController::class, 'updateItem']);
+    Route::delete('/items/{id}', [CartController::class, 'removeItem']);
+    Route::delete('/clear', [CartController::class, 'clear']);
 });
 
 // Admin Protected Management routes
