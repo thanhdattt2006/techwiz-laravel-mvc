@@ -18,6 +18,15 @@ export default function MarketCard({
 }) {
   if (!market) return null;
 
+  const stallsCount = market.active_stalls_count ?? market.stallsCount ?? (market.farmers?.length || 0);
+  const operatingDays = market.schedules && market.schedules.length > 0
+    ? market.schedules.map((s) => s.day_name).join(', ')
+    : (market.operatingDays || 'Weekend Meetings');
+  const openingHours = market.schedules && market.schedules.length > 0
+    ? `${market.schedules[0].open_time} - ${market.schedules[0].close_time}`
+    : (market.openingHours || '08:00 AM - 01:00 PM');
+  const locationLabel = market.neighborhood || market.city || (market.address ? market.address.split(',')[0] : 'Chicago, IL');
+
   return (
     <div
       onClick={() => onSelect && onSelect(market)}
@@ -39,7 +48,7 @@ export default function MarketCard({
             />
             <div className="absolute top-3 left-3">
               <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-800/90 text-white backdrop-blur shadow-xs">
-                {market.stallsCount} Certified Stalls
+                {stallsCount} Certified Stalls
               </span>
             </div>
             <div className="absolute bottom-3 left-3 right-3 p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-b-xl text-white">
@@ -48,21 +57,21 @@ export default function MarketCard({
               </h3>
               <p className="text-xs text-emerald-200 flex items-center gap-1 mt-0.5">
                 <MapPin className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span className="truncate">{market.neighborhood || market.city}</span>
+                <span className="truncate">{locationLabel}</span>
               </p>
             </div>
           </div>
         ) : (
           <div className="p-6 bg-gradient-to-br from-[#16A34A] to-emerald-800 text-white space-y-2">
             <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur border border-white/20 inline-block">
-              {market.stallsCount} Artisan Stalls
+              {stallsCount} Artisan Stalls
             </span>
             <h3 className="text-lg font-black leading-snug group-hover:text-amber-200 transition">
               {market.name}
             </h3>
             <p className="text-xs text-emerald-100 flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-              <span>{market.neighborhood || market.city}</span>
+              <span>{locationLabel}</span>
             </p>
           </div>
         )}
@@ -73,22 +82,27 @@ export default function MarketCard({
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-[#16A34A] shrink-0" />
               <span>
-                <strong>Schedule:</strong> {market.operatingDays}
+                <strong>Schedule:</strong> {operatingDays}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-4 h-4 text-amber-600 shrink-0" />
               <span>
-                <strong>Hours:</strong> {market.openingHours}
+                <strong>Hours:</strong> {openingHours}
               </span>
             </div>
             {market.address && (
               <div className="flex items-start gap-2 pt-1 border-t border-slate-100">
                 <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5" />
                 <span className="text-[11px] leading-relaxed">
-                  {market.address}, {market.city}
+                  {market.address}{market.city ? `, ${market.city}` : ''}
                 </span>
               </div>
+            )}
+            {market.description && (
+              <p className="text-[11px] leading-relaxed text-[#475569] pt-1 line-clamp-2">
+                {market.description}
+              </p>
             )}
             {market.specialty && (
               <p className="text-[11px] leading-relaxed text-[#475569] pt-1">

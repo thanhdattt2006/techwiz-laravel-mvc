@@ -19,9 +19,15 @@ export default function ProductCard({
 }) {
   if (!product) return null;
 
-  const farmName = product.farmOrigin || product.farm || 'Local Family Farm';
-  const marketLocation = product.marketName || product.market || 'City Farmers Market';
-  const isOrganic = product.isOrganic || (product.tag && product.tag.toLowerCase().includes('organic'));
+  const farmName = product.farmer?.stall_name || product.farmOrigin || product.farm || 'Local Family Farm';
+  const categoryName = typeof product.category === 'object' ? product.category?.name : (product.category || 'Produce');
+  const marketLocation = product.farmer?.markets?.[0]?.name || product.marketName || product.market || 'Local Farmers Market';
+  const ratingValue = product.avg_rating !== undefined && product.avg_rating !== null ? Number(product.avg_rating) : product.rating;
+  const reviewsCountValue = product.review_count !== undefined && product.review_count !== null ? Number(product.review_count) : product.reviewsCount;
+  const stockQty = product.stock_quantity !== undefined && product.stock_quantity !== null ? Number(product.stock_quantity) : null;
+  const stockDisplay = product.stockStatus || (stockQty !== null ? (stockQty > 0 ? `In Stock (${stockQty} ${product.unit || 'units'} remaining)` : 'Out of Stock') : null);
+
+  const isOrganic = product.isOrganic || (product.tag && product.tag.toLowerCase().includes('organic')) || (product.description && product.description.toLowerCase().includes('organic'));
   const tagText = product.tag || (isOrganic ? 'USDA Organic' : null);
   const tagColor =
     product.tagColor ||
@@ -29,7 +35,7 @@ export default function ProductCard({
       ? 'bg-emerald-100 text-[#15803D] border-emerald-200'
       : 'bg-amber-100 text-amber-800 border-amber-200');
 
-  const formattedPrice = typeof product.price === 'number' ? product.price.toFixed(2) : product.price;
+  const formattedPrice = typeof product.price === 'number' ? product.price.toFixed(2) : (Number(product.price || 0)).toFixed(2);
 
   return (
     <div
@@ -52,21 +58,21 @@ export default function ProductCard({
                   {tagText}
                 </span>
               )}
-              {product.category && (
+              {categoryName && (
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-black/60 text-white backdrop-blur">
-                  {product.category}
+                  {categoryName}
                 </span>
               )}
             </div>
 
             {/* Rating Overlay */}
-            {product.rating && (
+            {ratingValue > 0 && (
               <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-lg bg-white/95 backdrop-blur text-[11px] font-bold text-amber-700 flex items-center gap-1 shadow-xs">
                 <Star className="w-3 h-3 text-amber-500 fill-amber-500" />
-                <span>{product.rating}</span>
-                {product.reviewsCount && (
+                <span>{ratingValue.toFixed(1)}</span>
+                {reviewsCountValue > 0 && (
                   <span className="text-[10px] text-[#475569] font-normal">
-                    ({product.reviewsCount})
+                    ({reviewsCountValue})
                   </span>
                 )}
               </div>
@@ -85,13 +91,13 @@ export default function ProductCard({
                 </span>
               ) : (
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-[#475569]">
-                  {product.category || 'Produce'}
+                  {categoryName || 'Produce'}
                 </span>
               )}
-              {product.rating && (
+              {ratingValue > 0 && (
                 <RatingStars
-                  rating={product.rating}
-                  reviewsCount={product.reviewsCount}
+                  rating={ratingValue}
+                  reviewsCount={reviewsCountValue}
                   size="xs"
                 />
               )}
@@ -135,9 +141,9 @@ export default function ProductCard({
                 <span>{product.harvestDate}</span>
               </div>
             )}
-            {product.stockStatus && (
+            {stockDisplay && (
               <div className="text-[11px] font-medium text-emerald-700">
-                <span>{product.stockStatus}</span>
+                <span>{stockDisplay}</span>
               </div>
             )}
           </div>

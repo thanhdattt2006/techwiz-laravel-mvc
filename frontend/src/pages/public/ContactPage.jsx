@@ -11,6 +11,7 @@ import {
   Compass,
 } from 'lucide-react';
 import { useModal } from '../../context/ModalContext';
+import { contactApi } from '../../api';
 
 export default function ContactPage() {
   const { showAlert } = useModal();
@@ -21,7 +22,7 @@ export default function ContactPage() {
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim() || !email.trim() || !message.trim()) {
       showAlert({
@@ -33,17 +34,30 @@ export default function ContactPage() {
     }
 
     setSubmitting(true);
-    setTimeout(() => {
-      setSubmitting(false);
+    try {
+      await contactApi.submitContact({
+        name: name.trim(),
+        email: email.trim(),
+        subject: topic,
+        message: message.trim(),
+      });
+
       setSent(true);
       showAlert({
         title: 'Inquiry Dispatched',
-        message: 'Your message has been delivered to the Chicago MarketLink operations office. We will reply within 24 hours!',
+        message: 'Your message has been delivered to the MarketLink operations office. We will reply to your email within 24-48 hours!',
         type: 'success',
-        confirmText: false,
-        autoCloseMs: 2200,
+        confirmText: 'Great',
       });
-    }, 600);
+    } catch (err) {
+      showAlert({
+        title: 'Submission Failed',
+        message: err?.response?.data?.message || 'Could not deliver your inquiry. Please verify your details and try again.',
+        type: 'error',
+      });
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (

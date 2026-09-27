@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Sprout,
@@ -12,9 +12,11 @@ import {
   MapPin,
   Star,
 } from 'lucide-react';
-import { ProductCard, MarketCard } from '../../components/common';
+import { ProductCard, MarketCard, AnnouncementBanner } from '../../components/common';
+import { marketApi, productApi, categoryApi } from '../../api';
 
-const FEATURED_MARKETS = [
+// Fallback items in case API is cold-starting
+const FALLBACK_MARKETS = [
   {
     id: 1,
     name: 'Lincoln Park Farmers Market',
@@ -22,9 +24,8 @@ const FEATURED_MARKETS = [
     address: 'Armitage Ave & Orchard St',
     operatingDays: 'Every Saturday',
     openingHours: '08:00 AM - 01:00 PM',
-    stallsCount: 24,
+    active_stalls_count: 24,
     specialty: 'Organic Vegetables, Heirloom Tomatoes & Artisan Dairy',
-    bgGradient: 'from-emerald-800 to-green-950',
   },
   {
     id: 2,
@@ -33,9 +34,8 @@ const FEATURED_MARKETS = [
     address: '1817 N Clark St',
     operatingDays: 'Wed & Saturday',
     openingHours: '07:00 AM - 01:00 PM',
-    stallsCount: 36,
+    active_stalls_count: 36,
     specialty: 'Orchard Fruits, Sweet Berries & Pastured Eggs',
-    bgGradient: 'from-green-800 to-teal-950',
   },
   {
     id: 3,
@@ -44,102 +44,95 @@ const FEATURED_MARKETS = [
     address: '3107 W Logan Blvd',
     operatingDays: 'Every Sunday',
     openingHours: '08:30 AM - 02:00 PM',
-    stallsCount: 30,
+    active_stalls_count: 30,
     specialty: 'Artisan Sourdough, Raw Wildflower Honey & Microgreens',
-    bgGradient: 'from-amber-900 to-emerald-950',
   },
 ];
 
-const SEASONAL_HARVEST = [
+const FALLBACK_HARVEST = [
   {
     id: 1,
     name: 'Organic Heirloom Tomatoes',
-    category: 'VEGETABLES',
-    farm: 'Green Valley Organics',
-    market: 'Lincoln Park Market',
+    category: { name: 'Vegetables' },
+    farmOrigin: 'Green Valley Organics',
+    marketName: 'Lincoln Park Market',
     price: 4.5,
     unit: 'lb',
     tag: 'USDA Organic',
-    tagColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    harvestNote: 'Harvested fresh this morning at 05:30 AM',
-    rating: 4.9,
-    reviewsCount: 38,
-    stockStatus: 'In Stock (18 lbs remaining)',
+    description: 'Harvested fresh this morning at 05:30 AM at peak sugar content.',
+    avg_rating: 4.9,
+    review_count: 38,
+    stock_quantity: 18,
   },
   {
     id: 2,
     name: 'Crisp Honeycrisp Apples',
-    category: 'FRUITS',
-    farm: 'Sunny Ridge Orchards',
-    market: 'Green City Market',
+    category: { name: 'Fruits' },
+    farmOrigin: 'Sunny Ridge Orchards',
+    marketName: 'Green City Market',
     price: 3.8,
     unit: 'lb',
     tag: 'Tree Ripened',
-    tagColor: 'bg-amber-100 text-amber-800 border-amber-200',
-    harvestNote: 'Hand-picked from 25-year mature orchard',
-    rating: 4.95,
-    reviewsCount: 52,
-    stockStatus: 'In Stock (35 lbs remaining)',
+    description: 'Hand-picked from 25-year mature orchard with crisp sweet bite.',
+    avg_rating: 4.95,
+    review_count: 52,
+    stock_quantity: 35,
   },
   {
     id: 3,
     name: 'Raw Wildflower Honey Comb',
-    category: 'PANTRY',
-    farm: 'Prairie Blossom Apiary',
-    market: 'Logan Square Market',
+    category: { name: 'Honey & Pantry' },
+    farmOrigin: 'Prairie Blossom Apiary',
+    marketName: 'Logan Square Market',
     price: 12.0,
     unit: 'jar',
-    tag: 'Pure & Unfiltered',
-    tagColor: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-    harvestNote: 'Single-source raw nectar with comb slice',
-    rating: 5.0,
-    reviewsCount: 44,
-    stockStatus: 'Only 8 jars left this week',
+    tag: 'Pure & Raw',
+    description: 'Single-source raw nectar with comb slice, unfiltered and pure.',
+    avg_rating: 5.0,
+    review_count: 44,
+    stock_quantity: 8,
   },
   {
     id: 4,
     name: 'Pastured Free-Range Eggs',
-    category: 'DAIRY',
-    farm: 'Oakwood Farmsteads',
-    market: 'Lincoln Park Market',
+    category: { name: 'Dairy & Eggs' },
+    farmOrigin: 'Oakwood Farmsteads',
+    marketName: 'Lincoln Park Market',
     price: 6.5,
     unit: 'dozen',
     tag: 'Pasture Raised',
-    tagColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    harvestNote: 'Foraged on open clover grass daily',
-    rating: 4.92,
-    reviewsCount: 29,
-    stockStatus: 'In Stock (20 cartons)',
+    description: 'Foraged on open clover grass daily with rich golden yolks.',
+    avg_rating: 4.92,
+    review_count: 29,
+    stock_quantity: 20,
   },
   {
     id: 5,
     name: 'Artisan Sourdough Country Loaf',
-    category: 'BAKERY',
-    farm: 'Stone Ground Craft Bakery',
-    market: 'Logan Square Market',
+    category: { name: 'Bakery' },
+    farmOrigin: 'Stone Ground Craft Bakery',
+    marketName: 'Logan Square Market',
     price: 7.0,
     unit: 'loaf',
     tag: '36-Hr Fermented',
-    tagColor: 'bg-amber-100 text-amber-800 border-amber-200',
-    harvestNote: 'Stone-milled organic wheat, wild sourdough yeast',
-    rating: 4.98,
-    reviewsCount: 67,
-    stockStatus: 'Only 6 loaves remaining',
+    description: 'Stone-milled organic wheat, wild sourdough yeast, crispy crust.',
+    avg_rating: 4.98,
+    review_count: 67,
+    stock_quantity: 6,
   },
   {
     id: 6,
     name: 'Sweet Tender Baby Spinach',
-    category: 'VEGETABLES',
-    farm: 'River Valley Greens',
-    market: 'Green City Market',
+    category: { name: 'Vegetables' },
+    farmOrigin: 'River Valley Greens',
+    marketName: 'Green City Market',
     price: 3.2,
     unit: 'bundle',
     tag: 'Pesticide Free',
-    tagColor: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-    harvestNote: 'Triple washed and hydro-cooled',
-    rating: 4.88,
-    reviewsCount: 23,
-    stockStatus: 'In Stock (25 bundles)',
+    description: 'Triple washed and hydro-cooled for long-lasting crispness.',
+    avg_rating: 4.88,
+    review_count: 23,
+    stock_quantity: 25,
   },
 ];
 
@@ -148,27 +141,116 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [sortByPrice, setSortByPrice] = useState('default');
 
+  const [markets, setMarkets] = useState([]);
+  const [loadingMarkets, setLoadingMarkets] = useState(true);
+
+  const [products, setProducts] = useState([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+
+  const [categories, setCategories] = useState([]);
+
+  // Fetch Markets from Live API
+  useEffect(() => {
+    let isMounted = true;
+    const loadMarkets = async () => {
+      try {
+        const res = await marketApi.getMarkets();
+        if (isMounted) {
+          const list = Array.isArray(res.data)
+            ? res.data
+            : res.data?.data || [];
+          setMarkets(list.length > 0 ? list.slice(0, 3) : FALLBACK_MARKETS);
+        }
+      } catch {
+        if (isMounted) setMarkets(FALLBACK_MARKETS);
+      } finally {
+        if (isMounted) setLoadingMarkets(false);
+      }
+    };
+    loadMarkets();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Fetch Products & Categories from Live API
+  useEffect(() => {
+    let isMounted = true;
+    const loadProductsAndCategories = async () => {
+      try {
+        const [prodRes, catRes] = await Promise.allSettled([
+          productApi.getProducts({ in_stock: 1 }),
+          categoryApi.getCategories(),
+        ]);
+
+        if (isMounted) {
+          if (prodRes.status === 'fulfilled' && prodRes.value?.data) {
+            const list = Array.isArray(prodRes.value.data)
+              ? prodRes.value.data
+              : prodRes.value.data?.data || [];
+            setProducts(list.length > 0 ? list : FALLBACK_HARVEST);
+          } else {
+            setProducts(FALLBACK_HARVEST);
+          }
+
+          if (catRes.status === 'fulfilled' && catRes.value?.data) {
+            const list = Array.isArray(catRes.value.data)
+              ? catRes.value.data
+              : catRes.value.data?.data || [];
+            setCategories(list);
+          }
+        }
+      } catch {
+        if (isMounted) setProducts(FALLBACK_HARVEST);
+      } finally {
+        if (isMounted) setLoadingProducts(false);
+      }
+    };
+    loadProductsAndCategories();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Filter and Sort produce
   const filteredHarvest = useMemo(() => {
-    return SEASONAL_HARVEST.filter((item) => {
-      const matchSearch =
-        searchTerm === '' ||
-        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.farm.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.market.toLowerCase().includes(searchTerm.toLowerCase());
+    return products
+      .filter((item) => {
+        const itemName = (item.name || '').toLowerCase();
+        const farmName = (item.farmer?.stall_name || item.farmOrigin || item.farm || '').toLowerCase();
+        const marketName = (item.farmer?.markets?.[0]?.name || item.marketName || item.market || '').toLowerCase();
+        const term = searchTerm.toLowerCase().trim();
 
-      const matchCat =
-        selectedCategory === 'ALL' || item.category === selectedCategory;
+        const matchSearch =
+          term === '' ||
+          itemName.includes(term) ||
+          farmName.includes(term) ||
+          marketName.includes(term);
 
-      return matchSearch && matchCat;
-    }).sort((a, b) => {
-      if (sortByPrice === 'asc') return a.price - b.price;
-      if (sortByPrice === 'desc') return b.price - a.price;
-      return 0;
-    });
-  }, [searchTerm, selectedCategory, sortByPrice]);
+        const catName = (typeof item.category === 'object' ? item.category?.name : item.category) || '';
+        const catSlug = (typeof item.category === 'object' ? item.category?.slug : '') || '';
+
+        const matchCat =
+          selectedCategory === 'ALL' ||
+          catName.toUpperCase() === selectedCategory.toUpperCase() ||
+          catSlug.toUpperCase() === selectedCategory.toUpperCase();
+
+        return matchSearch && matchCat;
+      })
+      .sort((a, b) => {
+        const priceA = Number(a.price || 0);
+        const priceB = Number(b.price || 0);
+        if (sortByPrice === 'asc') return priceA - priceB;
+        if (sortByPrice === 'desc') return priceB - priceA;
+        return 0;
+      });
+  }, [products, searchTerm, selectedCategory, sortByPrice]);
 
   return (
-    <div className="space-y-16 pb-20">
+    <div className="space-y-16 pb-20 font-sans antialiased text-[#0F172A]">
+      {/* Top Dismissible Announcement Banner */}
+      <AnnouncementBanner />
+
       {/* Hero Banner Section */}
       <section className="bg-gradient-to-br from-[#15803D] via-[#16A34A] to-emerald-700 text-white py-16 sm:py-20 px-4 sm:px-8 shadow-lg">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
@@ -251,16 +333,38 @@ export default function HomePage() {
             to="/markets"
             className="flex items-center gap-1.5 text-xs font-bold text-[#16A34A] hover:text-[#15803D] hover:underline shrink-0"
           >
-            <span>View All 6 Markets</span>
+            <span>View All Markets</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {FEATURED_MARKETS.map((market) => (
-            <MarketCard key={market.id} market={market} />
-          ))}
-        </div>
+        {/* Markets Grid with Loading Skeletons */}
+        {loadingMarkets ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[1, 2, 3].map((n) => (
+              <div
+                key={n}
+                className="bg-white border border-[#E2E8DF] rounded-3xl h-72 p-6 animate-pulse flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="h-6 w-24 bg-slate-100 rounded-full" />
+                  <div className="h-6 w-48 bg-slate-200 rounded-lg" />
+                  <div className="h-4 w-32 bg-slate-100 rounded-lg" />
+                </div>
+                <div className="space-y-2">
+                  <div className="h-4 w-full bg-slate-100 rounded-lg" />
+                  <div className="h-4 w-2/3 bg-slate-100 rounded-lg" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {markets.map((market) => (
+              <MarketCard key={market.id} market={market} />
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Main Produce Catalog Section */}
@@ -287,8 +391,8 @@ export default function HomePage() {
                 className="w-full sm:w-auto text-xs bg-slate-50 border border-[#E2E8DF] rounded-xl px-3 py-2 font-medium text-[#0F172A] focus:outline-none focus:border-[#16A34A]"
               >
                 <option value="default">Default Harvest Order</option>
-                <option value="asc">Price: Low to High ($3.20 first)</option>
-                <option value="desc">Price: High to Low ($12.00 first)</option>
+                <option value="asc">Price: Low to High</option>
+                <option value="desc">Price: High to Low</option>
               </select>
             </div>
           </div>
@@ -299,7 +403,7 @@ export default function HomePage() {
               <Search className="w-4 h-4 text-[#475569] absolute left-3.5 top-3" />
               <input
                 type="text"
-                placeholder="Search produce name, farm (e.g. Green Valley), or market..."
+                placeholder="Search produce name, farm, or neighborhood market..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 text-xs bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-[#0F172A] focus:outline-none focus:border-[#16A34A] transition"
@@ -308,38 +412,82 @@ export default function HomePage() {
 
             {/* Category Filter Pills */}
             <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto shrink-0 pb-1 sm:pb-0">
-              {['ALL', 'VEGETABLES', 'FRUITS', 'DAIRY', 'BAKERY', 'PANTRY'].map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setSelectedCategory(cat)}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
-                    selectedCategory === cat
-                      ? 'bg-[#16A34A] text-white shadow-xs'
-                      : 'bg-slate-100 hover:bg-slate-200 text-[#0F172A]'
-                  }`}
-                >
-                  {cat === 'ALL' ? 'All Harvest' : cat}
-                </button>
-              ))}
+              <button
+                type="button"
+                onClick={() => setSelectedCategory('ALL')}
+                className={`px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
+                  selectedCategory === 'ALL'
+                    ? 'bg-[#16A34A] text-white shadow-xs'
+                    : 'bg-slate-100 hover:bg-slate-200 text-[#0F172A]'
+                }`}
+              >
+                All Harvest
+              </button>
+              {categories.length > 0
+                ? categories.map((cat) => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setSelectedCategory(cat.name)}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
+                        selectedCategory.toUpperCase() === cat.name.toUpperCase()
+                          ? 'bg-[#16A34A] text-white shadow-xs'
+                          : 'bg-slate-100 hover:bg-slate-200 text-[#0F172A]'
+                      }`}
+                    >
+                      {cat.name}
+                    </button>
+                  ))
+                : ['VEGETABLES', 'FRUITS', 'DAIRY', 'BAKERY', 'PANTRY'].map((cat) => (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => setSelectedCategory(cat)}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap cursor-pointer ${
+                        selectedCategory === cat
+                          ? 'bg-[#16A34A] text-white shadow-xs'
+                          : 'bg-slate-100 hover:bg-slate-200 text-[#0F172A]'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
             </div>
           </div>
         </div>
 
-        {/* Harvest Grid */}
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredHarvest.length > 0 ? (
-            filteredHarvest.map((item) => (
-              <ProductCard key={item.id} product={item} />
-            ))
-          ) : (
-            <div className="col-span-full py-12 text-center bg-white border border-[#E2E8DF] rounded-2xl">
-              <Sprout className="w-10 h-10 text-[#475569] mx-auto mb-2 opacity-50" />
-              <p className="text-sm font-semibold text-[#0F172A]">No seasonal produce matching criteria found</p>
-              <p className="text-xs text-[#475569] mt-1">Try resetting your search query or selecting "All Harvest".</p>
-            </div>
-          )}
-        </div>
+        {/* Harvest Grid with Loading Skeletons */}
+        {loadingProducts ? (
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <div
+                key={n}
+                className="bg-white border border-[#E2E8DF] rounded-2xl h-80 p-5 animate-pulse flex flex-col justify-between"
+              >
+                <div className="space-y-3">
+                  <div className="h-36 bg-slate-100 rounded-xl" />
+                  <div className="h-4 w-28 bg-slate-200 rounded-md" />
+                  <div className="h-5 w-48 bg-slate-200 rounded-md" />
+                </div>
+                <div className="h-8 bg-slate-100 rounded-xl" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredHarvest.length > 0 ? (
+              filteredHarvest.map((item) => (
+                <ProductCard key={item.id} product={item} />
+              ))
+            ) : (
+              <div className="col-span-full py-12 text-center bg-white border border-[#E2E8DF] rounded-2xl">
+                <Sprout className="w-10 h-10 text-[#475569] mx-auto mb-2 opacity-50" />
+                <p className="text-sm font-semibold text-[#0F172A]">No seasonal produce matching criteria found</p>
+                <p className="text-xs text-[#475569] mt-1">Try resetting your search query or selecting "All Harvest".</p>
+              </div>
+            )}
+          </div>
+        )}
       </section>
 
       {/* How Pre-Order Works (3-Step Visual Process) */}
@@ -455,4 +603,3 @@ export default function HomePage() {
     </div>
   );
 }
-

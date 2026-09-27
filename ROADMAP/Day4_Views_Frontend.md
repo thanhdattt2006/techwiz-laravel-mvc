@@ -209,7 +209,7 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.4: Tích Hợp Trang Chủ & Trang Liên Hệ (HomePage & ContactPage)
+### Phase 4.4: Tích Hợp Trang Chủ & Trang Liên Hệ (HomePage & ContactPage) [x]
 
 - **Mục tiêu**: Thay thế mock JSON trên Trang Chủ và kết nối Form Liên Hệ với Backend API.
 - **Files tác động**:
@@ -217,12 +217,12 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
   - `frontend/src/pages/public/ContactPage.jsx`
   - Tạo mới: `frontend/src/components/common/AnnouncementBanner.jsx`
 - **Checklist công việc**:
-  - `[ ]` Tạo component `AnnouncementBanner.jsx`: Gọi `GET /api/v1/announcements/active` hiển thị banner thông báo nổi bật trên đầu trang khi có tin mới.
-  - `[ ]` `HomePage.jsx`:
-    - Thay thế `markets.json` bằng `marketApi.getMarkets({ limit: 4 })`.
-    - Thay thế `products.json` bằng `productApi.getProducts({ limit: 8, in_stock: 1 })`.
+  - `[x]` Tạo component `AnnouncementBanner.jsx`: Gọi `GET /api/v1/announcements/active` hiển thị banner thông báo nổi bật trên đầu trang khi có tin mới.
+  - `[x]` `HomePage.jsx`:
+    - Thay thế dữ liệu mock tĩnh bằng `marketApi.getMarkets()`.
+    - Thay thế nông sản tĩnh bằng `productApi.getProducts({ in_stock: 1 })`.
     - Nhúng `AnnouncementBanner.jsx` vào đầu trang.
-  - `[ ]` `ContactPage.jsx`:
+  - `[x]` `ContactPage.jsx`:
     - Kết nối form liên hệ với `contactApi.submitContact({ name, email, subject, message })`.
     - Validate dữ liệu, hiển thị modal thông báo thành công và reset form.
 - **Tiêu chí hoàn thành**: Trang chủ hiển thị chợ và nông sản thật từ API; Form liên hệ lưu thành công bản ghi vào bảng `contact_messages`.
