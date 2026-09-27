@@ -91,7 +91,7 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
   - Đối chiếu 100% components Frontend với 10 nhóm Backend Endpoints.
   - Lập danh sách chi tiết các UI thừa/mock rác cần gỡ bỏ: `GoogleSignInButton.jsx` (không có Social OAuth), `ForgotPasswordPage.jsx` (OTP giả lập), các nút 1-Click Autofill/Demo Fill rác, tab `PREFERENCES` lưu localStorage không có trong DB schema, form Pre-Order mock trực tiếp trên `ProductDetailPage.jsx`.
   - Tái cấu trúc thành **17 Phases chuyên biệt** tại `ROADMAP/Day4_Views_Frontend.md`.
-- `[ ]` **Phase 4.1**: Tầng Dịch Vụ API Client Độc Lập (13 API modules `src/api/*`).
+- `[x]` **Phase 4.1**: Tầng Dịch Vụ API Client Độc Lập (13 API modules `src/api/*`).
 - `[ ]` **Phase 4.2**: Chuẩn Hóa Xác Thực, 1-Click Demo Login & Gỡ Bỏ UI Thừa (Google Login).
 - `[ ]` **Phase 4.3**: Nâng Cấp Trang Đăng Ký Tài Khoản & Mở Sạp Nông Dân (`RegisterPage.jsx`).
 - `[ ]` **Phase 4.4**: Tích Hợp Trang Chủ & Trang Liên Hệ (`HomePage.jsx`, `ContactPage.jsx`, `AnnouncementBanner.jsx`).

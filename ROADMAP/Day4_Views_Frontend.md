@@ -140,25 +140,25 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.1: Xây Dựng Tầng Dịch Vụ API Client Độc Lập (API Layer Foundation)
+### Phase 4.1: Xây Dựng Tầng Dịch Vụ API Client Độc Lập (API Layer Foundation) [x]
 
 - **Mục tiêu**: Xây dựng đủ 13 modules API Service trong `frontend/src/api/` ánh xạ 1-1 với toàn bộ REST Endpoints của Backend Laravel.
 - **Files tác động**:
-  - Tạo mới / cập nhật: `frontend/src/api/authApi.js`, `marketApi.js`, `farmerApi.js`, `productApi.js`, `categoryApi.js`, `weeklyStockApi.js`, `cartApi.js`, `orderApi.js`, `reviewApi.js`, `favoriteApi.js`, `notificationApi.js`, `adminApi.js`, `contactApi.js`.
+  - Tạo mới / cập nhật: `frontend/src/api/authApi.js`, `marketApi.js`, `farmerApi.js`, `productApi.js`, `categoryApi.js`, `weeklyStockApi.js`, `cartApi.js`, `orderApi.js`, `reviewApi.js`, `favoriteApi.js`, `notificationApi.js`, `adminApi.js`, `contactApi.js`, `index.js`.
 - **Checklist công việc**:
-  - `[ ]` `authApi.js`: `login`, `register`, `registerFarmer`, `getMe`, `updateProfile`, `changePassword`, `logout`.
-  - `[ ]` `marketApi.js`: `getMarkets(params)`, `getMarket(id)`, `createMarket(data)`, `updateMarket(id, data)`, `deleteMarket(id)`.
-  - `[ ]` `farmerApi.js`: `getFarmers(params)`, `getFarmer(id)`, `getFarmerProfile()`, `updateFarmerProfile(data)`, `getFarmerMarkets()`, `linkMarket(data)`, `updateFarmerMarket(marketId, data)`, `unlinkMarket(marketId)`.
-  - `[ ]` `productApi.js`: `getProducts(params)`, `getProduct(id)`, `getFarmerProducts(params)`, `createProduct(data)`, `updateProduct(id, data)`, `deleteProduct(id)`, `toggleHide(id)`.
-  - `[ ]` `categoryApi.js`: `getCategories()`, `createCategory(data)`, `updateCategory(id, data)`, `deleteCategory(id)`.
-  - `[ ]` `weeklyStockApi.js`: `getTemplates(productId)`, `updateTemplates(productId, templates)`, `applyWeeklyTemplates(data)`.
-  - `[ ]` `cartApi.js`: `getCart()`, `addItem(productId, quantity)`, `updateItem(id, quantity)`, `removeItem(id)`, `clearCart()`.
-  - `[ ]` `orderApi.js`: `getPickupSlots(params)`, `trackOrder(orderCode)`, `checkout(data)`, `getMyOrders(params)`, `getMyOrder(id)`, `cancelOrder(id, reason)`, `getFarmerOrders(params)`, `acceptOrder(id)`, `declineOrder(id, reason)`, `markOrderReady(id)`, `completeOrder(id)`.
-  - `[ ]` `reviewApi.js`: `getProductReviews(productId)`, `getFarmerReviews(farmerId)`, `submitReview(data)`, `replyReview(id, reply)`, `toggleHideReview(id)`.
-  - `[ ]` `favoriteApi.js`: `getFavorites(params)`, `toggleFavorite(targetType, targetId)`.
-  - `[ ]` `notificationApi.js`: `getNotifications(params)`, `markRead(id)`, `markAllRead()`, `getActiveAnnouncements(params)`, `getAdminAnnouncements()`, `createAnnouncement(data)`, `updateAnnouncement(id, data)`, `deleteAnnouncement(id)`.
-  - `[ ]` `adminApi.js`: `getOverviewStats()`, `getUsers(params)`, `updateUserStatus(id, status)`, `getPendingFarmers()`, `approveFarmer(id)`, `rejectFarmer(id, reason)`, `getInquiries(params)`, `markInquiryRead(id)`.
-  - `[ ]` `contactApi.js`: `submitContact(data)`.
+  - `[x]` `authApi.js`: `login`, `register`, `registerFarmer`, `getMe`, `updateProfile`, `changePassword`, `logout`.
+  - `[x]` `marketApi.js`: `getMarkets(params)`, `getMarket(id)`, `createMarket(data)`, `updateMarket(id, data)`, `deleteMarket(id)`.
+  - `[x]` `farmerApi.js`: `getFarmers(params)`, `getFarmer(id)`, `getFarmerProfile()`, `updateFarmerProfile(data)`, `getFarmerMarkets()`, `linkMarket(data)`, `updateFarmerMarket(marketId, data)`, `unlinkMarket(marketId)`.
+  - `[x]` `productApi.js`: `getProducts(params)`, `getProduct(id)`, `getFarmerProducts(params)`, `createProduct(data)`, `updateProduct(id, data)`, `deleteProduct(id)`, `toggleHide(id)`.
+  - `[x]` `categoryApi.js`: `getCategories()`, `createCategory(data)`, `updateCategory(id, data)`, `deleteCategory(id)`.
+  - `[x]` `weeklyStockApi.js`: `getTemplates(productId)`, `updateTemplates(productId, templates)`, `applyWeeklyTemplates(data)`.
+  - `[x]` `cartApi.js`: `getCart()`, `addItem(productId, quantity)`, `updateItem(id, quantity)`, `removeItem(id)`, `clearCart()`.
+  - `[x]` `orderApi.js`: `getPickupSlots(params)`, `trackOrder(orderCode)`, `checkout(data)`, `getMyOrders(params)`, `getMyOrder(id)`, `cancelOrder(id, reason)`, `getFarmerOrders(params)`, `acceptOrder(id)`, `declineOrder(id, reason)`, `markOrderReady(id)`, `completeOrder(id)`.
+  - `[x]` `reviewApi.js`: `getProductReviews(productId)`, `getFarmerReviews(farmerId)`, `submitReview(data)`, `replyReview(id, reply)`, `toggleHideReview(id)`.
+  - `[x]` `favoriteApi.js`: `getFavorites(params)`, `toggleFavorite(targetType, targetId)`.
+  - `[x]` `notificationApi.js`: `getNotifications(params)`, `markRead(id)`, `markAllRead()`, `getActiveAnnouncements(params)`, `getAdminAnnouncements()`, `createAnnouncement(data)`, `updateAnnouncement(id, data)`, `deleteAnnouncement(id)`.
+  - `[x]` `adminApi.js`: `getOverviewStats()`, `getUsers(params)`, `updateUserStatus(id, status)`, `getPendingFarmers()`, `approveFarmer(id)`, `rejectFarmer(id, reason)`, `getInquiries(params)`, `markInquiryRead(id)`.
+  - `[x]` `contactApi.js`: `submitContact(data)`.
 - **Tiêu chí hoàn thành**: Toàn bộ 13 file được export chuẩn, không lỗi import, sẵn sàng cho các component gọi trực tiếp.
 
 ---
