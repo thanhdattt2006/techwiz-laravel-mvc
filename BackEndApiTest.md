@@ -583,6 +583,133 @@ Authorization: Bearer <customer_token>
 Authorization: Bearer <customer_token>
 ```
 
+---
+
+## 7. Pre-Orders & Order Lifecycle (Phase 3.8)
+
+### 7.1. Checkout Pre-Order for Stall Pickup [Customer Only]
+- **Method**: `POST /api/v1/orders/checkout`
+- **Headers**:
+```http
+Authorization: Bearer <customer_token>
+Content-Type: application/json
+```
+- **Body**:
+```json
+{
+  "market_id": 1,
+  "pickup_date": "2026-10-03",
+  "pickup_start_time": "09:00",
+  "pickup_end_time": "09:30",
+  "note": "Please pick fresh ripe apples.",
+  "farmer_id": null
+}
+```
+
+---
+
+### 7.2. Get Customer Order History [Customer Only]
+- **Method**: `GET /api/v1/orders/my-orders?status=placed`
+- **Headers**:
+```http
+Authorization: Bearer <customer_token>
+```
+
+---
+
+### 7.3. Get Customer Order Details [Customer Only]
+- **Method**: `GET /api/v1/orders/my-orders/{id}`
+*(Example: `GET /api/v1/orders/my-orders/1`)*
+- **Headers**:
+```http
+Authorization: Bearer <customer_token>
+```
+
+---
+
+### 7.4. Public Track Order via Order Code [Public]
+- **Method**: `GET /api/v1/orders/track/{orderCode}`
+*(Example: `GET /api/v1/orders/track/ML-2026-F01-7782`)*
+
+---
+
+### 7.5. Cancel Order Before Cutoff Deadline [Customer Only]
+- **Method**: `PATCH /api/v1/orders/{id}/cancel`
+*(Example: `PATCH /api/v1/orders/1/cancel`)*
+- **Headers**:
+```http
+Authorization: Bearer <customer_token>
+Content-Type: application/json
+```
+- **Body**:
+```json
+{
+  "cancel_reason": "Schedule conflict, cannot attend the market."
+}
+```
+
+---
+
+### 7.6. Get Farmer Incoming Pre-Orders [Farmer Only]
+- **Method**: `GET /api/v1/farmer/orders?status=placed`
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+```
+
+---
+
+### 7.7. Accept Pre-Order [Farmer Only]
+- **Method**: `PATCH /api/v1/farmer/orders/{id}/accept`
+*(Example: `PATCH /api/v1/farmer/orders/1/accept`)*
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+```
+
+---
+
+### 7.8. Decline Pre-Order & Restock [Farmer Only]
+- **Method**: `PATCH /api/v1/farmer/orders/{id}/decline`
+*(Example: `PATCH /api/v1/farmer/orders/1/decline`)*
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+Content-Type: application/json
+```
+- **Body**:
+```json
+{
+  "cancel_reason": "Crop harvest affected by sudden frost."
+}
+```
+
+---
+
+### 7.9. Mark Order Ready for Stall Pickup [Farmer Only]
+- **Method**: `PATCH /api/v1/farmer/orders/{id}/ready`
+*(Example: `PATCH /api/v1/farmer/orders/1/ready`)*
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+```
+
+---
+
+### 7.10. Complete Order at Stall (Cash Settled) [Farmer Only]
+- **Method**: `PATCH /api/v1/farmer/orders/{id}/complete`
+*(Example: `PATCH /api/v1/farmer/orders/1/complete`)*
+- **Headers**:
+```http
+Authorization: Bearer <farmer_token>
+```
+
+---
+
+### 7.11. Generate Available Pickup Slots [Public / Customer]
+- **Method**: `GET /api/v1/orders/slots?farmer_id=1&market_id=1&pickup_date=2026-10-03`
+
+
 
 
 

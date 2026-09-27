@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\FarmerController;
 use App\Http\Controllers\Api\V1\MarketController;
+use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\WeeklyStockController;
 use Illuminate\Support\Facades\Route;
@@ -64,6 +65,11 @@ Route::prefix('v1/farmer')->middleware(['auth:sanctum', 'role:farmer', 'farmer.a
     Route::get('/products/{id}/template', [WeeklyStockController::class, 'getTemplates']);
     Route::put('/products/{id}/template', [WeeklyStockController::class, 'updateTemplates']);
     Route::post('/apply-weekly-templates', [WeeklyStockController::class, 'applyWeeklyTemplates']);
+    Route::get('/orders', [OrderController::class, 'farmerOrders']);
+    Route::patch('/orders/{id}/accept', [OrderController::class, 'accept']);
+    Route::patch('/orders/{id}/decline', [OrderController::class, 'decline']);
+    Route::patch('/orders/{id}/ready', [OrderController::class, 'ready']);
+    Route::patch('/orders/{id}/complete', [OrderController::class, 'complete']);
 });
 
 // Customer Shopping Cart routes
@@ -73,6 +79,16 @@ Route::prefix('v1/cart')->middleware(['auth:sanctum', 'role:customer,admin'])->g
     Route::put('/items/{id}', [CartController::class, 'updateItem']);
     Route::delete('/items/{id}', [CartController::class, 'removeItem']);
     Route::delete('/clear', [CartController::class, 'clear']);
+});
+
+// Customer Pre-Order routes & Public Tracking / Slots
+Route::get('v1/orders/track/{orderCode}', [OrderController::class, 'track']);
+Route::get('v1/orders/slots', [OrderController::class, 'getPickupSlots']);
+Route::prefix('v1/orders')->middleware(['auth:sanctum', 'role:customer,admin'])->group(function () {
+    Route::post('/checkout', [OrderController::class, 'checkout']);
+    Route::get('/my-orders', [OrderController::class, 'myOrders']);
+    Route::get('/my-orders/{id}', [OrderController::class, 'showMyOrder']);
+    Route::patch('/{id}/cancel', [OrderController::class, 'cancel']);
 });
 
 // Admin Protected Management routes

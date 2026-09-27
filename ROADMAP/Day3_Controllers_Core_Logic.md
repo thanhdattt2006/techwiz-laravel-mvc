@@ -193,7 +193,7 @@
 
 ## Phase 3.8: Nhóm 7 - Đặt Hàng Pre-Order & Xử Lý Vòng Đời Đơn (Orders & OrderItems)
 
-- `[ ]` **Endpoints**:
+- `[x]` **Endpoints**:
   - `POST  /api/v1/orders/checkout` (Customer: Đặt trước Pre-Order, tự động tách đơn theo sạp)
   - `GET   /api/v1/orders/my-orders` (Customer: Xem lịch sử các đơn đặt trước)
   - `GET   /api/v1/orders/my-orders/{id}` (Customer: Chi tiết đơn hàng của khách)
@@ -204,22 +204,25 @@
   - `PATCH /api/v1/farmer/orders/{id}/decline` (Farmer: Từ chối đơn + lý do & hoàn kho)
   - `PATCH /api/v1/farmer/orders/{id}/ready` (Farmer: Báo hàng đã chuẩn bị xong tại sạp)
   - `PATCH /api/v1/farmer/orders/{id}/complete` (Farmer: Khách đã nhận hàng & thanh toán tiền mặt)
-- `[ ]` **Controller**: `OrderController.php` (`app/Http/Controllers/Api/V1/OrderController.php`).
-- `[ ]` **Services**:
+  - `GET   /api/v1/orders/slots` (Public/Customer: Lấy danh sách khung giờ nhận hàng khả dụng)
+- `[x]` **Controller**: `OrderController.php` (`app/Http/Controllers/Api/V1/OrderController.php`).
+- `[x]` **Services**:
   - `PreOrderCheckoutService.php`: Thuật toán tách đơn đa sạp, kiểm tra giờ cutoff, khóa dòng `lockForUpdate()`, trừ kho và bọc trong `DB::transaction()`.
   - `TimeSlotGeneratorService.php`: Thuật toán sinh tự động khung giờ nhận hàng 30 phút trong ngày họp chợ.
-- `[ ]` **Form Requests**:
+- `[x]` **Form Requests**:
   - `CheckoutPreOrderRequest`: Validate `market_id`, `pickup_date`, `pickup_start_time`, `pickup_end_time`, `note`.
   - `DeclineOrderRequest` & `CancelOrderRequest`: Validate `cancel_reason`.
-- `[ ]` **JsonResources**:
+- `[x]` **JsonResources**:
   - `OrderResource.php`: Chi tiết đơn, snapshot mặt hàng, mốc thời gian tracking, cờ `can_be_cancelled`.
   - `OrderItemResource.php`: Snapshot tên, đơn vị, đơn giá lúc chốt đơn và thành tiền.
-- `[ ]` **Nghiệp vụ cốt lõi**:
+- `[x]` **Nghiệp vụ cốt lõi**:
   - **Tách đơn đa sạp**: Nếu giỏ hàng có hàng của 2 sạp khác nhau $\rightarrow$ sinh ra 2 bản ghi `orders` riêng biệt với mã `order_code` riêng.
   - **Khóa dòng & Trừ kho**: Giảm `stock_quantity`, nếu về 0 thì set `availability = 'sold_out'`.
-  - **Hoàn kho tự động**: Khi đơn bị `declined` hoặc `cancelled`, hoàn lại đúng số lượng vào `stock_quantity`.
-  - **Thông báo tự động**: Bắn in-app notification cho đối phương ở mỗi mốc đổi trạng thái.
-- `[ ]` **Đưa danh sách API và data mẫu để test**
+  - **Hoàn kho tự động**: Khi đơn bị `declined` hoặc `cancelled`, hoàn lại đúng số lượng vào `stock_quantity` và bật lại `available`.
+  - **Thông báo tự động**: Bắn in-app notification cho đối phương ở mỗi mốc đổi trạng thái (`order_placed`, `order_accepted`, `order_declined`, `order_ready`, `order_completed`, `order_cancelled`).
+- `[x]` **Đưa danh sách API và data mẫu để test**:
+  - Đã xuất bản danh sách API và dữ liệu mẫu test tại [`BackEndApiTest.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/BackEndApiTest.md#7-pre-orders--order-lifecycle-phase-38).
+  - Đã tạo Feature Test `tests/Feature/OrderApiTest.php` với 17 test cases bao phủ toàn diện (100% pass, tổng 124/124 tests toàn dự án).
 
 ---
 
