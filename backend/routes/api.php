@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\V1\AdminController;
 use App\Http\Controllers\Api\V1\AnnouncementController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\CategoryController;
+use App\Http\Controllers\Api\V1\ContactController;
 use App\Http\Controllers\Api\V1\FarmerController;
 use App\Http\Controllers\Api\V1\FavoriteController;
 use App\Http\Controllers\Api\V1\MarketController;
@@ -98,6 +100,23 @@ Route::prefix('v1/orders')->middleware(['auth:sanctum', 'role:customer,admin'])-
 
 // Admin Protected Management routes
 Route::prefix('v1/admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
+    // Platform Stats Overview
+    Route::get('/stats/overview', [AdminController::class, 'overviewStats']);
+
+    // User Governance
+    Route::get('/users', [AdminController::class, 'users']);
+    Route::patch('/users/{id}/status', [AdminController::class, 'updateUserStatus']);
+
+    // Farmer Approval Workflow
+    Route::get('/farmers/pending', [AdminController::class, 'pendingFarmers']);
+    Route::patch('/farmers/{id}/approve', [AdminController::class, 'approveFarmer']);
+    Route::patch('/farmers/{id}/reject', [AdminController::class, 'rejectFarmer']);
+
+    // Inquiries Inbox
+    Route::get('/inquiries', [AdminController::class, 'inquiries']);
+    Route::patch('/inquiries/{id}/read', [AdminController::class, 'markInquiryRead']);
+
+    // Markets & Categories
     Route::post('/markets', [MarketController::class, 'store']);
     Route::put('/markets/{id}', [MarketController::class, 'update']);
     Route::delete('/markets/{id}', [MarketController::class, 'destroy']);
@@ -111,6 +130,9 @@ Route::prefix('v1/admin')->middleware(['auth:sanctum', 'role:admin'])->group(fun
     Route::put('/announcements/{id}', [AnnouncementController::class, 'update']);
     Route::delete('/announcements/{id}', [AnnouncementController::class, 'destroy']);
 });
+
+// Public Contact Inquiry route
+Route::post('v1/contact', [ContactController::class, 'store']);
 
 // Public Review routes
 Route::get('v1/reviews/product/{productId}', [ReviewController::class, 'productReviews']);

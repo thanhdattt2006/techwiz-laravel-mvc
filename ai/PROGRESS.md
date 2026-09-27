@@ -81,10 +81,9 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - [x] **Phase 3.7 Nhóm 6 Giỏ Hàng Mua Sắm (Shopping Cart)**: Khách hàng quản lý giỏ hàng mua sắm, tự động nhóm các món theo từng sạp nông dân (kèm tính tạm tính theo sạp và danh sách chợ sạp tham gia), thêm món (tự động cộng dồn số lượng, kiểm tra tồn kho, chặn sản phẩm bị ẩn/hết hàng), cập nhật số lượng, xoá món và dọn sạch giỏ. 12 Feature Tests mới, tổng 107/107 Feature/Unit Tests passed 100%.
 - [x] **Phase 3.8 Nhóm 7 Đặt Hàng Pre-Order & Xử Lý Vòng Đời Đơn (Orders & OrderItems)**: Tách đơn đa sạp, dịch vụ tính khung giờ pickup và cutoff time (`TimeSlotGeneratorService`), dịch vụ checkout (`PreOrderCheckoutService`) với khóa dòng kho `lockForUpdate()` và `DB::transaction()`, cỗ máy trạng thái (placed -> accepted -> ready_for_pickup -> completed / declined / cancelled), hoàn kho tự động và thông báo in-app. 17 Feature Tests mới, tổng 124/124 Feature/Unit Tests passed 100%.
 - [x] **Phase 3.9 Nhóm 8 Đánh Giá & Mục Yêu Thích (Reviews & Favorites)**: Đánh giá 1-5 sao sau đơn hoàn thành, ràng buộc XOR sạp hoặc nông sản, nông dân trả lời review sản phẩm, kiểm duyệt review, tự động tính avg_rating & review_count (`RatingCalculationService`), danh sách và toggle đa hình yêu thích (`favorites`). 17 Feature Tests mới, tổng 141/141 Feature/Unit Tests passed 100%.
-- [x] **Phase 3.10 Nhóm 9 Thông Báo & Cảnh Báo Hệ Thống (Notifications & Announcements)**: Quản lý thông báo in-app (xem kèm unread count, đánh dấu đã đọc lẻ và tất cả), thông báo toàn sàn announcements theo role (`all`, `farmer`, `customer`), Admin CRUD announcements. 9 Feature Tests mới, tổng 150/150 Feature/Unit Tests passed 100%.
-- `[ ]` **Phase 3.11**: Admin Stats & Governance, Contact Messages
+- [x] **Phase 3.11 Nhóm 10 Quản Trị Hệ Thống & Hộp Thư Liên Hệ (Admin Stats & Contact Messages)**: Thống kê tổng quan sàn (doanh thu hoàn tất, phân bổ đơn hàng, users, chợ, nông sản, review rating sàn, inquiries, top 5 nông dân uy tín), quản lý người dùng & khoá/mở tài khoản (chặn admin tự đổi status chính mình), phê duyệt/từ chối sạp nông dân pending (+ gửi notification in-app), form liên hệ public & Admin Inquiries inbox (lọc đọc/chưa đọc, tìm kiếm, đánh dấu đã đọc). 14 Feature Tests mới, tổng 164/164 Feature/Unit Tests passed 100%.
 - `[ ]` **Phase 3.12**: Bộ kiểm thử tích hợp API (Feature Tests) & Zero N+1 Query
-- Tình trạng: Đang thực hiện Day 3 (Đã xong Phase 3.1 -> Phase 3.10)
+- Tình trạng: Đang thực hiện Day 3 (Đã hoàn tất Phase 3.11, sẵn sàng cho Phase 3.12)
 
 ### Day 4: Tích Hợp Frontend React Với Backend API
 

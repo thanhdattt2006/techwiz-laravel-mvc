@@ -903,6 +903,182 @@ Content-Type: application/json
 Authorization: Bearer <admin_token>
 ```
 
+---
+
+## 10. Admin Governance & Contact Inquiries (Phase 3.11)
+
+### 10.1. Submit Public Contact Inquiry [Public / Guest]
+- **Method**: `POST /api/v1/contact`
+- **Headers**:
+```http
+Content-Type: application/json
+Accept: application/json
+```
+- **Body**:
+```json
+{
+  "name": "Sarah Connor",
+  "email": "sarah.connor@example.com",
+  "subject": "Vendor Stall Application Inquiry",
+  "message": "Hello, I would like to know if there are open stalls for organic honey at the Saturday Logan Square Market."
+}
+```
+
+---
+
+### 10.2. Platform Overview Statistics [Admin Only]
+- **Method**: `GET /api/v1/admin/stats/overview`
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+Accept: application/json
+```
+- **Response Shape**:
+```json
+{
+  "success": true,
+  "message": "Platform overview statistics retrieved successfully.",
+  "data": {
+    "revenue": {
+      "gross_completed": 1250.75,
+      "currency": "USD"
+    },
+    "orders": {
+      "total": 42,
+      "by_status": {
+        "placed": 3,
+        "accepted": 5,
+        "ready_for_pickup": 4,
+        "completed": 28,
+        "cancelled": 1,
+        "declined": 1
+      }
+    },
+    "users": {
+      "total": 65,
+      "customers": 48,
+      "farmers": 16,
+      "pending_farmers": 2,
+      "active_farmers": 14,
+      "banned": 0
+    },
+    "markets": {
+      "total": 5,
+      "active": 5
+    },
+    "products": {
+      "total": 85,
+      "available": 79,
+      "sold_out": 6
+    },
+    "reviews": {
+      "total_visible": 34,
+      "platform_average": 4.85
+    },
+    "inquiries": {
+      "total": 12,
+      "unread": 3
+    },
+    "top_farmers": []
+  },
+  "errors": null
+}
+```
+
+---
+
+### 10.3. List & Filter Platform Users [Admin Only]
+- **Method**: `GET /api/v1/admin/users`
+*(Optional filters: `?role=customer` | `?role=farmer` | `?status=active` | `?search=john`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+Accept: application/json
+```
+
+---
+
+### 10.4. Update User Account Status [Admin Only]
+- **Method**: `PATCH /api/v1/admin/users/{id}/status`
+*(Example: `PATCH /api/v1/admin/users/4/status`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+Content-Type: application/json
+Accept: application/json
+```
+- **Body**:
+```json
+{
+  "status": "banned"
+}
+```
+*(Supports status values: `"active"`, `"inactive"`, `"banned"`, `"pending"`. Self-modification is blocked).*
+
+---
+
+### 10.5. List Pending Farmer Stall Applications [Admin Only]
+- **Method**: `GET /api/v1/admin/farmers/pending`
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+Accept: application/json
+```
+
+---
+
+### 10.6. Approve Farmer Stall Application [Admin Only]
+- **Method**: `PATCH /api/v1/admin/farmers/{id}/approve`
+*(Example: `PATCH /api/v1/admin/farmers/3/approve`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+Accept: application/json
+```
+*(Updates user status to `active` and dispatches in-app notification `farmer_approved` to farmer).*
+
+---
+
+### 10.7. Reject Farmer Stall Application [Admin Only]
+- **Method**: `PATCH /api/v1/admin/farmers/{id}/reject`
+*(Example: `PATCH /api/v1/admin/farmers/3/reject`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+Content-Type: application/json
+Accept: application/json
+```
+- **Body**:
+```json
+{
+  "reason": "Missing valid state agricultural vendor certification or invalid phone number."
+}
+```
+*(Updates user status to `inactive` and dispatches in-app notification `farmer_rejected` with reason to farmer).*
+
+---
+
+### 10.8. List Contact Inquiries Inbox [Admin Only]
+- **Method**: `GET /api/v1/admin/inquiries`
+*(Optional filters: `?is_read=false` | `?is_read=true` | `?search=honey`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+Accept: application/json
+```
+
+---
+
+### 10.9. Mark Contact Inquiry as Read [Admin Only]
+- **Method**: `PATCH /api/v1/admin/inquiries/{id}/read`
+*(Example: `PATCH /api/v1/admin/inquiries/1/read`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+Accept: application/json
+```
+
+
 
 
 

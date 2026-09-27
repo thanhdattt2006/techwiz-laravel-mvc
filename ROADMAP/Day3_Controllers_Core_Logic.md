@@ -277,25 +277,27 @@
 
 ## Phase 3.11: Nhóm 10 - Quản Trị Hệ Thống & Hộp Thư Liên Hệ (Admin Stats & Contact Messages)
 
-- `[ ]` **Endpoints**:
-  - `GET   /api/v1/admin/stats/overview` (Admin: Thống kê tổng hợp: Doanh thu, Đơn hàng, Top nông dân)
-  - `GET   /api/v1/admin/users` (Admin: Quản lý người dùng toàn sàn)
-  - `PATCH /api/v1/admin/users/{id}/status` (Admin: Khóa/Mở khóa tài khoản)
+- `[x]` **Endpoints**:
+  - `GET   /api/v1/admin/stats/overview` (Admin: Thống kê tổng hợp: Doanh thu hoàn tất, Phân bổ đơn hàng, Thống kê User, Chợ, Nông sản, Đánh giá, Hộp thư, Top 5 nông dân uy tín)
+  - `GET   /api/v1/admin/users` (Admin: Quản lý người dùng toàn sàn kèm bộ lọc vai trò, trạng thái và tìm kiếm fulltext)
+  - `PATCH /api/v1/admin/users/{id}/status` (Admin: Khóa/Mở khóa/Cập nhật trạng thái tài khoản; chặn admin tự sửa chính mình)
   - `GET   /api/v1/admin/farmers/pending` (Admin: Hàng chờ sạp nông dân chờ phê duyệt)
-  - `PATCH /api/v1/admin/farmers/{id}/approve` (Admin: Phê duyệt sạp nông dân mở bán)
-  - `PATCH /api/v1/admin/farmers/{id}/reject` (Admin: Từ chối hồ sơ nông dân)
-  - `POST  /api/v1/contact` (Public: Khách gửi phản ánh / liên hệ)
-  - `GET   /api/v1/admin/inquiries` (Admin: Hộp thư tiếp nhận phản ánh Admin Inbox)
-  - `PATCH /api/v1/admin/inquiries/{id}/read` (Admin: Đánh dấu đã xử lý phản ánh)
-- `[ ]` **Controllers**:
+  - `PATCH /api/v1/admin/farmers/{id}/approve` (Admin: Phê duyệt sạp nông dân mở bán + gửi notification in-app)
+  - `PATCH /api/v1/admin/farmers/{id}/reject` (Admin: Từ chối hồ sơ nông dân kèm lý do bắt buộc + gửi notification in-app)
+  - `POST  /api/v1/contact` (Public: Khách/Người dùng gửi phản ánh / thư liên hệ)
+  - `GET   /api/v1/admin/inquiries` (Admin: Hộp thư tiếp nhận phản ánh Admin Inbox kèm lọc trạng thái đọc và tìm kiếm)
+  - `PATCH /api/v1/admin/inquiries/{id}/read` (Admin: Đánh dấu đã đọc/xử lý phản ánh)
+- `[x]` **Controllers**:
   - `AdminController.php` (`app/Http/Controllers/Api/V1/AdminController.php`)
   - `ContactController.php` (`app/Http/Controllers/Api/V1/ContactController.php`)
-- `[ ]` **Form Requests**:
+- `[x]` **Form Requests**:
   - `StoreContactRequest`: Validate `name`, `email`, `subject`, `message`.
-  - `UpdateUserStatusRequest`: Validate `status` (`active`, `inactive`, `banned`).
-  - `RejectFarmerRequest`: Validate lý do từ chối.
-- `[ ]` **JsonResource**: `ContactMessageResource.php`.
-- `[ ]` **Đưa danh sách API và data mẫu để test**
+  - `UpdateUserStatusRequest`: Validate `status` (`active`, `inactive`, `banned`, `pending`).
+  - `RejectFarmerRequest`: Validate `reason` bắt buộc tối thiểu 5 ký tự.
+- `[x]` **JsonResource**: `ContactMessageResource.php`.
+- `[x]` **Đưa danh sách API và data mẫu để test**:
+  - Đã xuất bản danh sách API và dữ liệu mẫu test tại [`BackEndApiTest.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/BackEndApiTest.md#10-admin-governance--contact-inquiries-phase-311).
+  - Đã tạo Feature Test `tests/Feature/AdminAndContactApiTest.php` với 14 test cases bao phủ toàn diện (100% pass, tổng 164/164 tests toàn dự án).
 
 ---
 
