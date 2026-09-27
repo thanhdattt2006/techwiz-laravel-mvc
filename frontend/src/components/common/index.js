@@ -1,4 +1,3 @@
-export { default as GoogleSignInButton } from './GoogleSignInButton';
 export { default as Modal } from './Modal';
 export { default as ScrollToTop } from './ScrollToTop';
 export { default as RatingStars } from './RatingStars';

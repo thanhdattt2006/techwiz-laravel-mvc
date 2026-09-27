@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useModal } from '../../context/ModalContext';
-import GoogleSignInButton from '../../components/common/GoogleSignInButton';
 import {
   UserPlus,
   Mail,
@@ -13,8 +12,6 @@ import {
   CheckCircle2,
   Sprout,
   ShoppingBag,
-  Sparkles,
-  ShieldCheck,
   Store,
   MapPin,
 } from 'lucide-react';
@@ -39,19 +36,6 @@ export default function RegisterPage() {
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (error) setError('');
-  };
-
-  const handleDemoFill = () => {
-    const timestamp = Date.now().toString().slice(-4);
-    setFormData({
-      fullname: `Elena Rostova`,
-      username: `elena_shopper_${timestamp}`,
-      email: `elena_${timestamp}@gmail.com`,
-      phone: `(312) 555-88${timestamp.slice(0, 2)}`,
-      password: 'password123',
-      confirmPassword: 'password123',
-    });
-    setError('');
   };
 
   const handleRegister = async (e) => {
@@ -177,22 +161,6 @@ export default function RegisterPage() {
                     <span className="text-[#475569] text-[11px]">Inspect produce freshness in person and pay at your preferred stall.</span>
                   </div>
                 </div>
-              </div>
-            </div>
-
-            {/* 1-Click Demo Fill Action */}
-            <div className="pt-4 border-t border-[#E2E8DF] space-y-2">
-              <button
-                type="button"
-                onClick={handleDemoFill}
-                className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 text-xs font-bold transition cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4 text-amber-500" />
-                <span>1-Click Demo Fill (For Evaluation)</span>
-              </button>
-              <div className="text-[11px] text-[#475569] flex items-center gap-1.5 justify-center">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#16A34A]" />
-                <span>Sanctum Token & RBAC Role: <code className="font-bold text-[#0F172A]">customer</code></span>
               </div>
             </div>
           </section>
@@ -339,18 +307,6 @@ export default function RegisterPage() {
                   <span>{submitting ? 'Registering Account...' : 'Create Shopper Account'}</span>
                 </button>
               </div>
-
-              {/* Divider */}
-              <div className="relative flex py-2 items-center">
-                <div className="grow border-t border-[#E2E8DF]"></div>
-                <span className="shrink mx-4 text-[11px] text-[#475569] font-medium uppercase">
-                  Or continue with
-                </span>
-                <div className="grow border-t border-[#E2E8DF]"></div>
-              </div>
-
-              {/* Google Social Sign In */}
-              <GoogleSignInButton text="Continue with Google" />
 
               {/* Sign In Link */}
               <div className="pt-3 border-t border-[#E2E8DF] text-center text-xs text-[#475569]">

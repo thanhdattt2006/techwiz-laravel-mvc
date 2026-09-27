@@ -1,41 +1,60 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import authApi from '../api/authApi';
+import authApi from '../api/authApi.js';
+import { normalizeRole } from '../utils/roleUtils.js';
 
 const AuthContext = createContext(null);
 
 /**
  * Toggle backend connection:
- * - false: 100% standalone client-side mock mode (compliant with SRS evaluation & Vercel deployment)
- * - true: Connects to Laravel Web API endpoints via axiosClient
+ * - true: Connects to Laravel RESTful Web API endpoints via axiosClient with Sanctum tokens
+ * - false: Standalone client-side mock fallback
  */
-const USE_BACKEND_API = false;
+const USE_BACKEND_API = true;
 
 const DEMO_USERS = {
   admin: {
     id: 1,
-    fullname: 'MarketLink Platform Administrator',
+    fullname: 'Platform Administrator',
     username: 'admin',
-    email: 'admin@gmail.com',
+    email: 'admin@marketlink.com',
     phone: '(312) 555-0100',
     role: 'admin',
+    status: 'active',
+  },
+  farmer: {
+    id: 2,
+    fullname: 'Arthur Pendelton (Prairie Organic Grove)',
+    username: 'farmer',
+    email: 'farmer@marketlink.com',
+    phone: '(312) 555-4421',
+    role: 'farmer',
     status: 'active',
   },
   operator: {
     id: 2,
     fullname: 'Arthur Pendelton (Prairie Organic Grove)',
-    username: 'operator',
-    email: 'operator@gmail.com',
+    username: 'farmer',
+    email: 'farmer@marketlink.com',
     phone: '(312) 555-4421',
-    role: 'operator',
+    role: 'farmer',
+    status: 'active',
+  },
+  customer: {
+    id: 3,
+    fullname: 'Elena Vance (Local Shopper)',
+    username: 'customer',
+    email: 'customer@marketlink.com',
+    phone: '(312) 555-8819',
+    role: 'customer',
     status: 'active',
   },
   user: {
     id: 3,
-    fullname: 'Elena Rostova (Local Shopper)',
-    username: 'user',
-    email: 'user@gmail.com',
+    fullname: 'Elena Vance (Local Shopper)',
+    username: 'customer',
+    email: 'customer@marketlink.com',
     phone: '(312) 555-8819',
-    role: 'user',
+    role: 'customer',
     status: 'active',
   },
 };
@@ -44,7 +63,11 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
       const savedUser = localStorage.getItem('auth_user');
-      return savedUser ? JSON.parse(savedUser) : null;
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        return { ...parsed, role: normalizeRole(parsed.role) };
+      }
+      return null;
     } catch {
       return null;
     }
@@ -69,8 +92,12 @@ export const AuthProvider = ({ children }) => {
       try {
         const response = await authApi.getMe();
         if (response && response.success && response.data?.user) {
-          setUser(response.data.user);
-          localStorage.setItem('auth_user', JSON.stringify(response.data.user));
+          const fetchedUser = {
+            ...response.data.user,
+            role: normalizeRole(response.data.user.role),
+          };
+          setUser(fetchedUser);
+          localStorage.setItem('auth_user', JSON.stringify(fetchedUser));
         }
       } catch {
         setUser(null);
@@ -83,10 +110,11 @@ export const AuthProvider = ({ children }) => {
       return;
     }
 
-    // Client-side standalone mode
+    // Client-side standalone fallback
     try {
       if (savedUser) {
-        setUser(JSON.parse(savedUser));
+        const parsed = JSON.parse(savedUser);
+        setUser({ ...parsed, role: normalizeRole(parsed.role) });
         setToken(savedToken);
       }
     } catch {
@@ -102,54 +130,62 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     checkAuth();
 
-    if (USE_BACKEND_API) {
-      const handleUnauthorized = () => {
-        setUser(null);
-        setToken(null);
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('auth_user');
-      };
+    const handleUnauthorized = () => {
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('auth_user');
+    };
 
-      window.addEventListener('auth:unauthorized', handleUnauthorized);
-      return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
-    }
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
   }, [checkAuth]);
 
   /**
-   * Log in via either backend API or client-side mock demo.
+   * Log in via backend REST API or fallback demo.
+   * @param {string} loginInput - email or username
+   * @param {string} password - user password
    */
   const login = async (loginInput, password) => {
     if (USE_BACKEND_API) {
       try {
-        const response = await authApi.login(loginInput, password);
+        setIsLoading(true);
+        const response = await authApi.login(loginInput.trim(), password);
         if (response && response.success && response.data) {
-          const { token: newToken, user: newUser } = response.data;
+          const { token: newToken, user: rawUser } = response.data;
+          const authenticatedUser = {
+            ...rawUser,
+            role: normalizeRole(rawUser.role),
+          };
           setToken(newToken);
-          setUser(newUser);
+          setUser(authenticatedUser);
           localStorage.setItem('auth_token', newToken);
-          localStorage.setItem('auth_user', JSON.stringify(newUser));
-          return { success: true, user: newUser };
+          localStorage.setItem('auth_user', JSON.stringify(authenticatedUser));
+          setIsLoading(false);
+          return { success: true, user: authenticatedUser };
         }
-        return { success: false, message: response.message || 'Login failed' };
+        setIsLoading(false);
+        return { success: false, message: response?.message || 'Login failed.' };
       } catch (error) {
-        const message = error.response?.data?.message || 'Unable to connect to API server.';
+        setIsLoading(false);
+        const message = error.response?.data?.message || 'Unable to connect to authentication server.';
         return { success: false, message };
       }
     }
 
-    // Client-side standalone authentication
+    // Fallback standalone authentication
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 200));
 
     const normalizedInput = loginInput.trim().toLowerCase();
     let authenticatedUser = null;
 
-    if (normalizedInput === 'admin@gmail.com' || normalizedInput === 'admin') {
+    if (normalizedInput === 'admin@marketlink.com' || normalizedInput === 'admin@gmail.com' || normalizedInput === 'admin') {
       authenticatedUser = DEMO_USERS.admin;
-    } else if (normalizedInput === 'operator@gmail.com' || normalizedInput === 'operator') {
-      authenticatedUser = DEMO_USERS.operator;
-    } else if (normalizedInput === 'user@gmail.com' || normalizedInput === 'user') {
-      authenticatedUser = DEMO_USERS.user;
+    } else if (normalizedInput === 'farmer@marketlink.com' || normalizedInput === 'operator@gmail.com' || normalizedInput === 'farmer' || normalizedInput === 'operator') {
+      authenticatedUser = DEMO_USERS.farmer;
+    } else if (normalizedInput === 'customer@marketlink.com' || normalizedInput === 'user@gmail.com' || normalizedInput === 'customer' || normalizedInput === 'user') {
+      authenticatedUser = DEMO_USERS.customer;
     } else if (loginInput.trim().length > 0) {
       authenticatedUser = {
         id: Date.now(),
@@ -157,7 +193,7 @@ export const AuthProvider = ({ children }) => {
         username: loginInput.trim().toLowerCase().replace(/\s+/g, '_'),
         email: loginInput.includes('@') ? loginInput.trim() : `${loginInput.trim().toLowerCase()}@example.com`,
         phone: '090-000-0000',
-        role: 'user',
+        role: 'customer',
         status: 'active',
       };
     }
@@ -178,26 +214,33 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
-   * 1-Click Instant Demo Login for 3 roles: admin, operator, user.
+   * 1-Click Instant Demo Login for 3 roles: admin, farmer (operator), customer (user).
+   * Aligned with Seeder accounts: admin@marketlink.com, farmer@marketlink.com, customer@marketlink.com / password
    */
   const quickDemoLogin = async (targetRole) => {
+    const normalizedTarget = normalizeRole(targetRole);
+
     if (USE_BACKEND_API) {
       const credentials = {
-        admin: { login: 'admin@gmail.com', password: 'password123' },
-        operator: { login: 'operator@gmail.com', password: 'password123' },
-        user: { login: 'user@gmail.com', password: 'password123' },
+        admin: { login: 'admin@marketlink.com', password: 'password' },
+        farmer: { login: 'farmer@marketlink.com', password: 'password' },
+        customer: { login: 'customer@marketlink.com', password: 'password' },
       };
-      const cred = credentials[targetRole];
-      if (!cred) return { success: false, message: 'Role does not exist' };
+
+      const cred = credentials[normalizedTarget];
+      if (!cred) {
+        return { success: false, message: `Role "${targetRole}" does not exist.` };
+      }
+
       return login(cred.login, cred.password);
     }
 
-    const targetUser = DEMO_USERS[targetRole];
+    const targetUser = DEMO_USERS[normalizedTarget] || DEMO_USERS[targetRole];
     if (!targetUser) {
       return { success: false, message: `Role "${targetRole}" does not exist.` };
     }
 
-    const clientToken = `marketlink-demo-${targetRole}-${Date.now()}`;
+    const clientToken = `marketlink-demo-${normalizedTarget}-${Date.now()}`;
     setToken(clientToken);
     setUser(targetUser);
     localStorage.setItem('auth_token', clientToken);
@@ -207,37 +250,57 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
-   * Register a new shopper / customer account.
+   * Register a new customer account.
    */
-  const register = async ({ fullname, username, email, phone, password }) => {
+  const register = async (data) => {
     if (USE_BACKEND_API) {
       try {
-        const response = await authApi.register({ fullname, username, email, phone, password });
+        setIsLoading(true);
+        const payload = {
+          fullname: data.fullname,
+          username: data.username,
+          email: data.email,
+          phone: data.phone,
+          address: data.address || '',
+          password: data.password,
+          password_confirmation: data.password_confirmation || data.confirmPassword || data.password,
+        };
+
+        const response = await authApi.register(payload);
         if (response && response.success && response.data) {
-          const { token: newToken, user: newUser } = response.data;
+          const { token: newToken, user: rawUser } = response.data;
+          const newUser = {
+            ...rawUser,
+            role: normalizeRole(rawUser.role),
+          };
           setToken(newToken);
           setUser(newUser);
           localStorage.setItem('auth_token', newToken);
           localStorage.setItem('auth_user', JSON.stringify(newUser));
+          setIsLoading(false);
           return { success: true, user: newUser };
         }
-        return { success: false, message: response.message || 'Registration failed' };
+        setIsLoading(false);
+        return { success: false, message: response?.message || 'Registration failed.' };
       } catch (error) {
+        setIsLoading(false);
         const message = error.response?.data?.message || 'Unable to connect to registration server.';
         return { success: false, message };
       }
     }
 
+    // Fallback standalone registration
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 300));
 
     const newUser = {
       id: Date.now(),
-      fullname: fullname.trim(),
-      username: username.trim().toLowerCase(),
-      email: email.trim().toLowerCase(),
-      phone: phone.trim(),
-      role: 'user',
+      fullname: data.fullname.trim(),
+      username: data.username.trim().toLowerCase(),
+      email: data.email.trim().toLowerCase(),
+      phone: data.phone.trim(),
+      address: data.address || '',
+      role: 'customer',
       status: 'active',
     };
 
@@ -252,61 +315,44 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
-   * 1-Click Google Social Authentication (Demo & OAuth ready).
-   */
-  const loginWithGoogle = async () => {
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 250));
-
-    const googleUser = {
-      id: 999,
-      fullname: 'Elena Rostova (Google Shopper)',
-      username: 'elena_google_shopper',
-      email: 'elena.shopper@gmail.com',
-      phone: '(312) 555-8819',
-      role: 'user',
-      status: 'active',
-      isGoogleAuth: true,
-    };
-
-    const clientToken = `marketlink-google-${Date.now()}`;
-    setToken(clientToken);
-    setUser(googleUser);
-    localStorage.setItem('auth_token', clientToken);
-    localStorage.setItem('auth_user', JSON.stringify(googleUser));
-    setIsLoading(false);
-
-    return { success: true, user: googleUser };
-  };
-
-  /**
-   * Reset user password with OTP verification.
-   */
-  const resetPassword = async ({ identity, otp, newPassword: _newPassword }) => {
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    setIsLoading(false);
-
-    if (otp !== '123456') {
-      return { success: false, message: 'Invalid verification OTP code. Please use demo code 123456.' };
-    }
-
-    return {
-      success: true,
-      message: `Password successfully updated for ${identity}. You can now sign in with your new password.`,
-    };
-  };
-
-  /**
-   * Update active user profile details (fullname, phone, neighborhood, etc.).
+   * Update active user profile details (fullname, phone, address).
    */
   const updateProfile = async (profileData) => {
+    if (USE_BACKEND_API) {
+      try {
+        setIsLoading(true);
+        const payload = {
+          fullname: profileData.fullname,
+          phone: profileData.phone,
+          address: profileData.address,
+        };
+        const response = await authApi.updateProfile(payload);
+        if (response && response.success && response.data?.user) {
+          const updatedUser = {
+            ...response.data.user,
+            role: normalizeRole(response.data.user.role),
+          };
+          setUser(updatedUser);
+          localStorage.setItem('auth_user', JSON.stringify(updatedUser));
+          setIsLoading(false);
+          return { success: true, user: updatedUser };
+        }
+        setIsLoading(false);
+        return { success: false, message: response?.message || 'Update failed.' };
+      } catch (error) {
+        setIsLoading(false);
+        const message = error.response?.data?.message || 'Failed to update profile on server.';
+        return { success: false, message };
+      }
+    }
+
     setIsLoading(true);
     await new Promise((resolve) => setTimeout(resolve, 200));
 
     const updatedUser = {
       ...user,
       ...profileData,
+      role: normalizeRole(user?.role),
     };
 
     setUser(updatedUser);
@@ -320,7 +366,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   /**
-   * Change account password with validation and API fallback.
+   * Change account password via backend API.
    */
   const changePassword = async ({ currentPassword, newPassword, confirmPassword }) => {
     if (!currentPassword) {
@@ -331,6 +377,27 @@ export const AuthProvider = ({ children }) => {
     }
     if (newPassword !== confirmPassword) {
       return { success: false, message: 'New password and confirmation do not match.' };
+    }
+
+    if (USE_BACKEND_API) {
+      try {
+        setIsLoading(true);
+        const payload = {
+          current_password: currentPassword,
+          new_password: newPassword,
+          new_password_confirmation: confirmPassword,
+        };
+        const response = await authApi.changePassword(payload);
+        setIsLoading(false);
+        return {
+          success: response?.success ?? true,
+          message: response?.message || 'Your account password has been updated.',
+        };
+      } catch (error) {
+        setIsLoading(false);
+        const message = error.response?.data?.message || 'Failed to update password on server.';
+        return { success: false, message };
+      }
     }
 
     setIsLoading(true);
@@ -361,16 +428,16 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('auth_user');
   };
 
+  const currentRole = normalizeRole(user?.role);
+
   const value = {
     user,
     token,
-    role: user?.role || null,
+    role: currentRole,
     isAuthenticated: Boolean(token && user),
     isLoading,
     login,
     register,
-    loginWithGoogle,
-    resetPassword,
     logout,
     quickDemoLogin,
     updateProfile,

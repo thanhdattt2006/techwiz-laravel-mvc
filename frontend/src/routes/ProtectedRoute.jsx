@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { normalizeRole } from '../utils/roleUtils.js';
 import { Loader2 } from 'lucide-react';
 
 export default function ProtectedRoute({ allowedRoles = [] }) {
@@ -20,7 +21,14 @@ export default function ProtectedRoute({ allowedRoles = [] }) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
+  const userRole = normalizeRole ? normalizeRole(role) : role;
+  const normalizedAllowed = allowedRoles.map((r) => (normalizeRole ? normalizeRole(r) : r));
+
+  if (
+    allowedRoles.length > 0 &&
+    !allowedRoles.includes(role) &&
+    !normalizedAllowed.includes(userRole)
+  ) {
     return <Navigate to="/unauthorized" replace />;
   }
 

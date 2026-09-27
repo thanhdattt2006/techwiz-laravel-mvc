@@ -163,16 +163,18 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.2: Chuẩn Hóa Xác Thực, 1-Click Demo Login & Gỡ Bỏ UI Thừa (Auth Sync & Cleanup)
+### Phase 4.2: Chuẩn Hóa Xác Thực, 1-Click Demo Login & Gỡ Bỏ UI Thừa (Auth Sync & Cleanup) [x]
 
 - **Mục tiêu**: Bật kết nối Backend API thật cho hệ thống Authentication, cập nhật tài khoản Seeder chuẩn, gỡ bỏ Social Login Google giả lập và sửa hướng dẫn quên mật khẩu.
 - **Files tác động**:
   - `frontend/src/context/AuthContext.jsx`
   - `frontend/src/pages/auth/LoginPage.jsx`
+  - `frontend/src/pages/auth/ForgotPasswordPage.jsx`
   - `frontend/src/components/common/GoogleSignInButton.jsx` (Xóa bỏ)
   - `frontend/src/routes/ProtectedRoute.jsx`
+  - `frontend/src/utils/roleUtils.js`
 - **Checklist công việc**:
-  - `[ ]` `AuthContext.jsx`:
+  - `[x]` `AuthContext.jsx`:
     - Đặt `USE_BACKEND_API = true`.
     - Chuẩn hóa 3 vai trò: `admin`, `farmer`, `customer`. Hỗ trợ alias tự động cho `operator` $\rightarrow$ `farmer` và `user` $\rightarrow$ `customer`.
     - Cập nhật thông tin 1-Click Demo Login:
@@ -180,11 +182,11 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
       - Farmer: `farmer@marketlink.com` / `password`
       - Customer: `customer@marketlink.com` / `password`
     - Gỡ bỏ `loginWithGoogle` và `resetPassword` mock OTP.
-  - `[ ]` `LoginPage.jsx`:
+  - `[x]` `LoginPage.jsx`:
     - Gỡ bỏ component `GoogleSignInButton.jsx` và khối "Or sign in with Google".
     - Cập nhật 3 nút 1-Click Demo Login hiển thị đúng email `@marketlink.com` và password mặc định `password`.
     - Thay link "Forgot password?" thành modal hướng dẫn liên hệ Admin hỗ trợ.
-  - `[ ]` `ProtectedRoute.jsx`: Đồng bộ kiểm tra đúng 3 role `admin`, `farmer`, `customer`.
+  - `[x]` `ProtectedRoute.jsx`: Đồng bộ kiểm tra đúng 3 role `admin`, `farmer`, `customer`.
 - **Tiêu chí hoàn thành**: Đăng nhập thành công bằng cả 3 tài khoản Demo Seeder qua API `/api/v1/auth/login`, nhận Bearer token và lưu vào `localStorage`.
 
 ---
