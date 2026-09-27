@@ -808,6 +808,102 @@ Content-Type: application/json
 ```
 *(Supports `favoritable_type`: `"farmer"`, `"product"`, `"market"`)*
 
+---
+
+## 9. Notifications & Announcements (Phase 3.10)
+
+### 9.1. Get In-App Notifications with Unread Count [Protected]
+- **Method**: `GET /api/v1/notifications`
+*(Or unread only: `GET /api/v1/notifications?unread_only=true`)*
+- **Headers**:
+```http
+Authorization: Bearer <token>
+```
+
+---
+
+### 9.2. Mark Single Notification as Read [Protected]
+- **Method**: `PATCH /api/v1/notifications/{id}/read`
+*(Example: `PATCH /api/v1/notifications/1/read`)*
+- **Headers**:
+```http
+Authorization: Bearer <token>
+```
+
+---
+
+### 9.3. Mark All Notifications as Read [Protected]
+- **Method**: `PATCH /api/v1/notifications/read-all`
+- **Headers**:
+```http
+Authorization: Bearer <token>
+```
+
+---
+
+### 9.4. Get Active Public Announcements [Public / Role-Aware]
+- **Method**: `GET /api/v1/announcements/active`
+*(Optional filter for guests: `GET /api/v1/announcements/active?role=farmer` | `GET /api/v1/announcements/active?role=customer`)*
+
+---
+
+### 9.5. List All Announcements for Moderation [Admin Only]
+- **Method**: `GET /api/v1/admin/announcements`
+*(Optional filters: `?is_active=true` | `?target_role=farmer`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+```
+
+---
+
+### 9.6. Publish Platform Announcement [Admin Only]
+- **Method**: `POST /api/v1/admin/announcements`
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+Content-Type: application/json
+```
+- **Body**:
+```json
+{
+  "title": "Autumn Harvest Festival Announced",
+  "content": "Join us this coming Saturday for special vendor discounts and fresh ciders.",
+  "target_role": "all",
+  "is_active": true
+}
+```
+*(Supports `target_role`: `"all"`, `"farmer"`, `"customer"`)*
+
+---
+
+### 9.7. Update Announcement [Admin Only]
+- **Method**: `PUT /api/v1/admin/announcements/{id}`
+*(Example: `PUT /api/v1/admin/announcements/1`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+Content-Type: application/json
+```
+- **Body**:
+```json
+{
+  "title": "Autumn Harvest Festival Announced - Updated Schedule",
+  "is_active": true
+}
+```
+
+---
+
+### 9.8. Delete Announcement [Admin Only]
+- **Method**: `DELETE /api/v1/admin/announcements/{id}`
+*(Example: `DELETE /api/v1/admin/announcements/1`)*
+- **Headers**:
+```http
+Authorization: Bearer <admin_token>
+```
+
+
 
 
 

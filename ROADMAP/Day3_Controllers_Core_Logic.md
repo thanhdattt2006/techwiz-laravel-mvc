@@ -254,7 +254,7 @@
 
 ## Phase 3.10: Nhóm 9 - Thông Báo & Cảnh Báo Hệ Thống (Notifications & Announcements)
 
-- `[ ]` **Endpoints**:
+- `[x]` **Endpoints**:
   - `GET   /api/v1/notifications` (Protected: Danh sách thông báo in-app kèm unread count)
   - `PATCH /api/v1/notifications/{id}/read` (Protected: Đánh dấu đã đọc 1 thông báo)
   - `PATCH /api/v1/notifications/read-all` (Protected: Đánh dấu đã đọc toàn bộ)
@@ -263,13 +263,15 @@
   - `POST  /api/v1/admin/announcements` (Admin: Phát thông báo mới)
   - `PUT   /api/v1/admin/announcements/{id}` (Admin: Sửa thông báo)
   - `DELETE /api/v1/admin/announcements/{id}` (Admin: Xoá thông báo)
-- `[ ]` **Controllers**:
+- `[x]` **Controllers**:
   - `NotificationController.php` (`app/Http/Controllers/Api/V1/NotificationController.php`)
   - `AnnouncementController.php` (`app/Http/Controllers/Api/V1/AnnouncementController.php`)
-- `[ ]` **Form Request**:
-  - `StoreAnnouncementRequest`: Validate `title`, `content`, `target_role` (`all`, `farmer`, `customer`), `is_active`.
-- `[ ]` **JsonResources**: `NotificationResource.php`, `AnnouncementResource.php`.
-- `[ ]` **Đưa danh sách API và data mẫu để test**
+- `[x]` **Form Requests**:
+  - `StoreAnnouncementRequest` & `UpdateAnnouncementRequest`: Validate `title`, `content`, `target_role` (`all`, `farmer`, `customer`), `is_active`.
+- `[x]` **JsonResources**: `NotificationResource.php`, `AnnouncementResource.php`.
+- `[x]` **Đưa danh sách API và data mẫu để test**:
+  - Đã xuất bản danh sách API và dữ liệu mẫu test tại [`BackEndApiTest.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/BackEndApiTest.md#9-notifications--announcements-phase-310).
+  - Đã tạo Feature Test `tests/Feature/NotificationAndAnnouncementApiTest.php` với 9 test cases bao phủ toàn diện (100% pass, tổng 150/150 tests toàn dự án).
 
 ---
 

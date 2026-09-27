@@ -2,12 +2,14 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\V1\AnnouncementController;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\FarmerController;
 use App\Http\Controllers\Api\V1\FavoriteController;
 use App\Http\Controllers\Api\V1\MarketController;
+use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\ReviewController;
@@ -104,6 +106,10 @@ Route::prefix('v1/admin')->middleware(['auth:sanctum', 'role:admin'])->group(fun
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
     Route::patch('/products/{id}/toggle-hide', [ProductController::class, 'toggleHide']);
     Route::patch('/reviews/{id}/toggle-hide', [ReviewController::class, 'toggleHide']);
+    Route::get('/announcements', [AnnouncementController::class, 'index']);
+    Route::post('/announcements', [AnnouncementController::class, 'store']);
+    Route::put('/announcements/{id}', [AnnouncementController::class, 'update']);
+    Route::delete('/announcements/{id}', [AnnouncementController::class, 'destroy']);
 });
 
 // Public Review routes
@@ -119,4 +125,14 @@ Route::prefix('v1/reviews')->middleware(['auth:sanctum', 'role:customer,admin'])
 Route::prefix('v1/favorites')->middleware(['auth:sanctum', 'role:customer,admin'])->group(function () {
     Route::get('/', [FavoriteController::class, 'index']);
     Route::post('/toggle', [FavoriteController::class, 'toggle']);
+});
+
+// Public Announcement routes
+Route::get('v1/announcements/active', [AnnouncementController::class, 'active']);
+
+// Protected User In-app Notification routes
+Route::prefix('v1/notifications')->middleware('auth:sanctum')->group(function () {
+    Route::get('/', [NotificationController::class, 'index']);
+    Route::patch('/read-all', [NotificationController::class, 'markAllAsRead']);
+    Route::patch('/{id}/read', [NotificationController::class, 'markAsRead']);
 });
