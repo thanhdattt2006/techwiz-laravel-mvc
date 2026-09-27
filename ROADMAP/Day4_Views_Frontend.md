@@ -293,25 +293,31 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.8: Xây Dựng Hệ Thống Giỏ Hàng Toàn Cục (Cart Context & Cart Drawer)
+### Phase 4.8: Xây Dựng Hệ Thống Giỏ Hàng Toàn Cục (Cart Context & Cart Drawer) [x]
 
 - **Mục tiêu**: Xây dựng `CartContext.jsx` đồng bộ với Backend API và Drawer Giỏ Hàng hiển thị các món gom nhóm theo từng sạp nông dân.
 - **Files tác động**:
   - Tạo mới: `frontend/src/context/CartContext.jsx`
   - Tạo mới: `frontend/src/components/common/CartDrawer.jsx`
   - `frontend/src/components/layout/PublicNavbar.jsx`
+  - `frontend/src/App.jsx`
+  - `frontend/src/main.jsx`
+  - `frontend/src/hooks/useProductDetail.js`
+  - `frontend/src/components/common/ProductCard.jsx`
+  - `frontend/src/pages/public/ProductsPage.jsx`
 - **Checklist công việc**:
-  - `[ ]` `CartContext.jsx`:
+  - `[x]` `CartContext.jsx`:
     - Tự động gọi `cartApi.getCart()` khi user là `customer`.
     - Các hàm: `addToCart(productId, quantity)`, `updateQuantity(itemId, quantity)`, `removeItem(itemId)`, `clearCart()`.
     - State `cartCount` (tổng số lượng món).
-  - `[ ]` `CartDrawer.jsx`:
+  - `[x]` `CartDrawer.jsx`:
     - Giao diện trượt từ mép phải sang, gom nhóm các món theo từng Sạp Nông Dân (`CartResource`).
     - Hiển thị danh sách các chợ chung mà các sạp tham gia.
     - Tăng/giảm số lượng món, xoá từng món, nút dọn sạch giỏ hàng.
     - Hiển thị tạm tính từng sạp và tổng tiền toàn giỏ hàng.
-    - Nút "Tiến Hành Đặt Trước (Pre-Order)" kích hoạt checkout.
-  - `[ ]` `PublicNavbar.jsx`: Thêm icon Giỏ Hàng kèm Badge số lượng món (`cartCount`) mở `CartDrawer`.
+    - Nút "Tiến Hành Đặt Trước (Pre-Order)" kích hoạt luồng checkout.
+  - `[x]` `PublicNavbar.jsx`: Thêm icon Giỏ Hàng kèm Badge số lượng món (`cartCount`) mở `CartDrawer`.
+  - `[x]` Kết nối `ProductCard` (1-click Add to Basket) và `useProductDetail` (thêm vào giỏ và tự động bật Drawer).
 - **Tiêu chí hoàn thành**: Thêm nông sản vào giỏ từ nhiều sạp khác nhau, giỏ hàng tự động nhóm theo sạp và tính tổng tiền chính xác.
 
 ---

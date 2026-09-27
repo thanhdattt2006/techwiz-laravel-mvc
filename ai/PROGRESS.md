@@ -98,7 +98,7 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - `[x]` **Phase 4.5**: Danh Bạ Chợ & Lịch Họp Chợ Phiên (`MarketsPage.jsx`, helper day of week, GPS map).
 - `[x]` **Phase 4.6**: Catalog Nông Sản & Bộ Lọc Đa Tiêu Chí (`ProductsPage.jsx`, `useProducts.js`, categories API, pipeline filters).
 - `[x]` **Phase 4.7**: Chi Tiết Nông Sản & Gỡ Bỏ Form Pre-Order Autofill (`ProductDetailPage.jsx`, `useProductDetail.js`, reviews, quantity picker).
-- `[ ]` **Phase 4.8**: Xây Dựng Hệ Thống Giỏ Hàng Toàn Cục (`CartContext.jsx`, `CartDrawer.jsx` gom nhóm theo sạp).
+- `[x]` **Phase 4.8**: Xây Dựng Hệ Thống Giỏ Hàng Toàn Cục (`CartContext.jsx`, `CartDrawer.jsx` gom nhóm theo sạp).
 - `[ ]` **Phase 4.9**: Quy Trình Đặt Hàng Pre-Order & Chọn Khung Giờ (`PreOrderCheckoutModal.jsx`, slots, cutoff).
 - `[ ]` **Phase 4.10**: Cổng Khách Hàng - Lịch Sử Đơn Hàng & Tra Cứu Tiến Độ (`CustomerOrdersPage.jsx`, `OrderPickupTrackerPage.jsx`).
 - `[ ]` **Phase 4.11**: Cổng Khách Hàng - Đánh Giá 5 Sao, Hồ Sơ & Mục Yêu Thích (`ReviewModal.jsx`, `CustomerProfilePage.jsx` gỡ preferences rác).

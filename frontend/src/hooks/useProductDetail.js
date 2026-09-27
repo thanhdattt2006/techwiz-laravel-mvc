@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { productApi, reviewApi, favoriteApi, cartApi } from '../api';
+import { productApi, reviewApi, favoriteApi } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
+import { useCart } from '../context/CartContext';
 
 /**
  * Custom Hook: useProductDetail
@@ -11,8 +12,9 @@ import { useModal } from '../context/ModalContext';
  * @param {string|number} productId - Target produce ID from router params
  */
 export function useProductDetail(productId) {
-  const { user, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { showAlert } = useModal();
+  const { addToCart: addCartItem, openCart } = useCart();
 
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -148,27 +150,9 @@ export function useProductDetail(productId) {
     }
   }, [isAuthenticated, isFavorite, productId, showAlert]);
 
-  // 4. Add to Cart
+  // 4. Add to Cart via Global CartContext
   const addToCart = useCallback(async () => {
-    if (!isAuthenticated) {
-      showAlert({
-        title: 'Sign In Required',
-        message: 'Please log in as a customer to add produce items to your weekend market basket.',
-        type: 'info',
-        confirmText: 'Sign In',
-      });
-      return false;
-    }
-
-    if (user?.role !== 'customer') {
-      showAlert({
-        title: 'Customer Role Required',
-        message: 'Only customer accounts can pre-order produce and add items to a shopping cart.',
-        type: 'warning',
-        confirmText: 'Understood',
-      });
-      return false;
-    }
+    if (!product) return false;
 
     if (maxStock <= 0) {
       showAlert({
@@ -190,26 +174,15 @@ export function useProductDetail(productId) {
 
     setSubmittingCart(true);
     try {
-      await cartApi.addItem(product.id, quantity);
-      showAlert({
-        title: 'Added to Market Basket!',
-        message: `Reserved ${quantity} ${product.unit} of "${product.name}" from ${product.farmer?.stall_name || 'the farm stall'}.`,
-        type: 'success',
-        confirmText: 'Continue Shopping',
-      });
-      return true;
-    } catch (err) {
-      const msg = err?.response?.data?.message || 'Could not add item to cart. Please try again.';
-      showAlert({
-        title: 'Cart Update Failed',
-        message: msg,
-        type: 'danger',
-      });
-      return false;
+      const ok = await addCartItem(product.id, quantity);
+      if (ok) {
+        openCart();
+      }
+      return ok;
     } finally {
       setSubmittingCart(false);
     }
-  }, [isAuthenticated, user?.role, maxStock, quantity, product, showAlert]);
+  }, [product, maxStock, quantity, addCartItem, openCart, showAlert]);
 
   return {
     product,

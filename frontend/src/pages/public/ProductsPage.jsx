@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Sprout, Filter, RotateCcw } from 'lucide-react';
 import { ProductCard, FilterSidebar } from '../../components/common';
 import { useProducts } from '../../hooks/useProducts';
+import { useCart } from '../../context/CartContext';
 
 /**
  * ProductsPage Component
@@ -34,7 +35,15 @@ export default function ProductsPage() {
     resetFilters,
   } = useProducts();
 
+  const { addToCart, openCart } = useCart();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  const handleAddToCart = async (product) => {
+    const ok = await addToCart(product.id, 1);
+    if (ok) {
+      openCart();
+    }
+  };
 
   return (
     <div className="space-y-10 pb-20 font-sans antialiased text-[#0F172A]">
@@ -154,6 +163,7 @@ export default function ProductsPage() {
                     product={product}
                     isFavorited={favoritedIds.includes(product.id)}
                     onToggleFavorite={toggleFavorite}
+                    onAddToCart={handleAddToCart}
                   />
                 ))}
               </div>

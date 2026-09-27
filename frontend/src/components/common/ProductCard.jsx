@@ -17,6 +17,7 @@ export default function ProductCard({
   product,
   _compact = false,
   onPreOrder = null,
+  onAddToCart = null,
   isFavorited = false,
   onToggleFavorite = null,
   className = '',
@@ -209,24 +210,36 @@ export default function ProductCard({
           </div>
         </div>
 
-        {onPreOrder ? (
-          <button
-            type="button"
-            onClick={() => onPreOrder(product)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-xs cursor-pointer"
-          >
-            <ShoppingBag className="w-3.5 h-3.5" />
-            <span>Pre-Order</span>
-          </button>
-        ) : (
-          <Link
-            to={`/products/${product.id}`}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-xs cursor-pointer"
-          >
-            <ShoppingBag className="w-3.5 h-3.5" />
-            <span>Pre-Order</span>
-          </Link>
-        )}
+        <div className="flex items-center gap-2">
+          {onAddToCart && (
+            <button
+              type="button"
+              onClick={() => onAddToCart(product)}
+              className="p-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#16A34A] border border-emerald-200 transition cursor-pointer"
+              title="Add 1 to Market Basket"
+              aria-label="Add to Market Basket"
+            >
+              <ShoppingBag className="w-4 h-4" />
+            </button>
+          )}
+
+          {onPreOrder ? (
+            <button
+              type="button"
+              onClick={() => onPreOrder(product)}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-xs cursor-pointer"
+            >
+              <span>Pre-Order</span>
+            </button>
+          ) : (
+            <Link
+              to={`/products/${product.id}`}
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-xs cursor-pointer"
+            >
+              <span>Pre-Order</span>
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );

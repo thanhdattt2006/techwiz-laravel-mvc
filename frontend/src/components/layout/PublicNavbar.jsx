@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useCart } from '../../context/CartContext';
 import {
   Sprout,
   ShoppingBag,
@@ -18,6 +19,7 @@ import {
 
 export default function PublicNavbar() {
   const { user, role, isAuthenticated, logout } = useAuth();
+  const { cartCount, openCart } = useCart();
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -161,12 +163,28 @@ export default function PublicNavbar() {
             </Link>
           )}
 
+          {/* Shopping Basket Trigger Button */}
+          <button
+            type="button"
+            onClick={openCart}
+            aria-label="Open Market Basket"
+            className="relative p-2 rounded-xl bg-slate-100 hover:bg-emerald-50 text-[#0F172A] hover:text-[#16A34A] border border-[#E2E8DF] transition cursor-pointer"
+            title="View Market Basket"
+          >
+            <ShoppingBag className="w-4 h-4" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 min-w-5 h-5 px-1 rounded-full bg-[#16A34A] text-white text-[10px] font-black flex items-center justify-center shadow-xs">
+                {cartCount}
+              </span>
+            )}
+          </button>
+
           {/* Pre-Order CTA Button */}
           <Link
             to="/products"
             className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-xs whitespace-nowrap"
           >
-            <ShoppingBag className="w-3.5 h-3.5" />
+            <Sprout className="w-3.5 h-3.5" />
             <span>Pre-Order</span>
           </Link>
 
@@ -246,6 +264,23 @@ export default function PublicNavbar() {
           </nav>
 
           <div className="pt-3 border-t border-[#E2E8DF] flex flex-col gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                openCart();
+              }}
+              className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-emerald-50 text-[#16A34A] font-bold text-xs border border-emerald-200 transition cursor-pointer"
+            >
+              <div className="flex items-center gap-2">
+                <ShoppingBag className="w-4 h-4" />
+                <span>Market Basket</span>
+              </div>
+              <span className="px-2 py-0.5 rounded-full bg-[#16A34A] text-white text-[10px] font-black">
+                {cartCount} {cartCount === 1 ? 'item' : 'items'}
+              </span>
+            </button>
+
             {!isAuthenticated ? (
               <Link
                 to="/login"
