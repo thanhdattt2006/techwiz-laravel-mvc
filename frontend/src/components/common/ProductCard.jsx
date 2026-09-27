@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sprout, MapPin, Clock, Star, ShoppingBag } from 'lucide-react';
+import { Sprout, MapPin, Clock, Star, ShoppingBag, Heart } from 'lucide-react';
 import RatingStars from './RatingStars';
 
 /**
@@ -10,11 +10,15 @@ import RatingStars from './RatingStars';
  * @param {object} product - Produce product data
  * @param {boolean} _compact - Compact layout option
  * @param {function} onPreOrder - Optional callback when Pre-Order button is clicked
+ * @param {boolean} isFavorited - Whether user favorited this product
+ * @param {function} onToggleFavorite - Callback when favorite heart clicked
  */
 export default function ProductCard({
   product,
   _compact = false,
   onPreOrder = null,
+  isFavorited = false,
+  onToggleFavorite = null,
   className = '',
 }) {
   if (!product) return null;
@@ -65,6 +69,26 @@ export default function ProductCard({
               )}
             </div>
 
+            {/* Favorite Button Overlay */}
+            {onToggleFavorite && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  onToggleFavorite(product.id, e);
+                }}
+                className={`absolute top-3 right-3 p-1.5 rounded-full backdrop-blur transition shadow-xs cursor-pointer ${
+                  isFavorited
+                    ? 'bg-rose-50/95 text-rose-600 border border-rose-200'
+                    : 'bg-white/80 hover:bg-white text-slate-400 hover:text-rose-500'
+                }`}
+                title={isFavorited ? 'Remove from favorites' : 'Save to favorites'}
+              >
+                <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-rose-500 text-rose-500' : ''}`} />
+              </button>
+            )}
+
             {/* Rating Overlay */}
             {ratingValue > 0 && (
               <div className="absolute bottom-3 right-3 px-2 py-0.5 rounded-lg bg-white/95 backdrop-blur text-[11px] font-bold text-amber-700 flex items-center gap-1 shadow-xs">
@@ -85,21 +109,42 @@ export default function ProductCard({
           {/* Header row when no image */}
           {!product.image && (
             <div className="flex items-center justify-between mb-2">
-              {tagText ? (
-                <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${tagColor}`}>
-                  {tagText}
-                </span>
-              ) : (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-[#475569]">
-                  {categoryName || 'Produce'}
-                </span>
-              )}
-              {ratingValue > 0 && (
-                <RatingStars
-                  rating={ratingValue}
-                  reviewsCount={reviewsCountValue}
-                  size="xs"
-                />
+              <div className="flex items-center gap-1.5">
+                {tagText ? (
+                  <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${tagColor}`}>
+                    {tagText}
+                  </span>
+                ) : (
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-[#475569]">
+                    {categoryName || 'Produce'}
+                  </span>
+                )}
+                {ratingValue > 0 && (
+                  <RatingStars
+                    rating={ratingValue}
+                    reviewsCount={reviewsCountValue}
+                    size="xs"
+                  />
+                )}
+              </div>
+
+              {onToggleFavorite && (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    onToggleFavorite(product.id, e);
+                  }}
+                  className={`p-1.5 rounded-full transition cursor-pointer ${
+                    isFavorited
+                      ? 'text-rose-500 bg-rose-50'
+                      : 'text-slate-400 hover:text-rose-500 hover:bg-slate-100'
+                  }`}
+                  title={isFavorited ? 'Remove from favorites' : 'Save to favorites'}
+                >
+                  <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-rose-500 text-rose-500' : ''}`} />
+                </button>
               )}
             </div>
           )}

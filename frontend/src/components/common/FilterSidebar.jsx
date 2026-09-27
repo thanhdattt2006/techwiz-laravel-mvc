@@ -76,20 +76,33 @@ export default function FilterSidebar({
             >
               <span>All Categories</span>
             </button>
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => onCategoryChange(cat)}
-                className={`w-full text-left px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center justify-between ${
-                  selectedCategory === cat
-                    ? 'bg-emerald-50 text-[#16A34A] font-bold'
-                    : 'text-[#475569] hover:bg-slate-50'
-                }`}
-              >
-                <span>{cat}</span>
-              </button>
-            ))}
+            {categories.map((cat) => {
+              const catLabel = typeof cat === 'object' ? cat.name : cat;
+              const catValue = typeof cat === 'object' ? (cat.slug || cat.name) : cat;
+              const isSelected =
+                selectedCategory === catValue ||
+                (typeof cat === 'object' && (selectedCategory === cat.name || String(selectedCategory) === String(cat.id)));
+
+              return (
+                <button
+                  key={typeof cat === 'object' ? cat.id : cat}
+                  type="button"
+                  onClick={() => onCategoryChange(catValue)}
+                  className={`w-full text-left px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer flex items-center justify-between ${
+                    isSelected
+                      ? 'bg-emerald-50 text-[#16A34A] font-bold'
+                      : 'text-[#475569] hover:bg-slate-50'
+                  }`}
+                >
+                  <span>{catLabel}</span>
+                  {typeof cat === 'object' && cat.products_count !== undefined && (
+                    <span className="text-[10px] text-[#475569] bg-slate-100 px-1.5 py-0.5 rounded-md">
+                      {cat.products_count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
@@ -105,10 +118,12 @@ export default function FilterSidebar({
           >
             <option value="ALL">All Chicago Weekend Markets</option>
             {markets.map((m) => {
-              const name = typeof m === 'string' ? m : m.name;
+              const id = typeof m === 'object' ? m.id : m;
+              const name = typeof m === 'object' ? m.name : m;
+              const neighborhood = typeof m === 'object' && m.neighborhood ? ` (${m.neighborhood})` : '';
               return (
-                <option key={name} value={name}>
-                  {name}
+                <option key={id} value={id}>
+                  {name}{neighborhood}
                 </option>
               );
             })}
