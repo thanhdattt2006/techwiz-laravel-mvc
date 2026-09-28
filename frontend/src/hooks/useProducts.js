@@ -6,8 +6,7 @@ import { useModal } from '../context/ModalContext';
 
 /**
  * Custom Hook: useProducts
- * Encapsulates data fetching, multi-criteria filtering, and customer bookmarks
- * for the Produce Catalog, adhering to SOLID principles.
+ * Encapsulates catalog fetching, multi-criteria filtering, and bookmarks.
  */
 export function useProducts() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,15 +21,15 @@ export function useProducts() {
   // Filters state initialized from URL query params or defaults
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'ALL');
-  const [selectedMarketId, setSelectedMarketId] = useState(searchParams.get('market_id') || 'ALL');
+  const [selectedMarketId, setSelectedMarketId] = useState(
+    searchParams.get('market_id') || searchParams.get('market') || 'ALL'
+  );
   const [maxPrice, setMaxPrice] = useState(Number(searchParams.get('max_price')) || 25);
   const [organicOnly, setOrganicOnly] = useState(searchParams.get('organic') === 'true');
   const [inStockOnly, setInStockOnly] = useState(searchParams.get('in_stock') === 'true');
   const [sortBy, setSortBy] = useState(searchParams.get('sort_by') || 'default');
-
   const [favoritedIds, setFavoritedIds] = useState([]);
 
-  // Check if any non-default filter is active
   const hasActiveFilters =
     searchTerm !== '' ||
     selectedCategory !== 'ALL' ||
@@ -49,162 +48,126 @@ export function useProducts() {
           categoryApi.getCategories(),
           marketApi.getMarkets(),
         ]);
-
         if (isMounted) {
           if (catsRes.status === 'fulfilled' && catsRes.value?.data) {
-            const list = Array.isArray(catsRes.value.data)
-              ? catsRes.value.data
-              : catsRes.value.data?.data || [];
-            setCategories(list);
+            setCategories(Array.isArray(catsRes.value.data) ? catsRes.value.data : catsRes.value.data?.data || []);
           }
           if (marketsRes.status === 'fulfilled' && marketsRes.value?.data) {
-            const list = Array.isArray(marketsRes.value.data)
-              ? marketsRes.value.data
-              : marketsRes.value.data?.data || [];
-            setMarkets(list);
+            setMarkets(Array.isArray(marketsRes.value.data) ? marketsRes.value.data : marketsRes.value.data?.data || []);
           }
         }
       } catch {
         // Silently catch
       }
     };
-
     fetchMetadata();
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, []);
 
-  // 2. Fetch Customer Favorites
+  // 2. Synchronize filters when URL search params change
+  useEffect(() => {
+    const rawMarketId = searchParams.get('market_id');
+    const rawMarketName = searchParams.get('market');
+    const rawCategory = searchParams.get('category');
+    const rawSearch = searchParams.get('search');
+
+    if (rawMarketId) {
+      setSelectedMarketId(rawMarketId);
+    } else if (rawMarketName && markets.length > 0) {
+      const found = markets.find(
+        (m) => m.name?.toLowerCase() === rawMarketName.toLowerCase() ||
+               encodeURIComponent(m.name?.toLowerCase()) === encodeURIComponent(rawMarketName.toLowerCase())
+      );
+      if (found) setSelectedMarketId(found.id.toString());
+    }
+
+    if (rawCategory) setSelectedCategory(rawCategory);
+    if (rawSearch) setSearchTerm(rawSearch);
+  }, [searchParams, markets]);
+
+  // 3. Fetch Customer Favorites
   useEffect(() => {
     let isMounted = true;
     if (!isAuthenticated) return;
-
     const fetchFavorites = async () => {
       try {
         const res = await favoriteApi.getFavorites({ type: 'product' });
         if (isMounted && res?.data) {
           const list = Array.isArray(res.data) ? res.data : res.data.data || [];
-          const ids = list.map((item) => item.favoritable_id || item.id);
-          setFavoritedIds(ids);
+          setFavoritedIds(list.map((item) => item.favoritable_id || item.id));
         }
       } catch {
         // Silently catch
       }
     };
-
     fetchFavorites();
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [isAuthenticated]);
 
-  // 3. Fetch Products matching active filters
+  // 4. Fetch Products matching active filters
   const fetchFilteredProducts = useCallback(async () => {
     setLoading(true);
     try {
       const params = {};
-
-      if (searchTerm.trim()) {
-        params.search = searchTerm.trim();
-      }
-
+      if (searchTerm.trim()) params.search = searchTerm.trim();
       if (selectedCategory !== 'ALL') {
         const cat = categories.find(
-          (c) =>
-            c.id?.toString() === selectedCategory.toString() ||
-            c.slug?.toLowerCase() === selectedCategory.toLowerCase() ||
-            c.name?.toLowerCase() === selectedCategory.toLowerCase()
+          (c) => c.id?.toString() === selectedCategory.toString() ||
+                 c.slug?.toLowerCase() === selectedCategory.toLowerCase() ||
+                 c.name?.toLowerCase() === selectedCategory.toLowerCase()
         );
-        if (cat) {
-          params.category_id = cat.id;
-        } else {
-          params.category_slug = selectedCategory;
-        }
+        params.category_id = cat ? cat.id : selectedCategory;
       }
-
-      if (selectedMarketId !== 'ALL') {
-        params.market_id = selectedMarketId;
-      }
-
-      if (maxPrice < 25) {
-        params.max_price = maxPrice;
-      }
-
-      if (inStockOnly) {
-        params.in_stock_only = true;
-      }
-
-      if (sortBy !== 'default') {
-        params.sort_by = sortBy;
-      }
+      if (selectedMarketId !== 'ALL') params.market_id = selectedMarketId;
+      if (maxPrice < 25) params.max_price = maxPrice;
+      if (inStockOnly) params.in_stock_only = true;
+      if (sortBy !== 'default') params.sort_by = sortBy;
 
       const res = await productApi.getProducts(params);
       let list = Array.isArray(res.data) ? res.data : res.data?.data || [];
 
-      // Client-side fallback filter for organic flag if not handled by backend filter
       if (organicOnly) {
         list = list.filter(
-          (p) =>
-            p.isOrganic ||
+          (p) => p.isOrganic ||
             (p.tag && p.tag.toLowerCase().includes('organic')) ||
             (p.description && p.description.toLowerCase().includes('organic'))
         );
       }
-
       setProducts(list);
     } catch {
       setProducts([]);
     } finally {
       setLoading(false);
     }
-  }, [
-    searchTerm,
-    selectedCategory,
-    categories,
-    selectedMarketId,
-    maxPrice,
-    inStockOnly,
-    sortBy,
-    organicOnly,
-  ]);
+  }, [searchTerm, selectedCategory, categories, selectedMarketId, maxPrice, inStockOnly, sortBy, organicOnly]);
 
   useEffect(() => {
     fetchFilteredProducts();
   }, [fetchFilteredProducts]);
 
-  // Toggle Favorite
-  const toggleFavorite = useCallback(
-    async (productId, e) => {
-      if (e) e.stopPropagation();
+  const toggleFavorite = useCallback(async (productId, e) => {
+    if (e) e.stopPropagation();
+    if (!isAuthenticated) {
+      showAlert({
+        title: 'Sign In Required',
+        message: 'Please sign in to your shopper account to bookmark your favorite produce items.',
+        type: 'info',
+      });
+      return;
+    }
+    try {
+      const res = await favoriteApi.toggleFavorite('product', productId);
+      const isFav = res?.data?.is_favorited;
+      setFavoritedIds((prev) => isFav ? [...prev, productId] : prev.filter((id) => id !== productId));
+    } catch (err) {
+      showAlert({
+        title: 'Bookmark Failed',
+        message: err?.response?.data?.message || 'Could not update favorite status.',
+        type: 'error',
+      });
+    }
+  }, [isAuthenticated, showAlert]);
 
-      if (!isAuthenticated) {
-        showAlert({
-          title: 'Sign In Required',
-          message: 'Please sign in to your shopper account to bookmark your favorite produce items.',
-          type: 'info',
-        });
-        return;
-      }
-
-      try {
-        const res = await favoriteApi.toggleFavorite('product', productId);
-        const isFav = res?.data?.is_favorited;
-        setFavoritedIds((prev) =>
-          isFav ? [...prev, productId] : prev.filter((id) => id !== productId)
-        );
-      } catch (err) {
-        showAlert({
-          title: 'Bookmark Failed',
-          message: err?.response?.data?.message || 'Could not update favorite status.',
-          type: 'error',
-        });
-      }
-    },
-    [isAuthenticated, showAlert]
-  );
-
-  // Reset Filters
   const resetFilters = useCallback(() => {
     setSearchTerm('');
     setSelectedCategory('ALL');

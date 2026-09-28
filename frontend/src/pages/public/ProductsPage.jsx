@@ -117,8 +117,23 @@ export default function ProductsPage() {
           <main className="lg:col-span-8 xl:col-span-9 space-y-6">
             {/* Top Toolbar */}
             <div className="bg-white border border-[#E2E8DF] rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="text-xs text-[#475569]">
-                Showing <strong className="text-[#0F172A]">{products.length}</strong> fresh harvest listings
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs text-[#475569]">
+                  Showing <strong className="text-[#0F172A]">{products.length}</strong> fresh harvest listings
+                </span>
+                {selectedMarketId !== 'ALL' && (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
+                    <span>Market: {markets.find((m) => m.id?.toString() === selectedMarketId?.toString())?.name || 'Selected'}</span>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedMarketId('ALL')}
+                      className="hover:text-emerald-950 text-emerald-600 font-bold ml-0.5 cursor-pointer"
+                      title="Clear market filter"
+                    >
+                      ×
+                    </button>
+                  </span>
+                )}
               </div>
 
               {/* Sort selector */}

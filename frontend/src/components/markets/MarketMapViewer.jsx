@@ -203,7 +203,7 @@ export default function MarketMapViewer({
 
           <div className="space-y-2.5 pt-4 border-t border-slate-200">
             <Link
-              to={`/products?market=${encodeURIComponent(market.name)}`}
+              to={`/products?market_id=${market.id}`}
               className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-xs"
             >
               <ShoppingBag className="w-4 h-4" />

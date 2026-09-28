@@ -110,11 +110,29 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - `[x]` **Phase 4.17**: Thông Báo In-App, Đánh Bóng UX/UI & Kiểm Thử Tích Hợp (`NotificationDropdown.jsx`, responsive, 0 console.log).
 - Tình trạng: **100% HOÀN TẤT TOÀN BỘ 17 PHASES CỦA DAY 4**! Hệ thống Frontend React Vite kết nối 100% API Backend Laravel, 0 lỗi build, 0 console.log. Sẵn sàng cho Day 5 (E2E Testing, Vercel + Render Deploy, Demo Script).
 
-### Day 5: End-to-End Testing, Polish, Deploy Vercel + Render & Chuẩn Bị Demo
+### Day 5: End-to-End Testing, QA Polish, Deploy Vercel + Render & Chuẩn Bị Demo (5 Phases)
 
-- `[ ]` Code Freeze: Dừng thêm tính năng mới
-- `[ ]` Kiểm thử End-to-End: Luồng Khách duyệt nông sản -> Chọn ngày họp chợ & Pre-order -> Nông dân duyệt & đóng gói -> Khách nhận hàng tại sạp -> Đánh giá sao
-- `[ ]` Kiểm tra CORS và kết nối giữa Frontend trên Vercel và Backend trên Render
-- `[ ]` Dọn dẹp dữ liệu rác, chạy lại Seeder tạo bộ dữ liệu mẫu chuẩn chỉ
-- `[ ]` Viết kịch bản demo trình diễn trước Ban Giám Khảo TechWiz 7
-- Tình trạng: Chờ thực hiện sau Day 4
+- `[ ]` **Phase 5.1: Kiểm Thử Phân Tầng 3 Lớp & Ma Trận E2E 3 Vai Trò (Multi-Tier & E2E Testing)**
+  - Tầng 1 Model & DB: Fillables, casts, softDeletes, relationships, constraints trên 7 phân hệ (Auth, Markets, Products, WeeklyStock, Cart, Orders, Reviews).
+  - Tầng 2 Controller & API: FormRequest (422), eager loading with() chống N+1, DB::transaction() + lockForUpdate() checkout & decline, JsonResource transformation.
+  - Tầng 3 Frontend Data Binding: Axios interceptor, custom hooks state sync, null safety, error catch, skeletons.
+  - Kịch bản 1: Golden Happy Path 3 roles liên hoàn (Customer đặt đơn -> Farmer duyệt & giao -> Khách đánh giá 5 sao -> Admin xem KPIs).
+  - Kịch bản 2: Edge cases (bán quá tồn kho 422, quá cutoff time, huỷ đơn hoàn kho, từ chối kèm lý do hoàn kho, phân quyền RBAC).
+- `[ ]` **Phase 5.2: Tối Ưu Hóa Tốc Độ Tải Trang & Quản Lý Hình Ảnh (Performance & Asset Optimization)**
+  - Frontend Code Splitting: Chuyển `AppRoutes.jsx` sang `React.lazy()` + `<Suspense>`, giảm bundle ban đầu từ 1.05MB xuống < 180kB (>80% reduction).
+  - Vite Vendor Chunking: Tách `vendor-react`, `vendor-charts`, `vendor-icons` qua Rollup manualChunks.
+  - Backend Acceleration: Application Cache `Cache::remember` cho categories, markets, announcements; nén Gzip/Brotli; index verification.
+  - Quản lý ảnh nội bộ: Thay thế phụ thuộc remote Unsplash bằng kho ảnh WebP nội bộ (6 chợ, 5 ngành hàng, empty states, trust badges), `loading="lazy"`.
+- `[ ]` **Phase 5.3: Rà Soát F12 DevTools, Clean Code & Xử Lý Lỗi Ngoại Lệ (QA Polish)**
+  - F12 Console: 0 lỗi đỏ, 0 cảnh báo React key props, 0 `console.log()` trong toàn bộ `frontend/src`.
+  - Network Tab: 0 lỗi `500 Server Error`, bắt và hiển thị thông báo lỗi thân thiện cho 401, 403, 422.
+  - Responsive Audit: Hoàn hảo trên Mobile (375px/430px), Tablet (768px), Laptop/Desktop (1024px+).
+  - Backend Audit: 177/177 tests passed 100%, xác nhận Zero N+1 query (`ZeroNPlusOneIntegrationTest.php`), quét sạch `dd()`/`dump()`.
+- `[ ]` **Phase 5.4: Tối Ưu Môi Trường Production & Sẵn Sàng Deploy (Vercel & Render)**
+  - Backend Render: Dockerfile, `render.yaml`, `APP_ENV=production`, `APP_DEBUG=false`, CORS whitelist `config/cors.php`, kết nối Aiven Cloud MySQL qua SSL.
+  - Frontend Vercel: `frontend/vercel.json` SPA routing rewrite `/*` -> `/index.html` (F5 không lỗi 404), biến môi trường `VITE_API_BASE_URL` trỏ về Render, `npm run build` 0 lỗi.
+- `[ ]` **Phase 5.5: Dọn Dữ Liệu Mẫu Chuẩn Chỉ, Kịch Bản Thuyết Trình & Điểm Nhấn Sáng Tạo (Demo Script & Innovation)**
+  - Reset DB mẫu chuẩn: `php artisan migrate:fresh --seed` (6 chợ Chicago, 5 ngành hàng, 25+ nông sản tươi ngon, 3 tài khoản demo cố định có sẵn đơn hàng mẫu ở đủ 4 trạng thái).
+  - Điểm nhấn chuẩn quốc tế (học hỏi Farmigo, Harvie, Barn2Door): Cutoff countdown ticker, In-season harvest indicator, Farming practice badges, Booth navigator, Express check-in.
+  - Soạn kịch bản thuyết trình 15 phút chi tiết từng phút: Đặt vấn đề & kiến trúc decoupled (2p), demo Khách hàng (4p), demo Nông dân (4p), demo Admin (3p), giải đáp kỹ thuật & bảo vệ đồ án trước BGK (2p).
+- Tình trạng: **Kế hoạch Day 5 gồm 5 Chuyên đề đã được đồng bộ 100% vào ROADMAP và PROGRESS. Sẵn sàng thực thi!**

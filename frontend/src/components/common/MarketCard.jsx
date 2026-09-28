@@ -159,11 +159,12 @@ export default function MarketCard({
         </span>
 
         <Link
-          to={`/products?market=${encodeURIComponent(market.name)}`}
-          className="flex items-center gap-1 px-3.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#16A34A] text-xs font-bold transition"
+          to={`/products?market_id=${market.id}`}
+          className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#16A34A] text-xs font-bold transition shadow-2xs"
+          title={`Browse produce and stalls at ${market.name}`}
         >
-          <span>Browse Stalls</span>
-          <ArrowRight className="w-3 h-3" />
+          <span>Browse Stalls & Produce</span>
+          <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>
     </div>
