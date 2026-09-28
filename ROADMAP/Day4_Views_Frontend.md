@@ -444,17 +444,26 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.14: Cổng Nông Dân - Cấu Hình Sạp Chợ & Phản Hồi Đánh Giá (Stall Config & Reviews)
+### Phase 4.14: Cổng Nông Dân - Cấu Hình Sạp Chợ & Phản Hồi Đánh Giá (Stall Config & Reviews) [x]
 
 - **Mục tiêu**: Xây dựng Tab Quản Lý Sạp Tại Chợ và Tab Phản Hồi Đánh Giá Của Khách Hàng.
 - **Files tác động**:
   - `frontend/src/pages/farmer/FarmerDashboard.jsx` (Tab Markets & Tab Reviews)
+  - `frontend/src/components/farmer/FarmerMarketsTab.jsx`
+  - `frontend/src/components/farmer/FarmerMarketCard.jsx`
+  - `frontend/src/components/farmer/FarmerMarketModal.jsx`
+  - `frontend/src/components/farmer/MarketPickupDaysPicker.jsx`
+  - `frontend/src/components/farmer/FarmerReviewsTab.jsx`
+  - `frontend/src/components/farmer/FarmerReviewCard.jsx`
+  - `frontend/src/components/farmer/FarmerReviewReplyModal.jsx`
+  - `frontend/src/hooks/useFarmerMarkets.js`
+  - `frontend/src/hooks/useFarmerReviews.js`
 - **Checklist công việc**:
-  - `[ ]` **Tab Cấu Hình Sạp & Chợ Tham Gia (Market Stalls Configuration)**:
+  - `[x]` **Tab Cấu Hình Sạp & Chợ Tham Gia (Market Stalls Configuration)**:
     - Danh sách chợ sạp đã đăng ký từ `farmerApi.getFarmerMarkets()`.
     - Modal **Đăng Ký Chợ Mới** (`farmerApi.linkMarket`): Chọn chợ, số sạp (`Stall #...`), ngày họp mở bán, khung giờ mở/đóng, độ dài slot nhận hàng (15/30/45/60 phút), giờ chốt đơn trước phiên họp (`cutoff_hours`: 1-72h).
     - Cập nhật cấu hình hoặc Rút sạp khỏi chợ (`farmerApi.unlinkMarket(marketId)`).
-  - `[ ]` **Tab Phản Hồi Đánh Giá (Customer Reviews & Replies)**:
+  - `[x]` **Tab Phản Hồi Đánh Giá (Customer Reviews & Replies)**:
     - Xem các đánh giá của khách về nông sản của sạp từ `reviewApi.getFarmerReviews(farmerId)`.
     - Form viết phản hồi cảm ơn hoặc giải đáp thắc mắc của khách $\rightarrow$ Gọi `reviewApi.replyReview(id, reply)`.
 - **Tiêu chí hoàn thành**: Nông dân đăng ký được sạp vào chợ mới và trả lời đánh giá của khách hàng thành công.

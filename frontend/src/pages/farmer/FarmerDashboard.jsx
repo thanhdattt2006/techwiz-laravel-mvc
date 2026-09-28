@@ -1,34 +1,40 @@
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Store, ShoppingBag, Sliders, Calendar, Settings } from 'lucide-react';
+import { Store, ShoppingBag, Sliders, Calendar, Settings, MapPin, Star } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useModal } from '../../context/ModalContext';
 import { useFarmerOrders } from '../../hooks/useFarmerOrders';
 import { useFarmerProducts } from '../../hooks/useFarmerProducts';
 import { useWeeklyStock } from '../../hooks/useWeeklyStock';
+import { useFarmerMarkets } from '../../hooks/useFarmerMarkets';
+import { useFarmerReviews } from '../../hooks/useFarmerReviews';
 import {
   FarmerMetricsCards,
   FarmerOrdersQueueTab,
   FarmerStockTab,
   WeeklyStockTab,
+  FarmerMarketsTab,
+  FarmerReviewsTab,
   FarmerSettingsTab,
 } from '../../components/farmer';
 
 /**
- * FarmerDashboard (Phase 4.13)
+ * FarmerDashboard (Phase 4.14)
  * High-level coordinator page for the Farmer & Stall Master portal.
  * Modular tabs:
  * 1. Pre-Orders Queue (Live State Machine)
  * 2. Stall Stock (Live Produce Inventory CRUD)
  * 3. Weekly Rollover (7-Day Templates & 1-Click Apply)
- * 4. Stall Settings (Identity & Security)
+ * 4. Market Stalls (Registered Farmers Markets & Slots)
+ * 5. Customer Reviews (Feedback & Farmer Responses)
+ * 6. Stall Settings (Identity & Security)
  */
 export default function FarmerDashboard() {
   const { user, updateProfile } = useAuth();
   const { showAlert } = useModal();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const validTabs = ['queue', 'stock', 'weekly', 'settings'];
+  const validTabs = ['queue', 'stock', 'weekly', 'markets', 'reviews', 'settings'];
   const urlTab = searchParams.get('tab');
   const activeTab = urlTab && validTabs.includes(urlTab.toLowerCase())
     ? urlTab.toUpperCase()
@@ -38,10 +44,12 @@ export default function FarmerDashboard() {
     setSearchParams({ tab: tab.toLowerCase() });
   };
 
-  // Custom Hooks for State Management (Single Responsibility)
+  // State Management Custom Hooks (Single Responsibility Principle)
   const farmerOrders = useFarmerOrders();
   const farmerProducts = useFarmerProducts();
   const weeklyStock = useWeeklyStock(farmerProducts.products, farmerProducts.refetch);
+  const farmerMarkets = useFarmerMarkets();
+  const farmerReviews = useFarmerReviews(user?.farmer?.id, farmerProducts.products);
 
   const [farmSaving, setFarmSaving] = useState(false);
 
@@ -85,6 +93,8 @@ export default function FarmerDashboard() {
 
   const activeQueueCount = farmerOrders.metrics.activeCount;
   const productsCount = farmerProducts.products.length;
+  const marketsCount = farmerMarkets.farmerMarkets.length;
+  const reviewsCount = farmerReviews.metrics.total;
 
   return (
     <div className="space-y-8 pb-16">
@@ -108,7 +118,7 @@ export default function FarmerDashboard() {
           <button
             type="button"
             onClick={() => setActiveTab('QUEUE')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
               activeTab === 'QUEUE'
                 ? 'bg-[#16A34A] text-white shadow-xs'
                 : 'text-[#475569] hover:text-[#0F172A]'
@@ -121,40 +131,66 @@ export default function FarmerDashboard() {
           <button
             type="button"
             onClick={() => setActiveTab('STOCK')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
               activeTab === 'STOCK'
                 ? 'bg-[#16A34A] text-white shadow-xs'
                 : 'text-[#475569] hover:text-[#0F172A]'
             }`}
           >
             <Sliders className="w-4 h-4" />
-            <span>Produce Stock ({productsCount})</span>
+            <span>Stock ({productsCount})</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab('WEEKLY')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
               activeTab === 'WEEKLY'
                 ? 'bg-[#16A34A] text-white shadow-xs'
                 : 'text-[#475569] hover:text-[#0F172A]'
             }`}
           >
             <Calendar className="w-4 h-4" />
-            <span>Weekly Rollover</span>
+            <span>Rollover</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('MARKETS')}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+              activeTab === 'MARKETS'
+                ? 'bg-[#16A34A] text-white shadow-xs'
+                : 'text-[#475569] hover:text-[#0F172A]'
+            }`}
+          >
+            <MapPin className="w-4 h-4" />
+            <span>Markets ({marketsCount})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveTab('REVIEWS')}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+              activeTab === 'REVIEWS'
+                ? 'bg-[#16A34A] text-white shadow-xs'
+                : 'text-[#475569] hover:text-[#0F172A]'
+            }`}
+          >
+            <Star className="w-4 h-4" />
+            <span>Reviews ({reviewsCount})</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab('SETTINGS')}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${
               activeTab === 'SETTINGS'
                 ? 'bg-[#16A34A] text-white shadow-xs'
                 : 'text-[#475569] hover:text-[#0F172A]'
             }`}
           >
             <Settings className="w-4 h-4" />
-            <span>Stall Settings</span>
+            <span>Settings</span>
           </button>
         </div>
       </div>
@@ -173,6 +209,14 @@ export default function FarmerDashboard() {
 
       {activeTab === 'WEEKLY' && (
         <WeeklyStockTab hook={weeklyStock} products={farmerProducts.products} />
+      )}
+
+      {activeTab === 'MARKETS' && (
+        <FarmerMarketsTab hook={farmerMarkets} />
+      )}
+
+      {activeTab === 'REVIEWS' && (
+        <FarmerReviewsTab hook={farmerReviews} />
       )}
 
       {activeTab === 'SETTINGS' && (
