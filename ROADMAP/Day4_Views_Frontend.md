@@ -514,7 +514,7 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.17: Thông Báo In-App, Đánh Bóng UX/UI & Kiểm Thử Tích Hợp (Polish & Integration)
+### Phase 4.17: Thông Báo In-App, Đánh Bóng UX/UI & Kiểm Thử Tích Hợp (Polish & Integration) [x]
 
 - **Mục tiêu**: Xây dựng Dropdown Thông Báo In-App, chuẩn hóa UX Loading/Empty states, kiểm thử toàn diện trên mọi kích thước màn hình và rà soát sạch 100% `console.log()`.
 - **Files tác động**:
@@ -524,12 +524,12 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
   - `frontend/src/components/layout/OperatorLayout.jsx`
   - Toàn bộ codebase frontend.
 - **Checklist công việc**:
-  - `[ ]` `NotificationDropdown.jsx`:
+  - `[x]` `NotificationDropdown.jsx`:
     - Thêm icon Chuông trên Navbar và Header Dashboard khi user đã đăng nhập.
     - Hiển thị Badge chấm đỏ số lượng thông báo chưa đọc (`unread_count`).
     - Menu xổ xuống danh sách thông báo: Khi đơn hàng được duyệt, đơn sẵn sàng, sạp được phê duyệt.
     - Nút đánh dấu đã đọc (`notificationApi.markRead`) và "Đánh dấu tất cả đã đọc" (`notificationApi.markAllRead`).
-  - `[ ]` Chuẩn hóa UX/UI:
+  - `[x]` Chuẩn hóa UX/UI:
     - Hiển thị Loading Skeleton / Spinners khi đang fetch API.
     - Xử lý Empty States thân thiện (khi chưa có đơn, chưa có nông sản, giỏ trống).
     - Tích hợp Toast Notifications phản hồi kết quả thao tác.

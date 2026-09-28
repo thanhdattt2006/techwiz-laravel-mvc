@@ -13,6 +13,7 @@ import {
   ExternalLink,
   Settings,
 } from 'lucide-react';
+import NotificationDropdown from '../common/NotificationDropdown';
 
 export default function OperatorLayout() {
   const { user, logout } = useAuth();
@@ -74,6 +75,9 @@ export default function OperatorLayout() {
                 ROLE: STALL MASTER
               </span>
             </div>
+
+            {/* In-App Notifications Dropdown */}
+            <NotificationDropdown />
 
             <Link
               to="/farmer/dashboard?tab=settings"

@@ -16,6 +16,18 @@ import {
   Menu,
   X,
 } from 'lucide-react';
+import NotificationDropdown from '../common/NotificationDropdown';
+
+const NAV_LINKS = [
+  { to: '/', label: 'Home', end: true },
+  { to: '/markets', label: 'Markets' },
+  { to: '/products', label: 'Produce' },
+  { to: '/about', label: 'About' },
+  { to: '/gallery', label: 'Gallery' },
+  { to: '/feedback', label: 'Feedback' },
+  { to: '/contact', label: 'Contact' },
+  { to: '/sitemap', label: 'Sitemap' },
+];
 
 export default function PublicNavbar() {
   const { user, role, isAuthenticated, logout } = useAuth();
@@ -53,18 +65,12 @@ export default function PublicNavbar() {
             <span>🌿 Local Farmers Markets • Fresh Organic Harvest • Community Supported Agriculture</span>
           </div>
           <div className="flex items-center gap-4">
-            <a
-              href="tel:3125553276"
-              className="flex items-center gap-1.5 font-bold hover:underline text-emerald-100"
-            >
+            <a href="tel:3125553276" className="flex items-center gap-1.5 font-bold hover:underline text-emerald-100">
               <PhoneCall className="w-3.5 h-3.5 text-amber-300" />
               Hotline: (312) 555-FARM
             </a>
             <span className="text-emerald-300/60 hidden sm:inline">|</span>
-            <a
-              href="mailto:support@marketlink.org"
-              className="hidden sm:flex items-center gap-1 text-emerald-100 hover:underline"
-            >
+            <a href="mailto:support@marketlink.org" className="hidden sm:flex items-center gap-1 text-emerald-100 hover:underline">
               <Mail className="w-3.5 h-3.5 text-emerald-300" />
               support@marketlink.org
             </a>
@@ -92,51 +98,29 @@ export default function PublicNavbar() {
           </div>
         </Link>
 
-        {/* Desktop Navigation Links (Single-Word Concise Labels) */}
+        {/* Desktop Navigation Links */}
         <nav className="hidden lg:flex items-center gap-1 shrink-0">
-          <NavLink to="/" className={navLinkClass} end>
-            Home
-          </NavLink>
-          <NavLink to="/markets" className={navLinkClass}>
-            Markets
-          </NavLink>
-          <NavLink to="/products" className={navLinkClass}>
-            Produce
-          </NavLink>
-          <NavLink to="/about" className={navLinkClass}>
-            About
-          </NavLink>
-          <NavLink to="/gallery" className={navLinkClass}>
-            Gallery
-          </NavLink>
-          <NavLink to="/feedback" className={navLinkClass}>
-            Feedback
-          </NavLink>
-          <NavLink to="/contact" className={navLinkClass}>
-            Contact
-          </NavLink>
-          <NavLink to="/sitemap" className={navLinkClass}>
-            Sitemap
-          </NavLink>
+          {NAV_LINKS.map((link) => (
+            <NavLink key={link.to} to={link.to} className={navLinkClass} end={link.end}>
+              {link.label}
+            </NavLink>
+          ))}
         </nav>
 
         {/* Right Action Buttons */}
         <div className="flex items-center gap-2 shrink-0">
+          {/* Notifications Dropdown (when logged in) */}
+          {isAuthenticated && <NotificationDropdown />}
+
           {isAuthenticated && user ? (
             <div className="flex items-center gap-2">
               <Link
                 to={getDashboardPath()}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-[#16A34A] hover:bg-emerald-100/80 text-xs font-bold transition shadow-xs whitespace-nowrap"
               >
-                {role === 'admin' && (
-                  <ShieldCheck className="w-3.5 h-3.5 text-purple-600" />
-                )}
-                {(role === 'farmer' || role === 'operator') && (
-                  <Tractor className="w-3.5 h-3.5 text-emerald-600" />
-                )}
-                {(role === 'customer' || role === 'user') && (
-                  <User className="w-3.5 h-3.5 text-blue-600" />
-                )}
+                {role === 'admin' && <ShieldCheck className="w-3.5 h-3.5 text-purple-600" />}
+                {(role === 'farmer' || role === 'operator') && <Tractor className="w-3.5 h-3.5 text-emerald-600" />}
+                {(role === 'customer' || role === 'user') && <User className="w-3.5 h-3.5 text-blue-600" />}
                 <span className="hidden xl:inline">{user.fullname}</span>
                 <span className="xl:hidden">Portal</span>
                 <LayoutDashboard className="w-3.5 h-3.5 opacity-70" />
@@ -204,63 +188,17 @@ export default function PublicNavbar() {
       {mobileMenuOpen && (
         <div className="lg:hidden border-t border-[#E2E8DF] bg-white px-4 py-4 space-y-2 shadow-lg animate-in slide-in-from-top-2">
           <nav className="flex flex-col space-y-1">
-            <NavLink
-              to="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className={mobileNavLinkClass}
-              end
-            >
-              <span>Home</span>
-            </NavLink>
-            <NavLink
-              to="/markets"
-              onClick={() => setMobileMenuOpen(false)}
-              className={mobileNavLinkClass}
-            >
-              <span>Markets</span>
-            </NavLink>
-            <NavLink
-              to="/products"
-              onClick={() => setMobileMenuOpen(false)}
-              className={mobileNavLinkClass}
-            >
-              <span>Produce</span>
-            </NavLink>
-            <NavLink
-              to="/about"
-              onClick={() => setMobileMenuOpen(false)}
-              className={mobileNavLinkClass}
-            >
-              <span>About</span>
-            </NavLink>
-            <NavLink
-              to="/gallery"
-              onClick={() => setMobileMenuOpen(false)}
-              className={mobileNavLinkClass}
-            >
-              <span>Gallery</span>
-            </NavLink>
-            <NavLink
-              to="/feedback"
-              onClick={() => setMobileMenuOpen(false)}
-              className={mobileNavLinkClass}
-            >
-              <span>Feedback</span>
-            </NavLink>
-            <NavLink
-              to="/contact"
-              onClick={() => setMobileMenuOpen(false)}
-              className={mobileNavLinkClass}
-            >
-              <span>Contact</span>
-            </NavLink>
-            <NavLink
-              to="/sitemap"
-              onClick={() => setMobileMenuOpen(false)}
-              className={mobileNavLinkClass}
-            >
-              <span>Sitemap</span>
-            </NavLink>
+            {NAV_LINKS.map((link) => (
+              <NavLink
+                key={link.to}
+                to={link.to}
+                onClick={() => setMobileMenuOpen(false)}
+                className={mobileNavLinkClass}
+                end={link.end}
+              >
+                <span>{link.label}</span>
+              </NavLink>
+            ))}
           </nav>
 
           <div className="pt-3 border-t border-[#E2E8DF] flex flex-col gap-2">
