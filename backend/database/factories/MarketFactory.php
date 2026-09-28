@@ -29,7 +29,7 @@ class MarketFactory extends Factory
             'map_provider' => 'osm',
             'map_embed_url' => 'https://www.openstreetmap.org/export/embed.html',
             'description' => fake()->sentence(),
-            'image' => 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=600&q=80',
+            'image' => '/images/markets/market-lincoln-park.webp',
             'status' => Market::STATUS_ACTIVE,
         ];
     }

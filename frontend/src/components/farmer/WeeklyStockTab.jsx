@@ -133,7 +133,7 @@ export default function WeeklyStockTab({ hook, products = [] }) {
           <div className="flex items-center justify-between p-3.5 rounded-2xl bg-[#F8FAF6] border border-[#E2E8DF]">
             <div className="flex items-center gap-3">
               <img
-                src={selectedProduct.image || 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=100'}
+                src={selectedProduct.image || '/images/categories/fresh-vegetables.webp'}
                 alt={selectedProduct.name}
                 className="w-10 h-10 rounded-xl object-cover border border-[#E2E8DF]"
               />

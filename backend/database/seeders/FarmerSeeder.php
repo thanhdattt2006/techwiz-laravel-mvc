@@ -34,7 +34,7 @@ class FarmerSeeder extends Seeder
                 'latitude' => 42.3147,
                 'longitude' => -88.4487,
                 'description' => 'Certified organic heirloom vegetables, crisp leafy greens, and seasonal fruits picked hours before market.',
-                'logo' => 'https://images.unsplash.com/photo-1595974482597-4b8da8879bc5?auto=format&fit=crop&w=400&q=80',
+                'logo' => '/images/farmers/farmer-green-valley.webp',
                 'avg_rating' => 4.90,
                 'review_count' => 14,
             ]
@@ -50,7 +50,7 @@ class FarmerSeeder extends Seeder
                 'latitude' => 41.7508,
                 'longitude' => -88.1535,
                 'description' => 'Pasture-raised poultry and eggs, artisanal cheese, raw wildflower honey, and fresh country churned butter.',
-                'logo' => 'https://images.unsplash.com/photo-1500595046743-cd271d694d30?auto=format&fit=crop&w=400&q=80',
+                'logo' => '/images/farmers/farmer-sunny-meadow.webp',
                 'avg_rating' => 4.85,
                 'review_count' => 9,
             ]
@@ -118,7 +118,7 @@ class FarmerSeeder extends Seeder
                     'latitude' => 41.7606,
                     'longitude' => -88.3201,
                     'description' => 'Hydroponic microgreens, specialty edible flowers, baby culinary herbs, and organic pea shoots grown sustainably indoors.',
-                    'logo' => 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=400&q=80',
+                    'logo' => '/images/farmers/farmer-heritage-bakehouse.webp',
                     'avg_rating' => 0.00,
                     'review_count' => 0,
                 ]

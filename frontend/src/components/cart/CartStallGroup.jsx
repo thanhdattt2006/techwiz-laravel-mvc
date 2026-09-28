@@ -48,7 +48,7 @@ export default function CartStallGroup({ stall, loading, updateQuantity, removeI
       {/* Items in this Stall */}
       <div className="space-y-3">
         {stall.items?.map((item) => {
-          const itemImg = item.product_image || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=200&q=80';
+          const itemImg = item.product_image || '/images/categories/fresh-vegetables.webp';
           const itemPrice = Number(item.unit_price).toFixed(2);
           const itemSubtotal = Number(item.subtotal).toFixed(2);
 

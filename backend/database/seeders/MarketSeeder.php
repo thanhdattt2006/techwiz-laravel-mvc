@@ -24,7 +24,7 @@ class MarketSeeder extends Seeder
                 'map_provider' => 'google',
                 'map_embed_url' => 'https://maps.google.com/maps?q=41.9182,-87.6473&hl=en&z=15&output=embed',
                 'description' => 'Premier open-air neighborhood market serving Lincoln Park with certified organic produce, bakery, and farm goods.',
-                'image' => 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?auto=format&fit=crop&w=800&q=80',
+                'image' => '/images/markets/market-lincoln-park.webp',
                 'status' => 'active',
                 'schedules' => [
                     ['day_of_week' => 6, 'open_time' => '07:00:00', 'close_time' => '13:00:00'], // Sat
@@ -38,7 +38,7 @@ class MarketSeeder extends Seeder
                 'map_provider' => 'google',
                 'map_embed_url' => 'https://maps.google.com/maps?q=41.9214,-87.6348&hl=en&z=15&output=embed',
                 'description' => "Chicago's largest sustainable farmers market connecting top local chefs and mindful shoppers with sustainable growers.",
-                'image' => 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=800&q=80',
+                'image' => '/images/markets/market-green-city.webp',
                 'status' => 'active',
                 'schedules' => [
                     ['day_of_week' => 3, 'open_time' => '07:00:00', 'close_time' => '13:00:00'], // Wed
@@ -53,7 +53,7 @@ class MarketSeeder extends Seeder
                 'map_provider' => 'google',
                 'map_embed_url' => 'https://maps.google.com/maps?q=41.9298,-87.7083&hl=en&z=15&output=embed',
                 'description' => 'Vibrant cultural hub market showcasing organic farming, artisan bakeries, and live folk music every Sunday.',
-                'image' => 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&w=800&q=80',
+                'image' => '/images/markets/market-logan-square.webp',
                 'status' => 'active',
                 'schedules' => [
                     ['day_of_week' => 0, 'open_time' => '08:30:00', 'close_time' => '15:00:00'], // Sun
@@ -67,7 +67,7 @@ class MarketSeeder extends Seeder
                 'map_provider' => 'google',
                 'map_embed_url' => 'https://maps.google.com/maps?q=41.9088,-87.6774&hl=en&z=15&output=embed',
                 'description' => 'Bustling park market featuring local microgreens, organic mushrooms, and eco-friendly artisanal provisions.',
-                'image' => 'https://images.unsplash.com/photo-1519999482648-25049ddd37b1?auto=format&fit=crop&w=800&q=80',
+                'image' => '/images/markets/market-wicker-park.webp',
                 'status' => 'active',
                 'schedules' => [
                     ['day_of_week' => 0, 'open_time' => '08:00:00', 'close_time' => '14:00:00'], // Sun

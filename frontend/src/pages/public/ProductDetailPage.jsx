@@ -71,7 +71,7 @@ export default function ProductDetailPage() {
 
   const isSoldOut = maxStock <= 0;
   const totalPrice = (quantity * (Number(product.price) || 0)).toFixed(2);
-  const imageSrc = product.image || product.img || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=600&q=80';
+  const imageSrc = product.image || product.img || '/images/categories/fresh-vegetables.webp';
 
   const handlePreOrderNow = async () => {
     const success = await addToCart();

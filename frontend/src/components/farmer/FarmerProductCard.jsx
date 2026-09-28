@@ -1,7 +1,7 @@
 import React from 'react';
 import { Edit2, Trash2, Sprout, Loader2, DollarSign } from 'lucide-react';
 
-const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=400&auto=format&fit=crop&q=80';
+const FALLBACK_IMAGE = '/images/categories/fresh-vegetables.webp';
 
 /**
  * FarmerProductCard (Phase 4.13)
