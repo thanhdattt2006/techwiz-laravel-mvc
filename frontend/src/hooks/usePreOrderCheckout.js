@@ -98,7 +98,7 @@ export function usePreOrderCheckout({ isOpen, initialStall = null, onOrderSucces
         pickup_date: selectedDate,
       });
 
-      const slotList = res?.data?.data?.slots || [];
+      const slotList = res?.data?.slots || res?.slots || res?.data?.data?.slots || [];
       setSlots(slotList);
 
       const firstAvailable = slotList.find((s) => s.is_available);
@@ -132,22 +132,10 @@ export function usePreOrderCheckout({ isOpen, initialStall = null, onOrderSucces
 
   // Confirm Pre-Order
   const handleConfirmPreOrder = async () => {
-    if (!activeStall) {
-      setErrorMessage('No stall selected for checkout.');
-      return;
-    }
-    if (!selectedMarketId) {
-      setErrorMessage('Please select a farmers market for stall pickup.');
-      return;
-    }
-    if (!selectedDate) {
-      setErrorMessage('Please select a pickup date.');
-      return;
-    }
-    if (!selectedSlot) {
-      setErrorMessage('Please select an available pickup time slot.');
-      return;
-    }
+    if (!activeStall) return setErrorMessage('No stall selected for checkout.');
+    if (!selectedMarketId) return setErrorMessage('Please select a farmers market for stall pickup.');
+    if (!selectedDate) return setErrorMessage('Please select a pickup date.');
+    if (!selectedSlot) return setErrorMessage('Please select an available pickup time slot.');
 
     setSubmitting(true);
     setErrorMessage(null);
@@ -163,7 +151,7 @@ export function usePreOrderCheckout({ isOpen, initialStall = null, onOrderSucces
 
     try {
       const res = await orderApi.checkout(payload);
-      const orders = res?.data?.data || [];
+      const orders = res?.data || res?.data?.data || res || [];
       const ordersList = Array.isArray(orders) ? orders : [orders];
       setPlacedOrders(ordersList);
 

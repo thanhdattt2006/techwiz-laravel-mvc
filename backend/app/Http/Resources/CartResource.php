@@ -54,12 +54,15 @@ class CartResource extends JsonResource
                 'stall_subtotal' => round($stallSubtotal, 2),
                 'markets' => $farmer && $farmer->relationLoaded('markets')
                     ? $farmer->markets->map(static function ($market): array {
+                        $rawDays = $market->pivot?->pickup_days;
+                        $pickupDays = is_array($rawDays) ? $rawDays : (is_string($rawDays) ? json_decode($rawDays, true) : []);
+
                         return [
                             'id' => $market->id,
                             'name' => $market->name,
                             'address' => $market->address,
                             'stall_location' => $market->pivot?->stall_location,
-                            'pickup_days' => $market->pivot?->pickup_days ?? [],
+                            'pickup_days' => is_array($pickupDays) ? array_values($pickupDays) : [],
                             'pickup_start_time' => $market->pivot?->pickup_start_time ? substr((string) $market->pivot->pickup_start_time, 0, 5) : null,
                             'pickup_end_time' => $market->pivot?->pickup_end_time ? substr((string) $market->pivot->pickup_end_time, 0, 5) : null,
                             'slot_minutes' => $market->pivot?->slot_minutes,

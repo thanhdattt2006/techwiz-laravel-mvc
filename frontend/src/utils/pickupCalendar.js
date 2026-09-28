@@ -14,7 +14,16 @@ const SHORT_DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
  * @returns {Array<object>} Array of date objects with dateStr, dayName, relativeLabel, etc.
  */
 export function getUpcomingPickupDates(pickupDays = [], maxResults = 8) {
-  if (!Array.isArray(pickupDays) || pickupDays.length === 0) return [];
+  let days = pickupDays;
+  if (typeof days === 'string') {
+    try {
+      days = JSON.parse(days);
+    } catch {
+      days = [];
+    }
+  }
+  if (!Array.isArray(days) || days.length === 0) return [];
+  const normalizedDays = days.map((d) => Number(d));
 
   const results = [];
   const today = new Date();
@@ -24,7 +33,7 @@ export function getUpcomingPickupDates(pickupDays = [], maxResults = 8) {
     candidate.setDate(today.getDate() + i);
 
     const dayOfWeek = candidate.getDay();
-    if (pickupDays.includes(dayOfWeek)) {
+    if (normalizedDays.includes(dayOfWeek)) {
       const year = candidate.getFullYear();
       const month = String(candidate.getMonth() + 1).padStart(2, '0');
       const day = String(candidate.getDate()).padStart(2, '0');

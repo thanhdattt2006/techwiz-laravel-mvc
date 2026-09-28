@@ -25,11 +25,23 @@ class ProductFilter extends QueryFilter
     }
 
     /**
-     * Filter products by category ID.
+     * Filter products by category ID or slug.
      */
     public function categoryId(mixed $value): void
     {
-        $this->builder->where('category_id', (int) $value);
+        if (is_numeric($value)) {
+            $this->builder->where('category_id', (int) $value);
+        } else {
+            $this->categorySlug($value);
+        }
+    }
+
+    /**
+     * Filter products by category (ID or slug).
+     */
+    public function category(mixed $value): void
+    {
+        $this->categoryId($value);
     }
 
     /**

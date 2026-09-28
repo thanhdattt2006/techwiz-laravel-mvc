@@ -32,8 +32,12 @@ export default function CheckoutMarketStep({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {availableMarkets.map((m) => {
             const isSelected = String(m.id) === String(selectedMarketId);
-            const daysStr = Array.isArray(m.pickup_days)
-              ? m.pickup_days.map((d) => SHORT_DAY_NAMES[d] || d).join(', ')
+            let daysList = m.pickup_days;
+            if (typeof daysList === 'string') {
+              try { daysList = JSON.parse(daysList); } catch { daysList = []; }
+            }
+            const daysStr = Array.isArray(daysList) && daysList.length > 0
+              ? daysList.map((d) => SHORT_DAY_NAMES[d] || d).join(', ')
               : 'Weekends';
 
             return (

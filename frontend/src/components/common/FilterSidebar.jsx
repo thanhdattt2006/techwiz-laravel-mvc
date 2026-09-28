@@ -11,9 +11,11 @@ export default function FilterSidebar({
   categories = [],
   selectedCategory = 'ALL',
   onCategoryChange = () => {},
+  categoriesLoading = false,
   markets = [],
   selectedMarket = 'ALL',
   onMarketChange = () => {},
+  marketsLoading = false,
   maxPrice = 15,
   onMaxPriceChange = () => {},
   priceLimit = 20,
@@ -61,7 +63,16 @@ export default function FilterSidebar({
       </div>
 
       {/* 2. Category Selector */}
-      {categories.length > 0 && (
+      {categoriesLoading ? (
+        <div className="space-y-2">
+          <div className="h-3.5 w-16 bg-slate-200 rounded animate-pulse" />
+          <div className="space-y-1.5 pt-1">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <div key={n} className="h-7 bg-slate-100 rounded-xl animate-pulse" />
+            ))}
+          </div>
+        </div>
+      ) : categories.length > 0 ? (
         <div className="space-y-2">
           <label className="text-xs font-bold text-[#0F172A]">Category</label>
           <div className="space-y-1">
@@ -105,10 +116,15 @@ export default function FilterSidebar({
             })}
           </div>
         </div>
-      )}
+      ) : null}
 
       {/* 3. Market Location Dropdown */}
-      {markets.length > 0 && (
+      {marketsLoading ? (
+        <div className="space-y-1.5">
+          <div className="h-3.5 w-32 bg-slate-200 rounded animate-pulse" />
+          <div className="h-9 bg-slate-100 rounded-xl animate-pulse" />
+        </div>
+      ) : markets.length > 0 ? (
         <div className="space-y-1.5">
           <label className="text-xs font-bold text-[#0F172A]">Pickup Farmers Market</label>
           <select
@@ -129,7 +145,7 @@ export default function FilterSidebar({
             })}
           </select>
         </div>
-      )}
+      ) : null}
 
       {/* 4. Price Slider */}
       <div className="space-y-2">

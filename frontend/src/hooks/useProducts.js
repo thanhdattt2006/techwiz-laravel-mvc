@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { productApi, categoryApi, marketApi, favoriteApi } from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -19,6 +19,13 @@ export function useProducts() {
   const [categories, setCategories] = useState([]);
   const [markets, setMarkets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+  const [marketsLoading, setMarketsLoading] = useState(true);
+  const categoriesRef = useRef([]);
+
+  useEffect(() => {
+    categoriesRef.current = categories;
+  }, [categories]);
 
   // Filters state initialized from URL query params or defaults
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
@@ -41,28 +48,26 @@ export function useProducts() {
     inStockOnly ||
     sortBy !== 'default';
 
-  // 1. Fetch Categories & Markets metadata
+  // 1. Fetch Categories & Markets metadata independently
   useEffect(() => {
     let isMounted = true;
-    const fetchMetadata = async () => {
-      try {
-        const [catsRes, marketsRes] = await Promise.allSettled([
-          categoryApi.getCategories(),
-          marketApi.getMarkets(),
-        ]);
-        if (isMounted) {
-          if (catsRes.status === 'fulfilled' && catsRes.value?.data) {
-            setCategories(Array.isArray(catsRes.value.data) ? catsRes.value.data : catsRes.value.data?.data || []);
-          }
-          if (marketsRes.status === 'fulfilled' && marketsRes.value?.data) {
-            setMarkets(Array.isArray(marketsRes.value.data) ? marketsRes.value.data : marketsRes.value.data?.data || []);
-          }
-        }
-      } catch {
-        // Silently catch
+
+    categoryApi.getCategories().then((res) => {
+      if (isMounted && res?.data) {
+        setCategories(Array.isArray(res.data) ? res.data : res.data?.data || []);
       }
-    };
-    fetchMetadata();
+    }).catch(() => {}).finally(() => {
+      if (isMounted) setCategoriesLoading(false);
+    });
+
+    marketApi.getMarkets().then((res) => {
+      if (isMounted && res?.data) {
+        setMarkets(Array.isArray(res.data) ? res.data : res.data?.data || []);
+      }
+    }).catch(() => {}).finally(() => {
+      if (isMounted) setMarketsLoading(false);
+    });
+
     return () => { isMounted = false; };
   }, []);
 
@@ -113,7 +118,7 @@ export function useProducts() {
       const params = {};
       if (searchTerm.trim()) params.search = searchTerm.trim();
       if (selectedCategory !== 'ALL') {
-        const cat = categories.find(
+        const cat = categoriesRef.current.find(
           (c) => c.id?.toString() === selectedCategory.toString() ||
                  c.slug?.toLowerCase() === selectedCategory.toLowerCase() ||
                  c.name?.toLowerCase() === selectedCategory.toLowerCase()
@@ -141,7 +146,7 @@ export function useProducts() {
     } finally {
       setLoading(false);
     }
-  }, [searchTerm, selectedCategory, categories, selectedMarketId, maxPrice, inStockOnly, sortBy, organicOnly]);
+  }, [searchTerm, selectedCategory, selectedMarketId, maxPrice, inStockOnly, sortBy, organicOnly]);
 
   useEffect(() => {
     fetchFilteredProducts();
@@ -191,6 +196,8 @@ export function useProducts() {
     categories,
     markets,
     loading,
+    categoriesLoading,
+    marketsLoading,
     searchTerm,
     setSearchTerm,
     selectedCategory,

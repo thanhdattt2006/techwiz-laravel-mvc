@@ -24,14 +24,14 @@ export default function MarketMapViewer({
   isFavorited = false,
   onToggleFavorite,
 }) {
-  if (!market) return null;
-
   const [mapProvider, setMapProvider] = useState('google');
   const [mapLoading, setMapLoading] = useState(true);
 
   useEffect(() => {
     setMapLoading(true);
-  }, [market.id, mapProvider]);
+  }, [market?.id, mapProvider]);
+
+  if (!market) return null;
 
   const getGoogleMapsUrl = (m) => m ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${m.name}, ${m.address || 'Chicago, IL'}`)}` : '#';
 

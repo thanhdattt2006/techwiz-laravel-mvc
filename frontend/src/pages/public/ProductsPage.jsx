@@ -15,6 +15,8 @@ export default function ProductsPage() {
     categories,
     markets,
     loading,
+    categoriesLoading,
+    marketsLoading,
     searchTerm,
     setSearchTerm,
     selectedCategory,
@@ -95,9 +97,11 @@ export default function ProductsPage() {
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
                 categories={categories}
+                categoriesLoading={categoriesLoading}
                 selectedCategory={selectedCategory}
                 onCategoryChange={setSelectedCategory}
                 markets={markets}
+                marketsLoading={marketsLoading}
                 selectedMarket={selectedMarketId}
                 onMarketChange={setSelectedMarketId}
                 maxPrice={maxPrice}
