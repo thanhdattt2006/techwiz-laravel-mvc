@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, ChevronLeft, ChevronRight, ExternalLink, ArrowLeft, LogOut } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink, ArrowLeft, LogOut } from 'lucide-react';
 
 /**
  * AdminSidebar (Phase 4.17)
@@ -25,9 +25,11 @@ export default function AdminSidebar({
         {/* Brand & Desktop Collapse Button */}
         <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-between'} pb-4 border-b border-[#E2E8DF]`}>
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-xl bg-[#16A34A] text-white flex items-center justify-center font-bold shadow-xs group-hover:bg-[#15803D] transition shrink-0">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
+            <img
+              src="/logo.png"
+              alt="MarketLink Admin"
+              className="w-10 h-10 rounded-xl object-contain shadow-xs group-hover:scale-105 transition shrink-0"
+            />
             {!isCollapsed && (
               <div className="transition-opacity duration-200">
                 <div className="text-base font-black tracking-tight text-[#0F172A]">

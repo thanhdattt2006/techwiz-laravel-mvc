@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ShieldCheck, X, ChevronRight, ExternalLink, LogOut } from 'lucide-react';
+import { X, ChevronRight, ExternalLink, LogOut } from 'lucide-react';
 
 /**
  * AdminMobileDrawer (Phase 4.17)
@@ -27,9 +27,7 @@ export default function AdminMobileDrawer({
         <div>
           <div className="flex items-center justify-between pb-4 border-b border-[#E2E8DF]">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#16A34A] text-white flex items-center justify-center font-bold">
-                <ShieldCheck className="w-4 h-4" />
-              </div>
+              <img src="/logo.png" alt="MarketLink Admin" className="w-8 h-8 rounded-lg object-contain" />
               <span className="font-bold text-sm text-[#0F172A]">MarketLink Admin</span>
             </div>
             <button

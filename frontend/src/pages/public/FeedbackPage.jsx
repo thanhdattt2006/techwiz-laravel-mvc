@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { Star, Send, CheckCircle2, Sprout } from 'lucide-react';
+import { Star, Send, CheckCircle2 } from 'lucide-react';
 import { useModal } from '../../context/ModalContext';
 import marketsData from '../../data/markets.json';
 
@@ -56,12 +56,18 @@ export default function FeedbackPage() {
       <div className="bg-white border border-[#E2E8DF] rounded-3xl p-6 sm:p-10 shadow-xs space-y-8">
         {/* Header */}
         <div className="text-center space-y-2 border-b border-[#E2E8DF] pb-6">
-          <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-[#16A34A] flex items-center justify-center mx-auto mb-2">
-            <Sprout className="w-6 h-6" />
+          <Link to="/" className="inline-block group mb-1">
+            <img
+              src="/logo.png"
+              alt="MarketLink Logo"
+              className="w-14 h-14 mx-auto object-contain group-hover:scale-105 transition-transform"
+            />
+          </Link>
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-[#16A34A] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-block">
+              Community Harvest Review
+            </span>
           </div>
-          <span className="text-xs font-bold uppercase tracking-wider text-[#16A34A] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 inline-block">
-            Community Harvest Review
-          </span>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#0F172A]">
             Market Stall & Harvest Feedback
           </h1>
@@ -82,20 +88,12 @@ export default function FeedbackPage() {
             <div className="flex items-center justify-center gap-3 pt-4">
               <button
                 type="button"
-                onClick={() => {
-                  setSubmitted(false);
-                  setComment('');
-                  setOrderCode('');
-                  setShopperName('');
-                }}
+                onClick={() => { setSubmitted(false); setComment(''); setOrderCode(''); setShopperName(''); }}
                 className="px-5 py-2.5 rounded-xl border border-[#E2E8DF] text-xs font-bold text-[#0F172A] hover:bg-slate-50 transition cursor-pointer"
               >
                 Submit Another Review
               </button>
-              <Link
-                to="/user/history"
-                className="px-5 py-2.5 rounded-xl bg-[#16A34A] text-white text-xs font-bold hover:bg-[#15803D] transition shadow-xs"
-              >
+              <Link to="/user/history" className="px-5 py-2.5 rounded-xl bg-[#16A34A] text-white text-xs font-bold hover:bg-[#15803D] transition shadow-xs">
                 Return to My Pre-Orders
               </Link>
             </div>
@@ -117,13 +115,7 @@ export default function FeedbackPage() {
                     onClick={() => setRating(star)}
                     className="p-1.5 transition transform hover:scale-125 cursor-pointer focus:outline-hidden"
                   >
-                    <Star
-                      className={`w-8 h-8 ${
-                        (hoverRating || rating) >= star
-                          ? 'text-amber-400 fill-amber-400'
-                          : 'text-slate-200'
-                      }`}
-                    />
+                    <Star className={`w-8 h-8 ${(hoverRating || rating) >= star ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`} />
                   </button>
                 ))}
               </div>
@@ -137,9 +129,7 @@ export default function FeedbackPage() {
 
             {/* Quality Aspect Badges */}
             <div className="space-y-2">
-              <label className="block text-xs font-semibold text-[#0F172A]">
-                Key Highlight of Your Visit
-              </label>
+              <label className="block text-xs font-semibold text-[#0F172A]">Key Highlight of Your Visit</label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {ASPECT_OPTIONS.map((aspect) => (
                   <button
@@ -147,9 +137,7 @@ export default function FeedbackPage() {
                     key={aspect}
                     onClick={() => setFeedbackAspect(aspect)}
                     className={`px-3 py-2 rounded-xl text-[11px] font-bold border transition text-center cursor-pointer ${
-                      feedbackAspect === aspect
-                        ? 'bg-emerald-50 text-[#16A34A] border-emerald-300 shadow-2xs'
-                        : 'bg-white text-[#475569] border-[#E2E8DF] hover:bg-[#F8FAF6]'
+                      feedbackAspect === aspect ? 'bg-emerald-50 text-[#16A34A] border-emerald-300 shadow-2xs' : 'bg-white text-[#475569] border-[#E2E8DF] hover:bg-[#F8FAF6]'
                     }`}
                   >
                     {aspect}
@@ -161,26 +149,20 @@ export default function FeedbackPage() {
             {/* Market Selection & Order Code */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold text-[#0F172A] mb-1">
-                  Chicago Farmers Market
-                </label>
+                <label className="block text-xs font-semibold text-[#0F172A] mb-1">Chicago Farmers Market</label>
                 <select
                   value={selectedMarketId}
                   onChange={(e) => setSelectedMarketId(e.target.value)}
                   className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-[#0F172A] focus:outline-hidden focus:ring-2 focus:ring-[#16A34A]"
                 >
                   {marketsData.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {m.name} ({m.neighborhood})
-                    </option>
+                    <option key={m.id} value={m.id}>{m.name} ({m.neighborhood})</option>
                   ))}
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#0F172A] mb-1">
-                  Pre-Order Reservation Code (Optional)
-                </label>
+                <label className="block text-xs font-semibold text-[#0F172A] mb-1">Pre-Order Reservation Code (Optional)</label>
                 <input
                   type="text"
                   placeholder="e.g. MLB-2026-8819"
@@ -193,9 +175,7 @@ export default function FeedbackPage() {
 
             {/* Shopper Name */}
             <div>
-              <label className="block text-xs font-semibold text-[#0F172A] mb-1">
-                Your Name or Initials (Optional - will be displayed publicly)
-              </label>
+              <label className="block text-xs font-semibold text-[#0F172A] mb-1">Your Name or Initials (Optional - public display)</label>
               <input
                 type="text"
                 placeholder="e.g. Elena R. (Logan Square neighbor)"
@@ -207,9 +187,7 @@ export default function FeedbackPage() {
 
             {/* Comment */}
             <div>
-              <label className="block text-xs font-semibold text-[#0F172A] mb-1">
-                Your Detailed Harvest Review <span className="text-rose-500">*</span>
-              </label>
+              <label className="block text-xs font-semibold text-[#0F172A] mb-1">Your Detailed Harvest Review <span className="text-rose-500">*</span></label>
               <textarea
                 rows={4}
                 required
@@ -217,7 +195,7 @@ export default function FeedbackPage() {
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 className="w-full px-3.5 py-2.5 text-xs bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-[#0F172A] focus:outline-hidden focus:ring-2 focus:ring-[#16A34A] leading-relaxed"
-              ></textarea>
+              />
             </div>
 
             {/* Submit Button */}

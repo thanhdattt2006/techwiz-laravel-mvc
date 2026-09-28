@@ -144,9 +144,16 @@ export default function AdminUsersTab({ hook }) {
                 return (
                   <tr key={u.id} className="hover:bg-[#F8FAF6]/60 transition">
                     <td className="py-3 px-4">
-                      <div>
-                        <span className="font-bold text-[#0F172A] block">{u.fullname || 'Unnamed'}</span>
-                        <span className="text-[11px] text-[#475569]">{u.email}</span>
+                      <div className="flex items-center gap-2.5">
+                        <img
+                          src="/default-avatar.svg"
+                          alt="Avatar"
+                          className="w-7 h-7 rounded-full border border-slate-200 shrink-0 object-cover"
+                        />
+                        <div>
+                          <span className="font-bold text-[#0F172A] block">{u.fullname || 'Unnamed'}</span>
+                          <span className="text-[11px] text-[#475569]">{u.email}</span>
+                        </div>
                       </div>
                     </td>
 

@@ -102,10 +102,12 @@ export default function FarmerRegisterPage() {
 
         {/* Header */}
         <div className="text-center mb-6">
-          <Link to="/" className="inline-flex items-center gap-2 mb-3">
-            <div className="w-10 h-10 rounded-xl bg-[#16A34A] flex items-center justify-center text-white shadow-xs">
-              <Tractor className="w-6 h-6" />
-            </div>
+          <Link to="/" className="inline-flex items-center gap-2.5 mb-3 group">
+            <img
+              src="/logo.png"
+              alt="MarketLink Logo"
+              className="w-10 h-10 rounded-xl object-contain shadow-xs group-hover:scale-105 transition-transform"
+            />
             <div className="text-left">
               <div className="text-xl font-bold tracking-tight text-[#0F172A]">MarketLink</div>
               <div className="text-[10px] uppercase tracking-wider text-[#16A34A] font-semibold">

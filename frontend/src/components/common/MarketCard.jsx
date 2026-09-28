@@ -42,77 +42,46 @@ export default function MarketCard({
     >
       <div>
         {/* Header / Image banner */}
-        {market.image ? (
-          <div className="h-44 relative overflow-hidden bg-slate-100">
-            <img
-              src={market.image}
-              alt={market.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-              loading="lazy"
-            />
-            <div className="absolute top-3 left-3">
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-800/90 text-white backdrop-blur shadow-xs">
-                {stallsCount} Certified Stalls
-              </span>
-            </div>
-            {onToggleFavorite && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleFavorite(market.id, e);
-                }}
-                className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur transition shadow-xs cursor-pointer ${
-                  isFavorited
-                    ? 'bg-rose-50/95 text-rose-600 border border-rose-200'
-                    : 'bg-white/80 hover:bg-white text-slate-500 hover:text-rose-500'
-                }`}
-                title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-              >
-                <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-rose-500 text-rose-500' : ''}`} />
-              </button>
-            )}
-            <div className="absolute bottom-3 left-3 right-3 p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-b-xl text-white">
-              <h3 className="text-base font-bold leading-snug drop-shadow-xs">
-                {market.name}
-              </h3>
-              <p className="text-xs text-emerald-200 flex items-center gap-1 mt-0.5">
-                <MapPin className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                <span className="truncate">{locationLabel}</span>
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className="p-6 bg-gradient-to-br from-[#16A34A] to-emerald-800 text-white space-y-2 relative">
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white/20 backdrop-blur border border-white/20 inline-block">
-              {stallsCount} Artisan Stalls
+        <div className="h-44 relative overflow-hidden bg-slate-100">
+          <img
+            src={market.image || '/default-stall-cover.png'}
+            alt={market.name}
+            onError={(e) => { e.currentTarget.src = '/default-stall-cover.png'; }}
+            className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+            loading="lazy"
+          />
+          <div className="absolute top-3 left-3">
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-800/90 text-white backdrop-blur shadow-xs">
+              {stallsCount} Certified Stalls
             </span>
-            {onToggleFavorite && (
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleFavorite(market.id, e);
-                }}
-                className={`absolute top-4 right-4 p-2 rounded-full backdrop-blur transition shadow-xs cursor-pointer ${
-                  isFavorited
-                    ? 'bg-rose-50 text-rose-600'
-                    : 'bg-white/20 hover:bg-white/30 text-white'
-                }`}
-                title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
-              >
-                <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-rose-500 text-rose-500' : ''}`} />
-              </button>
-            )}
-            <h3 className="text-lg font-black leading-snug group-hover:text-amber-200 transition">
+          </div>
+          {onToggleFavorite && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite(market.id, e);
+              }}
+              className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur transition shadow-xs cursor-pointer ${
+                isFavorited
+                  ? 'bg-rose-50/95 text-rose-600 border border-rose-200'
+                  : 'bg-white/80 hover:bg-white text-slate-500 hover:text-rose-500'
+              }`}
+              title={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+            >
+              <Heart className={`w-3.5 h-3.5 ${isFavorited ? 'fill-rose-500 text-rose-500' : ''}`} />
+            </button>
+          )}
+          <div className="absolute bottom-3 left-3 right-3 p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent rounded-b-xl text-white">
+            <h3 className="text-base font-bold leading-snug drop-shadow-xs">
               {market.name}
             </h3>
-            <p className="text-xs text-emerald-100 flex items-center gap-1.5">
+            <p className="text-xs text-emerald-200 flex items-center gap-1 mt-0.5">
               <MapPin className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-              <span>{locationLabel}</span>
+              <span className="truncate">{locationLabel}</span>
             </p>
           </div>
-        )}
+        </div>
 
         {/* Market Details */}
         <div className="p-6 space-y-3.5">

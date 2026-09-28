@@ -65,10 +65,14 @@ export default function ProfileInfoForm() {
   return (
     <form onSubmit={handleSubmit} className="bg-white border border-[#E2E8DF] rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
       <div className="flex items-center justify-between pb-4 border-b border-[#E2E8DF]">
-        <div className="flex items-center gap-2.5">
-          <User className="w-5 h-5 text-[#16A34A]" />
+        <div className="flex items-center gap-3">
+          <img
+            src="/default-avatar.svg"
+            alt="Shopper Avatar"
+            className="w-11 h-11 rounded-full border border-emerald-200 shadow-2xs bg-emerald-50 shrink-0"
+          />
           <div>
-            <h2 className="text-base font-bold text-[#0F172A]">Personal Information</h2>
+            <h2 className="text-base font-bold text-[#0F172A]">{user?.fullname || 'Personal Information'}</h2>
             <p className="text-[11px] text-[#475569]">Used for order pickup verification and stall reservations</p>
           </div>
         </div>

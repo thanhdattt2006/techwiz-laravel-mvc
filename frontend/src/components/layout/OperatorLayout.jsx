@@ -38,14 +38,14 @@ export default function OperatorLayout() {
               className="lg:hidden p-2 rounded-xl text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAF6] transition cursor-pointer"
               title="Open Navigation Menu"
               aria-label="Toggle navigation drawer"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
+            ><Menu className="w-5 h-5" /></button>
 
             <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-10 h-10 rounded-xl bg-[#16A34A] flex items-center justify-center font-bold text-white shadow-xs group-hover:bg-[#15803D] transition">
-                <Store className="w-5 h-5" />
-              </div>
+              <img
+                src="/logo.png"
+                alt="MarketLink"
+                className="w-10 h-10 rounded-xl object-contain shadow-xs group-hover:scale-105 transition shrink-0"
+              />
               <div>
                 <div className="text-base font-black tracking-tight text-[#0F172A] flex items-center gap-2">
                   Market<span className="text-[#16A34A]">Link</span>
@@ -196,12 +196,7 @@ export default function OperatorLayout() {
                   <p className="text-xs font-bold text-[#0F172A]">{user?.fullname || 'Marcus Jenkins'}</p>
                   <span className="text-[10px] font-mono uppercase font-bold text-[#16A34A]">STALL MASTER</span>
                 </div>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition"
-                  title="Sign Out"
-                >
+                <button type="button" onClick={handleLogout} className="p-2 text-rose-600 hover:bg-rose-50 rounded-lg transition" title="Sign Out">
                   <LogOut className="w-4 h-4" />
                 </button>
               </div>
@@ -215,13 +210,9 @@ export default function OperatorLayout() {
         <div className="max-w-7xl mx-auto w-full flex flex-col sm:flex-row sm:items-center justify-between gap-1">
           <div className="flex items-center gap-2">
             <Sprout className="w-4 h-4 text-[#16A34A] shrink-0" />
-            <span>
-              <strong>Stall Pre-Order Queue Active:</strong> Morning harvest packed in tote crates. Please verify customer inspection before accepting cash at stall.
-            </span>
+            <span><strong>Stall Pre-Order Queue Active:</strong> Morning harvest packed in tote crates. Please verify customer inspection before accepting cash at stall.</span>
           </div>
-          <span className="text-[11px] font-mono font-bold text-[#16A34A] hidden sm:inline">
-            Stall Status: Open & Accepting Pickups
-          </span>
+          <span className="text-[11px] font-mono font-bold text-[#16A34A] hidden sm:inline">Stall Status: Open & Accepting Pickups</span>
         </div>
       </div>
 

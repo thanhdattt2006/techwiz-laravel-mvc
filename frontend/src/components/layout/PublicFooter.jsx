@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Sprout, Mail, Phone, MapPin, Heart, Clock } from 'lucide-react';
+import { Mail, Phone, MapPin, Heart, Clock } from 'lucide-react';
 
 export default function PublicFooter() {
   return (
@@ -10,9 +10,11 @@ export default function PublicFooter() {
           {/* Col 1: Brand & Mission */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-white text-[#16A34A] flex items-center justify-center font-bold shadow">
-                <Sprout className="w-5 h-5 text-[#16A34A]" />
-              </div>
+              <img
+                src="/logo.png"
+                alt="MarketLink Logo"
+                className="w-9 h-9 rounded-xl object-contain bg-white p-1 shadow"
+              />
               <span className="text-xl font-black tracking-tight text-white">
                 Market<span className="text-amber-300">Link</span>
               </span>

@@ -4,7 +4,6 @@ import {
   KeyRound,
   Mail,
   ArrowLeft,
-  Sprout,
   ShieldCheck,
   Phone,
   MessageSquare,
@@ -24,7 +23,7 @@ export default function ForgotPasswordPage() {
             <span>Back to Sign In</span>
           </Link>
           <div className="flex items-center gap-2">
-            <Sprout className="w-5 h-5 text-[#16A34A]" />
+            <img src="/logo.png" alt="MarketLink" className="w-5 h-5 object-contain" />
             <span className="text-sm font-black tracking-tight text-[#0F172A]">
               Market<span className="text-[#16A34A]">Link</span> Helpdesk
             </span>

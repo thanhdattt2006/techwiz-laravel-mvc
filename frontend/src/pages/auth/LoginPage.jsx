@@ -100,9 +100,13 @@ export default function LoginPage() {
         <div className='bg-white border border-[#E2E8DF] rounded-3xl p-8 sm:p-10 shadow-sm space-y-6'>
           {/* Header */}
           <div className='text-center space-y-2'>
-            <div className='w-12 h-12 rounded-2xl bg-emerald-50 text-[#16A34A] flex items-center justify-center mx-auto mb-3 shadow-xs'>
-              <Sprout className='w-6 h-6' />
-            </div>
+            <Link to='/' className='inline-block mb-2'>
+              <img
+                src='/logo.png'
+                alt='MarketLink Logo'
+                className='w-12 h-12 mx-auto object-contain hover:scale-105 transition-transform'
+              />
+            </Link>
             <div className='text-xs font-bold uppercase tracking-wider text-[#16A34A]'>
               MarketLink Portal
             </div>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Sprout,
   PhoneCall,
   Home,
   ShoppingBag,
@@ -17,9 +16,11 @@ export default function NotFoundPage() {
         <div className="relative mx-auto w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center">
           <div className="absolute inset-0 rounded-full bg-emerald-100 animate-ping opacity-30"></div>
           <div className="absolute inset-2 rounded-full bg-emerald-50 border-2 border-emerald-200"></div>
-          <div className="relative w-16 h-16 rounded-2xl bg-[#16A34A] text-white flex items-center justify-center shadow-lg shadow-emerald-600/30">
-            <Sprout className="w-9 h-9" />
-          </div>
+          <img
+            src="/logo.png"
+            alt="MarketLink Logo"
+            className="relative w-16 h-16 object-contain drop-shadow-md"
+          />
         </div>
 
         {/* 404 Headline */}

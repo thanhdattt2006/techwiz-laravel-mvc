@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 import {
   LogOut,
   ArrowLeft,
-  Sprout,
   ShoppingBag,
   SlidersHorizontal,
   Clock,
@@ -32,9 +31,11 @@ export default function UserLayout() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link to="/" className="flex items-center gap-2 group">
-              <div className="w-9 h-9 rounded-xl bg-[#16A34A] text-white flex items-center justify-center font-bold shadow-xs group-hover:bg-[#15803D] transition">
-                <Sprout className="w-5 h-5" />
-              </div>
+              <img
+                src="/logo.png"
+                alt="MarketLink Logo"
+                className="w-10 h-10 rounded-xl object-contain shadow-xs group-hover:scale-105 transition-transform"
+              />
               <div>
                 <span className="text-base font-black tracking-tight text-[#0F172A]">
                   Market<span className="text-[#16A34A]">Link</span>

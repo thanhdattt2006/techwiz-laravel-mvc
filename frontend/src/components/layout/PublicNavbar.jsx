@@ -97,9 +97,7 @@ export default function PublicNavbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-          <div className="w-9 h-9 rounded-xl bg-[#16A34A] flex items-center justify-center text-white shadow-md shadow-emerald-600/20 group-hover:bg-[#15803D] transition">
-            <Sprout className="w-5 h-5 text-white" />
-          </div>
+          <img src="/logo.png" alt="MarketLink Logo" className="w-10 h-10 rounded-xl object-contain shadow-xs group-hover:scale-105 transition-transform" />
           <div>
             <div className="text-lg font-black tracking-tight text-[#0F172A] flex items-center gap-1.5">
               Market<span className="text-[#16A34A]">Link</span>
