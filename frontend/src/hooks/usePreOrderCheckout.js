@@ -2,53 +2,8 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import orderApi from '../api/orderApi';
 import { useCart } from '../context/CartContext';
 import { useModal } from '../context/ModalContext';
+import { getUpcomingPickupDates } from '../utils/pickupCalendar';
 
-const DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const SHORT_DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-/**
- * Generate upcoming calendar dates matching the stall's pickup days
- * @param {Array<number>} pickupDays
- * @param {number} maxResults
- * @returns {Array<object>}
- */
-export function getUpcomingPickupDates(pickupDays = [], maxResults = 8) {
-  if (!Array.isArray(pickupDays) || pickupDays.length === 0) return [];
-
-  const results = [];
-  const today = new Date();
-
-  for (let i = 0; i < 35 && results.length < maxResults; i++) {
-    const candidate = new Date(today);
-    candidate.setDate(today.getDate() + i);
-
-    const dayOfWeek = candidate.getDay();
-    if (pickupDays.includes(dayOfWeek)) {
-      const year = candidate.getFullYear();
-      const month = String(candidate.getMonth() + 1).padStart(2, '0');
-      const day = String(candidate.getDate()).padStart(2, '0');
-      const dateStr = `${year}-${month}-${day}`;
-
-      let relativeLabel = '';
-      if (i === 0) relativeLabel = 'Today';
-      else if (i === 1) relativeLabel = 'Tomorrow';
-      else if (i <= 6) relativeLabel = `This ${SHORT_DAY_NAMES[dayOfWeek]}`;
-      else relativeLabel = `Next ${SHORT_DAY_NAMES[dayOfWeek]}`;
-
-      results.push({
-        dateStr,
-        dayOfWeek,
-        dayName: DAY_NAMES[dayOfWeek],
-        shortDay: SHORT_DAY_NAMES[dayOfWeek],
-        monthDay: candidate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-        relativeLabel,
-        isToday: i === 0,
-      });
-    }
-  }
-
-  return results;
-}
 
 /**
  * Custom Hook: usePreOrderCheckout

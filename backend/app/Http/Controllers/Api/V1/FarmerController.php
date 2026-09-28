@@ -11,15 +11,20 @@ use App\Http\Requests\Farmer\UpdateStallRequest;
 use App\Http\Resources\FarmerMarketResource;
 use App\Http\Resources\FarmerResource;
 use App\Models\Farmer;
-use App\Models\FarmerMarket;
 use App\Models\User;
+use App\Services\FarmerMarketService;
 use App\Traits\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class FarmerController extends Controller
 {
     use ApiResponse;
+
+    public function __construct(
+        protected FarmerMarketService $farmerMarketService
+    ) {}
 
     /**
      * List all active farmer stalls with optional search, sorting and market filtering (Public).
@@ -32,7 +37,6 @@ class FarmerController extends Controller
             $q->wherePivot('is_active', true);
         }]);
 
-        // Search by stall name, contact person or address
         if ($request->filled('search')) {
             $search = trim((string) $request->search);
             $query->where(function ($q) use ($search): void {
@@ -42,7 +46,6 @@ class FarmerController extends Controller
             });
         }
 
-        // Filter by market participation
         if ($request->filled('market_id')) {
             $marketId = (int) $request->market_id;
             $query->whereHas('markets', function ($q) use ($marketId): void {
@@ -50,7 +53,6 @@ class FarmerController extends Controller
             });
         }
 
-        // Sort results
         $sortBy = (string) $request->query('sort_by', 'avg_rating');
         if ($sortBy === 'stall_name') {
             $query->orderBy('stall_name', 'asc');
@@ -60,16 +62,14 @@ class FarmerController extends Controller
             $query->orderBy('avg_rating', 'desc');
         }
 
-        $farmers = $query->get();
-
         return $this->successResponse(
-            FarmerResource::collection($farmers),
+            FarmerResource::collection($query->get()),
             'Farmers retrieved successfully.'
         );
     }
 
     /**
-     * Get detailed public information for a single farmer stall including markets and listed products.
+     * Get detailed public information for a single farmer stall.
      */
     public function show(int $id): JsonResponse
     {
@@ -146,7 +146,7 @@ class FarmerController extends Controller
             return $this->errorResponse('Farmer profile not found for this account.', 404);
         }
 
-        $farmerMarkets = $farmer->farmerMarkets()->with('market.schedules')->get();
+        $farmerMarkets = $this->farmerMarketService->getFarmerMarkets($farmer);
 
         return $this->successResponse(
             FarmerMarketResource::collection($farmerMarkets),
@@ -167,29 +167,11 @@ class FarmerController extends Controller
             return $this->errorResponse('Farmer profile not found for this account.', 404);
         }
 
-        $validated = $request->validated();
-
-        $alreadyLinked = FarmerMarket::where('farmer_id', $farmer->id)
-            ->where('market_id', $validated['market_id'])
-            ->exists();
-
-        if ($alreadyLinked) {
-            return $this->errorResponse('Your stall is already registered at this market.', 422, [
-                'market_id' => ['Your stall is already registered at this market.'],
-            ]);
+        try {
+            $farmerMarket = $this->farmerMarketService->linkMarket($farmer, $request->validated());
+        } catch (ValidationException $e) {
+            return $this->errorResponse($e->getMessage(), 422, $e->errors());
         }
-
-        $farmerMarket = FarmerMarket::create([
-            'farmer_id' => $farmer->id,
-            'market_id' => $validated['market_id'],
-            'stall_location' => $validated['stall_location'] ?? null,
-            'pickup_days' => $validated['pickup_days'],
-            'pickup_start_time' => $validated['pickup_start_time'],
-            'pickup_end_time' => $validated['pickup_end_time'],
-            'slot_minutes' => $validated['slot_minutes'] ?? 30,
-            'cutoff_hours' => $validated['cutoff_hours'] ?? 12,
-            'is_active' => $validated['is_active'] ?? true,
-        ]);
 
         return $this->successResponse(
             new FarmerMarketResource($farmerMarket->load('market')),
@@ -211,15 +193,11 @@ class FarmerController extends Controller
             return $this->errorResponse('Farmer profile not found for this account.', 404);
         }
 
-        $farmerMarket = FarmerMarket::where('farmer_id', $farmer->id)
-            ->where('market_id', $marketId)
-            ->first();
+        $farmerMarket = $this->farmerMarketService->updateMarket($farmer, $marketId, $request->validated());
 
         if (! $farmerMarket) {
             return $this->errorResponse('Market link not found for your stall.', 404);
         }
-
-        $farmerMarket->update($request->validated());
 
         return $this->successResponse(
             new FarmerMarketResource($farmerMarket->load('market')),
@@ -240,15 +218,11 @@ class FarmerController extends Controller
             return $this->errorResponse('Farmer profile not found for this account.', 404);
         }
 
-        $farmerMarket = FarmerMarket::where('farmer_id', $farmer->id)
-            ->where('market_id', $marketId)
-            ->first();
+        $deleted = $this->farmerMarketService->unlinkMarket($farmer, $marketId);
 
-        if (! $farmerMarket) {
+        if (! $deleted) {
             return $this->errorResponse('Market link not found for your stall.', 404);
         }
-
-        $farmerMarket->delete();
 
         return $this->successResponse(
             null,
