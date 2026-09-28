@@ -15,7 +15,7 @@ export default function TrackerStallCard({ order }) {
   const lat = Number(market.latitude || 41.8781);
   const lng = Number(market.longitude || -87.6298);
 
-  const osmUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.01}%2C${lat - 0.008}%2C${lng + 0.01}%2C${lat + 0.008}&layer=mapnik&marker=${lat}%2C${lng}`;
+  const mapUrl = market.map_embed_url || `https://maps.google.com/maps?q=${lat},${lng}&hl=en&z=15&output=embed`;
   const gmapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${market.name || 'Farmers Market'} ${market.address || 'Chicago, IL'}`)}`;
 
   return (
@@ -65,9 +65,11 @@ export default function TrackerStallCard({ order }) {
       <div className="rounded-2xl overflow-hidden border border-[#E2E8DF] h-52 relative bg-slate-100">
         <iframe
           title={`${market.name || 'Market'} Location Map`}
-          src={osmUrl}
+          src={mapUrl}
           className="w-full h-full border-0 absolute inset-0"
           loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
         />
       </div>
 
