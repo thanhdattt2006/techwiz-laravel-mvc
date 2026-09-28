@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { productApi, reviewApi, favoriteApi } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
@@ -12,8 +13,10 @@ import { useCart } from '../context/CartContext';
  * @param {string|number} productId - Target produce ID from router params
  */
 export function useProductDetail(productId) {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated } = useAuth();
-  const { showAlert } = useModal();
+  const { showAlert, showConfirm } = useModal();
   const { addToCart: addCartItem, openCart } = useCart();
 
   const [product, setProduct] = useState(null);
@@ -124,12 +127,16 @@ export function useProductDetail(productId) {
   // 3. Toggle Favorite Heart
   const toggleFavorite = useCallback(async () => {
     if (!isAuthenticated) {
-      showAlert({
+      const confirmed = await showConfirm({
         title: 'Sign In Required',
         message: 'Please sign in to save fresh harvests to your personal favorites wishlist.',
         type: 'info',
-        confirmText: 'Got It',
+        confirmText: 'Sign In Now',
+        cancelText: 'Stay as Guest',
       });
+      if (confirmed) {
+        navigate('/login', { state: { from: location } });
+      }
       return;
     }
 
@@ -148,7 +155,7 @@ export function useProductDetail(productId) {
         type: 'danger',
       });
     }
-  }, [isAuthenticated, isFavorite, productId, showAlert]);
+  }, [isAuthenticated, isFavorite, productId, showAlert, showConfirm, navigate, location]);
 
   // 4. Add to Cart via Global CartContext
   const addToCart = useCallback(async () => {

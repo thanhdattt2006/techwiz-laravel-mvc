@@ -12,6 +12,7 @@ import {
   EyeOff,
   HelpCircle,
 } from 'lucide-react';
+import { sanitizeEnglishPassword } from '../../utils/sanitizeEnglishPassword';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -25,8 +26,9 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
 
   const getRedirectPath = (targetRole) => {
-    const from = location.state?.from?.pathname;
-    if (from && from !== '/login') return from;
+    const fromPath = location.state?.from?.pathname;
+    const fromSearch = location.state?.from?.search || '';
+    if (fromPath && fromPath !== '/login') return `${fromPath}${fromSearch}`;
     if (targetRole === 'admin') return '/admin/dashboard';
     if (targetRole === 'operator' || targetRole === 'farmer')
       return '/farmer/dashboard';
@@ -140,6 +142,7 @@ export default function LoginPage() {
                 <button
                   type='button'
                   onClick={handleForgotPassword}
+                  tabIndex={-1}
                   className='text-[11px] font-semibold text-[#16A34A] hover:underline cursor-pointer flex items-center gap-1'
                 >
                   <HelpCircle className='w-3 h-3' />
@@ -151,9 +154,13 @@ export default function LoginPage() {
                 <input
                   type={showPassword ? 'text' : 'password'}
                   required
+                  autoCapitalize='none'
+                  autoCorrect='off'
+                  spellCheck='false'
+                  lang='en'
                   placeholder='Enter your password'
                   value={passwordInput}
-                  onChange={(e) => setPasswordInput(e.target.value)}
+                  onChange={(e) => setPasswordInput(sanitizeEnglishPassword(e.target.value))}
                   className='w-full pl-10 pr-10 py-2.5 bg-[#F8FAF6] border border-[#E2E8DF] rounded-xl text-xs text-[#0F172A] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#16A34A] focus:bg-white transition'
                 />
                 <button

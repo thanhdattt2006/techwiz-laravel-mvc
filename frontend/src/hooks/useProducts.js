@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { productApi, categoryApi, marketApi, favoriteApi } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
@@ -9,9 +9,11 @@ import { useModal } from '../context/ModalContext';
  * Encapsulates catalog fetching, multi-criteria filtering, and bookmarks.
  */
 export function useProducts() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isAuthenticated } = useAuth();
-  const { showAlert } = useModal();
+  const { showAlert, showConfirm } = useModal();
 
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -148,11 +150,16 @@ export function useProducts() {
   const toggleFavorite = useCallback(async (productId, e) => {
     if (e) e.stopPropagation();
     if (!isAuthenticated) {
-      showAlert({
+      const confirmed = await showConfirm({
         title: 'Sign In Required',
         message: 'Please sign in to your shopper account to bookmark your favorite produce items.',
         type: 'info',
+        confirmText: 'Sign In Now',
+        cancelText: 'Stay as Guest',
       });
+      if (confirmed) {
+        navigate('/login', { state: { from: location } });
+      }
       return;
     }
     try {
@@ -166,7 +173,7 @@ export function useProducts() {
         type: 'error',
       });
     }
-  }, [isAuthenticated, showAlert]);
+  }, [isAuthenticated, showAlert, showConfirm, navigate, location]);
 
   const resetFilters = useCallback(() => {
     setSearchTerm('');

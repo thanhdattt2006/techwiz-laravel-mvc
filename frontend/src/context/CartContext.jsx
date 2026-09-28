@@ -14,7 +14,7 @@ const CartContext = createContext(null);
  */
 export function CartProvider({ children }) {
   const { role, isAuthenticated } = useAuth();
-  const { showAlert } = useModal();
+  const { showAlert, showConfirm } = useModal();
 
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -49,7 +49,16 @@ export function CartProvider({ children }) {
 
   const addToCart = useCallback(async (productId, quantity = 1) => {
     if (!isAuthenticated) {
-      showAlert({ title: 'Sign In Required', message: 'Please sign in to reserve fresh farm produce in your market basket.', type: 'info', confirmText: 'Sign In' });
+      const confirmed = await showConfirm({
+        title: 'Sign In Required',
+        message: 'Please sign in to reserve fresh farm produce in your market basket.',
+        type: 'info',
+        confirmText: 'Sign In Now',
+        cancelText: 'Stay as Guest',
+      });
+      if (confirmed) {
+        window.location.href = '/login';
+      }
       return false;
     }
     if (!isCustomer) {
@@ -65,7 +74,7 @@ export function CartProvider({ children }) {
       showAlert({ title: 'Basket Update Failed', message: err?.response?.data?.message || 'Could not add item to basket. Please try again.', type: 'danger' });
       return false;
     } finally { setLoading(false); }
-  }, [isAuthenticated, isCustomer, refreshCart, showAlert]);
+  }, [isAuthenticated, isCustomer, refreshCart, showAlert, showConfirm]);
 
   const removeItem = useCallback(async (itemId) => {
     if (!isCustomer) return false;

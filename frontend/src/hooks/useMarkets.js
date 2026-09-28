@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { marketApi, favoriteApi } from '../api';
 import { useAuth } from '../context/AuthContext';
 import { useModal } from '../context/ModalContext';
@@ -20,8 +21,10 @@ export const DAYS_OF_WEEK = [
  * Complies with SOLID (Single Responsibility) by separating business logic from UI components.
  */
 export function useMarkets() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated } = useAuth();
-  const { showAlert } = useModal();
+  const { showAlert, showConfirm } = useModal();
 
   const [markets, setMarkets] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -119,11 +122,16 @@ export function useMarkets() {
       if (e) e.stopPropagation();
 
       if (!isAuthenticated) {
-        showAlert({
+        const confirmed = await showConfirm({
           title: 'Sign In Required',
           message: 'Please sign in to your shopper account to save your favorite farmers markets.',
           type: 'info',
+          confirmText: 'Sign In Now',
+          cancelText: 'Stay as Guest',
         });
+        if (confirmed) {
+          navigate('/login', { state: { from: location } });
+        }
         return;
       }
 
@@ -141,7 +149,7 @@ export function useMarkets() {
         });
       }
     },
-    [isAuthenticated, showAlert]
+    [isAuthenticated, showAlert, showConfirm, navigate, location]
   );
 
   // Filter markets by keyword and day of week
