@@ -27,6 +27,9 @@ export function useProducts() {
     categoriesRef.current = categories;
   }, [categories]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
   // Filters state initialized from URL query params or defaults
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
   const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'ALL');
@@ -40,13 +43,16 @@ export function useProducts() {
   const [favoritedIds, setFavoritedIds] = useState([]);
 
   const hasActiveFilters =
-    searchTerm !== '' ||
-    selectedCategory !== 'ALL' ||
-    selectedMarketId !== 'ALL' ||
-    maxPrice < 25 ||
-    organicOnly ||
-    inStockOnly ||
-    sortBy !== 'default';
+    searchTerm !== '' || selectedCategory !== 'ALL' || selectedMarketId !== 'ALL' ||
+    maxPrice < 25 || organicOnly || inStockOnly || sortBy !== 'default';
+
+  // Reset to page 1 on active filter adjustments
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory, selectedMarketId, maxPrice, organicOnly, inStockOnly, sortBy]);
+
+  const totalPages = Math.max(1, Math.ceil(products.length / itemsPerPage));
+  const paginatedProducts = products.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   // 1. Fetch Categories & Markets metadata independently
   useEffect(() => {
@@ -188,11 +194,18 @@ export function useProducts() {
     setOrganicOnly(false);
     setInStockOnly(false);
     setSortBy('default');
+    setCurrentPage(1);
     setSearchParams({});
   }, [setSearchParams]);
 
   return {
     products,
+    paginatedProducts,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    totalItems: products.length,
+    itemsPerPage,
     categories,
     markets,
     loading,

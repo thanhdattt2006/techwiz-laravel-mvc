@@ -1,10 +1,12 @@
 import React from 'react';
-import { Leaf, Search, Sprout } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Leaf, Search, Sprout, ArrowRight } from 'lucide-react';
 import { ProductCard } from '../common';
 
 /**
  * HomeFreshHarvest Component
  * Search bar, category filter pills, price sort, and product cards grid.
+ * Displays 3 rows (9 produce items max) with a "View All" link to catalog.
  */
 export default function HomeFreshHarvest({
   products = [],
@@ -18,6 +20,7 @@ export default function HomeFreshHarvest({
   onSortByPriceChange,
 }) {
   const defaultCategories = ['VEGETABLES', 'FRUITS', 'DAIRY', 'BAKERY', 'PANTRY'];
+  const displayedProducts = products.slice(0, 9);
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -111,7 +114,7 @@ export default function HomeFreshHarvest({
       {/* Harvest Grid with Loading Skeletons */}
       {loading ? (
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map((n) => (
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => (
             <div
               key={n}
               className="bg-white border border-[#E2E8DF] rounded-2xl h-80 p-5 animate-pulse flex flex-col justify-between"
@@ -127,8 +130,8 @@ export default function HomeFreshHarvest({
         </div>
       ) : (
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {products.length > 0 ? (
-            products.map((item) => (
+          {displayedProducts.length > 0 ? (
+            displayedProducts.map((item) => (
               <ProductCard key={item.id} product={item} />
             ))
           ) : (
@@ -138,6 +141,19 @@ export default function HomeFreshHarvest({
               <p className="text-xs text-[#475569] mt-1">Try resetting your search query or selecting "All Harvest".</p>
             </div>
           )}
+        </div>
+      )}
+
+      {/* View All Produce Button */}
+      {!loading && products.length > 0 && (
+        <div className="mt-10 flex items-center justify-center">
+          <Link
+            to={selectedCategory !== 'ALL' ? `/products?category=${encodeURIComponent(selectedCategory)}` : '/products'}
+            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold shadow-xs hover:shadow transition duration-200 cursor-pointer"
+          >
+            <span>View All Fresh Produce ({products.length} Items Available)</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       )}
     </section>

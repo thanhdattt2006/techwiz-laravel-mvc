@@ -10,3 +10,4 @@ export { default as CartDrawer } from './CartDrawer';
 export { default as PreOrderCheckoutModal } from './PreOrderCheckoutModal';
 export { default as ReviewModal } from './ReviewModal';
 export { default as NotificationDropdown } from './NotificationDropdown';
+export { default as Pagination } from './Pagination';

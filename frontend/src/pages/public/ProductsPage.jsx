@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { Sprout, Filter, RotateCcw } from 'lucide-react';
-import { ProductCard, FilterSidebar } from '../../components/common';
+import { ProductCard, FilterSidebar, Pagination } from '../../components/common';
 import { useProducts } from '../../hooks/useProducts';
 import { useCart } from '../../context/CartContext';
 
 /**
  * ProductsPage Component
- * Seasonal fresh produce and artisanal catalog with live backend filters.
- * Refactored to adhere to SOLID principles and clean component separation.
+ * Seasonal fresh produce and artisanal catalog with live backend filters & pagination.
+ * Strictly adheres to S.O.L.I.D (< 230 lines).
  */
 export default function ProductsPage() {
   const {
-    products,
+    products = [],
+    paginatedProducts,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    totalItems,
+    itemsPerPage,
     categories,
     markets,
     loading,
@@ -81,7 +87,7 @@ export default function ProductsPage() {
             )}
           </button>
           <span className="text-xs font-semibold text-[#475569]">
-            {products.length} items available
+            {totalItems} items available
           </span>
         </div>
 
@@ -123,7 +129,7 @@ export default function ProductsPage() {
             <div className="bg-white border border-[#E2E8DF] rounded-2xl p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs text-[#475569]">
-                  Showing <strong className="text-[#0F172A]">{products.length}</strong> fresh harvest listings
+                  Showing <strong className="text-[#0F172A]">{totalItems > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0} - {Math.min(currentPage * itemsPerPage, totalItems)}</strong> of <strong className="text-[#0F172A]">{totalItems}</strong> listings
                 </span>
                 {selectedMarketId !== 'ALL' && (
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800">
@@ -174,17 +180,24 @@ export default function ProductsPage() {
                   </div>
                 ))}
               </div>
-            ) : products.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {products.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    isFavorited={favoritedIds.includes(product.id)}
-                    onToggleFavorite={toggleFavorite}
-                    onAddToCart={handleAddToCart}
-                  />
-                ))}
+            ) : paginatedProducts.length > 0 ? (
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                  {paginatedProducts.map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      isFavorited={favoritedIds.includes(product.id)}
+                      onToggleFavorite={toggleFavorite}
+                      onAddToCart={handleAddToCart}
+                    />
+                  ))}
+                </div>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
               </div>
             ) : (
               <div className="bg-white border border-[#E2E8DF] rounded-2xl p-12 text-center space-y-4 shadow-xs">
