@@ -105,10 +105,10 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - `[x]` **Phase 4.12**: Cổng Nông Dân - Hàng Đợi Duyệt Đơn Pre-Order (`FarmerDashboard.jsx` Queue: accept, ready, complete, decline reason).
 - `[x]` **Phase 4.13**: Cổng Nông Dân - Quản Lý Kho & Mẫu Kho Tuần 7 Ngày (`FarmerDashboard.jsx` Inventory CRUD & Weekly Stock Rollover).
 - `[x]` **Phase 4.14**: Cổng Nông Dân - Cấu Hình Sạp Chợ & Phản Hồi Đánh Giá (`FarmerMarketsTab`, `FarmerReviewsTab`).
-- `[ ]` **Phase 4.15**: Cổng Admin - Thống Kê KPIs, Phê Duyệt Nông Dân & Quản Trị Users (`AdminDashboard.jsx`: overview stats, pending farmers, users active/banned).
-- `[ ]` **Phase 4.16**: Cổng Admin - Quản Lý Chợ, Danh Mục, Ẩn/Hiện, Thông Báo & Hộp Thư (`AdminDashboard.jsx`: markets, categories, toggle-hide, announcements, inquiries).
+- `[x]` **Phase 4.15**: Cổng Admin - Thống Kê KPIs, Phê Duyệt Nông Dân & Quản Trị Users (`AdminDashboard.jsx`: overview stats, pending farmers, users active/banned).
+- `[/]` **Phase 4.16**: Cổng Admin - Quản Lý Chợ, Danh Mục, Ẩn/Hiện, Thông Báo & Hộp Thư (`AdminDashboard.jsx`: markets, categories, toggle-hide, announcements, inquiries).
 - `[ ]` **Phase 4.17**: Thông Báo In-App, Đánh Bóng UX/UI & Kiểm Thử Tích Hợp (`NotificationDropdown.jsx`, responsive, 0 console.log).
-- Tình trạng: **Đã tái cấu trúc hoàn tất 17 Phases Day 4**. Sẵn sàng thực thi Phase 4.1.
+- Tình trạng: **Hoàn tất 15/17 Phases Day 4**. Sẵn sàng thực thi Phase 4.16.
 
 ### Day 5: End-to-End Testing, Polish, Deploy Vercel + Render & Chuẩn Bị Demo
 

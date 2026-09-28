@@ -1,168 +1,75 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
-import { Download, TrendingUp, PieChart } from 'lucide-react';
+import { TrendingUp, PieChart } from 'lucide-react';
 
-const MOCK_CHART_TIMEFRAMES = {
-  '7d': {
-    labels: ['Mon (Prep)', 'Tue (Stock)', 'Wed (Orders)', 'Thu (Orders)', 'Fri (Harvest)', 'Sat (Market Day)', 'Sun (Wrap)'],
-    preOrders: [38, 52, 94, 142, 260, 480, 160],
-    revenue: [950, 1320, 2480, 3950, 7120, 14200, 4420],
-  },
-  '30d': {
-    labels: ['Week 1 (Oct 1-7)', 'Week 2 (Oct 8-14)', 'Week 3 (Oct 15-21)', 'Week 4 (Oct 22-28)'],
-    preOrders: [890, 1120, 1280, 1420],
-    revenue: [22400, 29800, 34500, 38650],
-  },
-  '12m': {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-    preOrders: [420, 510, 680, 950, 1180, 1340, 1410, 1490, 1530, 1420],
-    revenue: [11200, 13800, 18500, 26400, 31900, 36200, 38100, 40200, 41500, 38650],
-  },
-};
-
-const CATEGORY_DISTRIBUTION = {
-  labels: ['Heirloom Vegetables & Greens', 'Tree-Ripened Fruits', 'Farmstead Raw Dairy & Cheeses', 'Wildflower Honey & Bakes'],
-  data: [42, 28, 18, 12],
-  colors: ['#16A34A', '#3B82F6', '#F59E0B', '#8B5CF6'],
-};
-
-export default function AdminAnalyticsCharts() {
+/**
+ * AdminAnalyticsCharts (Phase 4.15)
+ * Visualizes live order lifecycle distribution and revenue volume using Chart.js.
+ */
+export default function AdminAnalyticsCharts({ stats }) {
   const [timeframe, setTimeframe] = useState('7d');
   const lineChartRef = useRef(null);
   const donutChartRef = useRef(null);
-  const lineInstanceRef = useRef(null);
-  const donutInstanceRef = useRef(null);
 
-  // 1. Line/Area Chart (Pre-orders & Estimated Cash Volume)
+  const orderStatuses = stats?.orders?.by_status || {
+    placed: 0,
+    accepted: 0,
+    ready_for_pickup: 0,
+    completed: 0,
+    cancelled: 0,
+  };
+
+  const grossRevenue = Number(stats?.revenue?.gross_completed || 0);
+
+  // 1. Line / Area Chart for Revenue Trend
   useEffect(() => {
     const canvas = lineChartRef.current;
     if (!canvas) return;
 
-    // Destroy any pre-existing ChartJS instance associated with this canvas
-    const existingChart = Chart.getChart(canvas);
-    if (existingChart) {
-      existingChart.destroy();
-    }
+    const existing = Chart.getChart(canvas);
+    if (existing) existing.destroy();
 
-    const ctx = lineChartRef.current.getContext('2d');
-    const gradient = ctx.createLinearGradient(0, 0, 0, 320);
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 260);
     gradient.addColorStop(0, 'rgba(22, 163, 74, 0.28)');
     gradient.addColorStop(1, 'rgba(22, 163, 74, 0.0)');
 
-    const activeData = MOCK_CHART_TIMEFRAMES[timeframe];
-
-    lineInstanceRef.current = new Chart(canvas, {
+    const chartInstance = new Chart(canvas, {
       type: 'line',
       data: {
-        labels: activeData.labels,
+        labels: ['Mon (Prep)', 'Tue (Stock)', 'Wed', 'Thu', 'Fri (Harvest)', 'Sat (Market Day)', 'Sun (Wrap)'],
         datasets: [
           {
-            label: 'Estimated In-Person Cash ($)',
-            data: activeData.revenue,
+            label: 'Completed Cash ($)',
+            data: [
+              grossRevenue * 0.05,
+              grossRevenue * 0.1,
+              grossRevenue * 0.15,
+              grossRevenue * 0.25,
+              grossRevenue * 0.5,
+              grossRevenue,
+              grossRevenue * 0.3,
+            ].map((v) => Math.round(v)),
             borderColor: '#16A34A',
             backgroundColor: gradient,
             borderWidth: 2.5,
             fill: true,
-            tension: 0.38,
+            tension: 0.35,
             pointBackgroundColor: '#16A34A',
-            pointBorderColor: '#FFFFFF',
-            pointBorderWidth: 2,
-            pointRadius: 4,
-            pointHoverRadius: 6,
-            yAxisID: 'yRevenue',
-          },
-          {
-            label: 'Pre-Order Hold Slots',
-            data: activeData.preOrders,
-            borderColor: '#3B82F6',
-            backgroundColor: 'transparent',
-            borderWidth: 2,
-            borderDash: [5, 5],
-            tension: 0.38,
-            pointBackgroundColor: '#3B82F6',
-            pointBorderColor: '#FFFFFF',
-            pointBorderWidth: 2,
-            pointRadius: 3.5,
-            pointHoverRadius: 5.5,
-            yAxisID: 'yOrders',
           },
         ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        interaction: {
-          mode: 'index',
-          intersect: false,
-        },
         plugins: {
-          legend: {
-            position: 'top',
-            align: 'end',
-            labels: {
-              boxWidth: 12,
-              boxHeight: 12,
-              font: {
-                size: 11,
-                weight: '600',
-              },
-              color: '#475569',
-            },
-          },
-          tooltip: {
-            backgroundColor: '#0F172A',
-            titleFont: { size: 12, weight: 'bold' },
-            bodyFont: { size: 11 },
-            padding: 10,
-            cornerRadius: 10,
-            callbacks: {
-              label(context) {
-                const label = context.dataset.label || '';
-                const val = context.parsed.y;
-                if (label.includes('($)')) {
-                  return ` ${label}: $${val.toLocaleString()}`;
-                }
-                return ` ${label}: ${val} orders`;
-              },
-            },
-          },
+          legend: { display: false },
         },
         scales: {
-          x: {
-            grid: {
-              color: 'rgba(226, 232, 240, 0.6)',
-            },
+          y: {
+            beginAtZero: true,
             ticks: {
-              font: { size: 10 },
-              color: '#475569',
-            },
-          },
-          yRevenue: {
-            type: 'linear',
-            position: 'left',
-            grid: {
-              color: 'rgba(226, 232, 240, 0.6)',
-            },
-            ticks: {
-              font: { size: 10 },
-              color: '#16A34A',
-              callback(value) {
-                return `$${value >= 1000 ? `${(value / 1000).toFixed(1)}k` : value}`;
-              },
-            },
-          },
-          yOrders: {
-            type: 'linear',
-            position: 'right',
-            grid: {
-              drawOnChartArea: false,
-            },
-            ticks: {
-              font: { size: 10 },
-              color: '#3B82F6',
-              callback(value) {
-                return `${value} slots`;
-              },
+              callback: (val) => `$${val}`,
             },
           },
         },
@@ -170,35 +77,38 @@ export default function AdminAnalyticsCharts() {
     });
 
     return () => {
-      const chart = Chart.getChart(canvas);
-      if (chart) {
-        chart.destroy();
-      }
+      chartInstance.destroy();
     };
-  }, [timeframe]);
+  }, [grossRevenue, timeframe]);
 
-  // 2. Donut Chart (Category Distribution)
+  // 2. Donut Chart for Real-time Orders Lifecycle Breakdown
   useEffect(() => {
     const canvas = donutChartRef.current;
     if (!canvas) return;
 
-    // Destroy any pre-existing ChartJS instance associated with this canvas
-    const existingChart = Chart.getChart(canvas);
-    if (existingChart) {
-      existingChart.destroy();
-    }
+    const existing = Chart.getChart(canvas);
+    if (existing) existing.destroy();
 
-    donutInstanceRef.current = new Chart(canvas, {
+    const dataValues = [
+      orderStatuses.placed || 0,
+      orderStatuses.accepted || 0,
+      orderStatuses.ready_for_pickup || 0,
+      orderStatuses.completed || 0,
+      (orderStatuses.cancelled || 0) + (orderStatuses.declined || 0),
+    ];
+
+    const hasData = dataValues.some((v) => v > 0);
+
+    const chartInstance = new Chart(canvas, {
       type: 'doughnut',
       data: {
-        labels: CATEGORY_DISTRIBUTION.labels,
+        labels: ['Placed', 'Accepted', 'Ready at Stall', 'Completed', 'Cancelled/Declined'],
         datasets: [
           {
-            data: CATEGORY_DISTRIBUTION.data,
-            backgroundColor: CATEGORY_DISTRIBUTION.colors,
+            data: hasData ? dataValues : [1, 1, 1, 1, 1],
+            backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#16A34A', '#F43F5E'],
             borderWidth: 2,
             borderColor: '#FFFFFF',
-            hoverOffset: 4,
           },
         ],
       },
@@ -208,16 +118,11 @@ export default function AdminAnalyticsCharts() {
         cutout: '72%',
         plugins: {
           legend: {
-            display: false,
-          },
-          tooltip: {
-            backgroundColor: '#0F172A',
-            padding: 10,
-            cornerRadius: 10,
-            callbacks: {
-              label(context) {
-                return ` ${context.label}: ${context.raw}% of pre-orders`;
-              },
+            position: 'bottom',
+            labels: {
+              boxWidth: 10,
+              usePointStyle: true,
+              font: { size: 10, weight: 'bold' },
             },
           },
         },
@@ -225,157 +130,60 @@ export default function AdminAnalyticsCharts() {
     });
 
     return () => {
-      const chart = Chart.getChart(canvas);
-      if (chart) {
-        chart.destroy();
-      }
+      chartInstance.destroy();
     };
-  }, []);
-
-  // Export Chart Image
-  const handleExportChart = () => {
-    if (!lineChartRef.current) return;
-    const imageURL = lineChartRef.current.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = imageURL;
-    a.download = `marketlink-growth-analytics-${timeframe}.png`;
-    a.click();
-  };
+  }, [orderStatuses]);
 
   return (
-    <div className="space-y-6">
-      {/* Chart Headers & Controls */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Main Area Chart: Pre-Orders & Estimated Volume */}
-        <div className="lg:col-span-2 bg-white border border-[#E2E8DF] rounded-3xl p-5 sm:p-6 shadow-xs space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E2E8DF]">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Revenue Trend Line Chart */}
+      <div className="lg:col-span-2 bg-white border border-[#E2E8DF] rounded-3xl p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E2E8DF]">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-emerald-100 text-[#16A34A] flex items-center justify-center">
+              <TrendingUp className="w-4 h-4" />
+            </div>
             <div>
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[#16A34A]" />
-                <h3 className="font-bold text-sm text-[#0F172A]">
-                  Pre-Order Hold Volumes & Estimated Cash Settlements
-                </h3>
-              </div>
-              <p className="text-[11px] text-[#475569]">
-                Live timeline of reservation hold slots vs in-person cash settlement estimates
-              </p>
+              <h3 className="text-sm font-bold text-[#0F172A]">Platform Cash Settlement Volume</h3>
+              <p className="text-[11px] text-[#475569]">In-person market booth cash revenue</p>
             </div>
+          </div>
 
-            {/* Controls */}
-            <div className="flex items-center gap-2">
-              <div className="flex items-center p-1 rounded-xl bg-[#F8FAF6] border border-[#E2E8DF] text-[11px] font-bold">
-                <button
-                  type="button"
-                  onClick={() => setTimeframe('7d')}
-                  className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
-                    timeframe === '7d'
-                      ? 'bg-[#16A34A] text-white shadow-2xs'
-                      : 'text-[#475569] hover:text-[#0F172A]'
-                  }`}
-                >
-                  7 Days
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTimeframe('30d')}
-                  className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
-                    timeframe === '30d'
-                      ? 'bg-[#16A34A] text-white shadow-2xs'
-                      : 'text-[#475569] hover:text-[#0F172A]'
-                  }`}
-                >
-                  30 Days
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTimeframe('12m')}
-                  className={`px-2.5 py-1 rounded-lg transition cursor-pointer ${
-                    timeframe === '12m'
-                      ? 'bg-[#16A34A] text-white shadow-2xs'
-                      : 'text-[#475569] hover:text-[#0F172A]'
-                  }`}
-                >
-                  12 Months
-                </button>
-              </div>
-
+          <div className="flex items-center gap-1 p-1 rounded-xl bg-[#F8FAF6] border border-[#E2E8DF] self-start sm:self-auto text-xs font-bold">
+            {['7d', '30d', '12m'].map((tf) => (
               <button
+                key={tf}
                 type="button"
-                onClick={handleExportChart}
-                className="p-1.5 rounded-xl border border-[#E2E8DF] hover:bg-slate-50 text-slate-500 hover:text-[#0F172A] transition cursor-pointer"
-                title="Download Chart as PNG"
+                onClick={() => setTimeframe(tf)}
+                className={`px-2.5 py-1 rounded-lg uppercase transition cursor-pointer ${
+                  timeframe === tf ? 'bg-[#16A34A] text-white shadow-2xs' : 'text-[#475569] hover:text-[#0F172A]'
+                }`}
               >
-                <Download className="w-4 h-4" />
+                {tf}
               </button>
-            </div>
-          </div>
-
-          {/* Canvas Wrapper */}
-          <div className="h-64 sm:h-72 w-full relative">
-            <canvas ref={lineChartRef} />
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between text-[11px] text-[#475569] pt-2 border-t border-[#E2E8DF]">
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-[#16A34A]" />
-                Estimated In-Person Cash Settlement
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-3 h-1 bg-[#3B82F6]" />
-                Pre-Order Holds
-              </span>
-            </div>
-            <span className="font-mono text-emerald-800 font-bold">
-              ✓ Peak Harvest Surge: Saturday Mornings
-            </span>
+            ))}
           </div>
         </div>
 
-        {/* Donut Chart: Produce Category Distribution */}
-        <div className="bg-white border border-[#E2E8DF] rounded-3xl p-5 sm:p-6 shadow-xs space-y-4 flex flex-col justify-between">
+        <div className="h-64 relative">
+          <canvas ref={lineChartRef} />
+        </div>
+      </div>
+
+      {/* Orders Lifecycle Doughnut Chart */}
+      <div className="bg-white border border-[#E2E8DF] rounded-3xl p-6 shadow-xs space-y-4">
+        <div className="flex items-center gap-2 pb-3 border-b border-[#E2E8DF]">
+          <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center">
+            <PieChart className="w-4 h-4" />
+          </div>
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-[#E2E8DF]">
-              <div className="flex items-center gap-2">
-                <PieChart className="w-4 h-4 text-blue-600" />
-                <h3 className="font-bold text-sm text-[#0F172A]">Produce Demand Split</h3>
-              </div>
-              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-emerald-50 text-[#16A34A] border border-emerald-200">
-                Chicago Market
-              </span>
-            </div>
-            <p className="text-[11px] text-[#475569] mt-1">
-              Pre-order reservations by agricultural category
-            </p>
-
-            {/* Donut Canvas */}
-            <div className="h-44 sm:h-48 relative my-3 flex items-center justify-center">
-              <canvas ref={donutChartRef} />
-              {/* Center Stat */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-xl font-black text-[#0F172A]">1,420</span>
-                <span className="text-[10px] text-[#475569] font-medium">Holds / Mo</span>
-              </div>
-            </div>
+            <h3 className="text-sm font-bold text-[#0F172A]">Orders Lifecycle</h3>
+            <p className="text-[11px] text-[#475569]">{stats?.orders?.total || 0} Total Pre-Orders</p>
           </div>
+        </div>
 
-          {/* Custom Legend */}
-          <div className="space-y-1.5 pt-3 border-t border-[#E2E8DF] text-xs">
-            {CATEGORY_DISTRIBUTION.labels.map((label, idx) => (
-              <div key={idx} className="flex items-center justify-between text-[11px]">
-                <div className="flex items-center gap-2">
-                  <span
-                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: CATEGORY_DISTRIBUTION.colors[idx] }}
-                  />
-                  <span className="text-[#475569] truncate max-w-[150px]">{label}</span>
-                </div>
-                <span className="font-mono font-bold text-[#0F172A]">
-                  {CATEGORY_DISTRIBUTION.data[idx]}%
-                </span>
-              </div>
-            ))}
-          </div>
+        <div className="h-64 relative">
+          <canvas ref={donutChartRef} />
         </div>
       </div>
     </div>

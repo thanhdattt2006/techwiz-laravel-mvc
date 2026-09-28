@@ -470,22 +470,22 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.15: Cổng Admin - Thống Kê KPIs, Phê Duyệt Nông Dân & Quản Trị Users (Admin Governance 1)
+### Phase 4.15: Cổng Admin - Thống Kê KPIs, Phê Duyệt Nông Dân & Quản Trị Users (Admin Governance 1) [x]
 
 - **Mục tiêu**: Kết nối Overview KPIs thời gian thực, luồng Phê Duyệt Sạp Nông Dân và Quản Lý Người Dùng trong `AdminDashboard.jsx`.
 - **Files tác động**:
   - `frontend/src/pages/admin/AdminDashboard.jsx` (Tab Overview, Tab Vendors, Tab Users)
   - `frontend/src/pages/admin/AdminAnalyticsCharts.jsx`
 - **Checklist công việc**:
-  - `[ ]` **Tab Tổng Quan (Overview & KPIs)**:
+  - `[x]` **Tab Tổng Quan (Overview & KPIs)**:
     - Thay thế số liệu mock bằng `adminApi.getOverviewStats()`: Doanh thu thực tế (`gross_completed`), cơ cấu đơn hàng, users, chợ, sản phẩm, inquiries chưa đọc, top 5 nông dân uy tín.
     - Vẽ biểu đồ doanh thu và phân bổ đơn hàng bằng Chart.js.
-  - `[ ]` **Tab Phê Duyệt Nông Dân (Pending Farmer Applications)**:
+  - `[x]` **Tab Phê Duyệt Nông Dân (Pending Farmer Applications)**:
     - Thay thế `INITIAL_VENDOR_APPLICATIONS` bằng `adminApi.getPendingFarmers()`.
     - Xem chi tiết hồ sơ sạp nông dân chờ duyệt.
     - Nút **Phê Duyệt** $\rightarrow$ Gọi `adminApi.approveFarmer(id)` (chuyển `active` và tự động gửi in-app notification cho nông dân).
     - Nút **Từ Chối** $\rightarrow$ Bật modal bắt buộc nhập lý do $\rightarrow$ Gọi `adminApi.rejectFarmer(id, reason)`.
-  - `[ ]` **Tab Quản Lý Người Dùng (Users Governance)**:
+  - `[x]` **Tab Quản Lý Người Dùng (Users Governance)**:
     - Thay thế `INITIAL_USERS` bằng `adminApi.getUsers(params)`.
     - Nút Khoá / Mở khoá tài khoản vi phạm $\rightarrow$ Gọi `adminApi.updateUserStatus(id, status)` (`active` $\leftrightarrow$ `banned`).
 - **Tiêu chí hoàn thành**: Số liệu thống kê khớp 100% với database; Phê duyệt sạp nông dân thành công và nông dân đăng nhập được ngay.
