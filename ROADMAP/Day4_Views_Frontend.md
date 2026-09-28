@@ -399,15 +399,19 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.12: Cổng Nông Dân - Hàng Đợi Duyệt Đơn Pre-Order (Farmer Orders Queue)
+### Phase 4.12: Cổng Nông Dân - Hàng Đợi Duyệt Đơn Pre-Order (Farmer Orders Queue) [x]
 
 - **Mục tiêu**: Kết nối Hàng Đợi Đơn Hàng trong `FarmerDashboard.jsx` với Backend API, hỗ trợ chuyển trạng thái 4 bước và từ chối đơn kèm lý do.
 - **Files tác động**:
   - `frontend/src/pages/farmer/FarmerDashboard.jsx` (Tab Queue)
+  - `frontend/src/components/farmer/FarmerOrdersQueueTab.jsx`
+  - `frontend/src/components/farmer/FarmerOrderCard.jsx`
+  - `frontend/src/components/farmer/DeclineOrderModal.jsx`
+  - `frontend/src/hooks/useFarmerOrders.js`
 - **Checklist công việc**:
-  - `[ ]` Thay thế `INITIAL_QUEUE` bằng `orderApi.getFarmerOrders(params)`.
-  - `[ ]` Bộ lọc đơn theo ngày nhận, chợ và trạng thái đơn.
-  - `[ ]` Các thao tác chuyển trạng thái đơn hàng theo đúng State Machine:
+  - `[x]` Thay thế `INITIAL_QUEUE` bằng `orderApi.getFarmerOrders(params)`.
+  - `[x]` Bộ lọc đơn theo ngày nhận, chợ và trạng thái đơn.
+  - `[x]` Các thao tác chuyển trạng thái đơn hàng theo đúng State Machine:
     - Nút **Duyệt Đơn** $\rightarrow$ Gọi `orderApi.acceptOrder(id)`.
     - Nút **Báo Sẵn Sàng Tại Sạp** $\rightarrow$ Gọi `orderApi.markOrderReady(id)`.
     - Nút **Hoàn Tất Nhận Hàng** $\rightarrow$ Gọi `orderApi.completeOrder(id)` (sau khi khách thanh toán tiền mặt tại sạp).
