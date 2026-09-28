@@ -78,6 +78,15 @@ export const productApi = {
   toggleHide: (id) => {
     return axiosClient.patch(`/admin/products/${id}/toggle-hide`);
   },
+
+  /**
+   * List all products including hidden ones for admin moderation (Admin only).
+   * @param {object} [params] - Query parameters { is_hidden, search }
+   * @returns {Promise<object>} Response envelope { success, message, data: [...] }
+   */
+  getAdminProducts: (params = {}) => {
+    return axiosClient.get('/admin/products', { params });
+  },
 };
 
 export default productApi;

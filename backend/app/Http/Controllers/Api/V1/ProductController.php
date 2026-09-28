@@ -199,4 +199,31 @@ class ProductController extends Controller
             $message
         );
     }
+
+    /**
+     * List all products including hidden ones for platform moderation (Admin only).
+     */
+    public function adminIndex(Request $request): JsonResponse
+    {
+        $query = Product::with(['category', 'farmer.markets']);
+
+        if ($request->has('is_hidden')) {
+            $query->where('is_hidden', $request->boolean('is_hidden'));
+        }
+
+        if ($request->filled('search')) {
+            $search = (string) $request->query('search');
+            $query->where(static function ($q) use ($search): void {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        $products = $query->latest('id')->get();
+
+        return $this->successResponse(
+            ProductResource::collection($products),
+            'All products retrieved successfully for moderation.'
+        );
+    }
 }

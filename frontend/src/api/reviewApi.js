@@ -53,6 +53,15 @@ export const reviewApi = {
   toggleHideReview: (id) => {
     return axiosClient.patch(`/admin/reviews/${id}/toggle-hide`);
   },
+
+  /**
+   * List all reviews with moderation details (Admin only).
+   * @param {object} [params] - Query parameters { is_hidden, rating, search }
+   * @returns {Promise<object>} Response envelope { success, message, data: [...] }
+   */
+  getAdminReviews: (params = {}) => {
+    return axiosClient.get('/admin/reviews', { params });
+  },
 };
 
 export default reviewApi;

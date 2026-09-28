@@ -160,4 +160,32 @@ class ReviewController extends Controller
             $statusMsg
         );
     }
+
+    /**
+     * List all reviews with customer, farmer, and product relations for moderation (Admin only).
+     */
+    public function adminIndex(Request $request): JsonResponse
+    {
+        $query = Review::with(['customer', 'farmer', 'product']);
+
+        if ($request->has('is_hidden')) {
+            $query->where('is_hidden', $request->boolean('is_hidden'));
+        }
+
+        if ($request->filled('rating')) {
+            $query->where('rating', (int) $request->query('rating'));
+        }
+
+        if ($request->filled('search')) {
+            $search = (string) $request->query('search');
+            $query->where('comment', 'like', "%{$search}%");
+        }
+
+        $reviews = $query->latest('id')->get();
+
+        return $this->successResponse(
+            ReviewResource::collection($reviews),
+            'All reviews retrieved successfully for moderation.'
+        );
+    }
 }

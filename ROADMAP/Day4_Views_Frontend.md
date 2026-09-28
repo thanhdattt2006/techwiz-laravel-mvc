@@ -492,22 +492,22 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.16: Cổng Admin - Quản Lý Chợ, Danh Mục, Ẩn/Hiện, Thông Báo & Hộp Thư (Admin Governance 2)
+### Phase 4.16: Cổng Admin - Quản Lý Chợ, Danh Mục, Ẩn/Hiện, Thông Báo & Hộp Thư (Admin Governance 2) [x]
 
 - **Mục tiêu**: Hoàn thiện CRUD Chợ & Lịch họp, CRUD Danh mục, Ẩn/Hiện vi phạm, Quản trị Thông báo toàn sàn và Hộp thư liên hệ.
 - **Files tác động**:
   - `frontend/src/pages/admin/AdminDashboard.jsx` (Tab Markets, Tab Reviews, Tab Messages, Tab Announcements)
 - **Checklist công việc**:
-  - `[ ]` **Tab Quản Lý Chợ & Danh Mục (Markets & Categories)**:
+  - `[x]` **Tab Quản Lý Chợ & Danh Mục (Markets & Categories)**:
     - CRUD Chợ và Lịch họp định kỳ $\rightarrow$ Gọi `marketApi.createMarket`, `updateMarket`, `deleteMarket`.
     - CRUD Danh mục nông sản $\rightarrow$ Gọi `categoryApi.createCategory`, `updateCategory`, `deleteCategory`.
     - Nút Ẩn / Hiện nông sản vi phạm $\rightarrow$ Gọi `productApi.toggleHide(id)`.
     - Nút Ẩn / Hiện đánh giá spam $\rightarrow$ Gọi `reviewApi.toggleHideReview(id)`.
-  - `[ ]` **Tab Quản Trị Thông Báo Toàn Sàn (Announcements)**:
+  - `[x]` **Tab Quản Trị Thông Báo Toàn Sàn (Announcements)**:
     - Danh sách thông báo từ `notificationApi.getAdminAnnouncements()`.
     - Form phát thông báo mới theo vai trò mục tiêu (`all`, `farmer`, `customer`).
     - Bật/tắt trạng thái hiển thị (`is_active`), chỉnh sửa và xoá thông báo.
-  - `[ ]` **Tab Hộp Thư Liên Hệ (Inquiries Inbox)**:
+  - `[x]` **Tab Hộp Thư Liên Hệ (Inquiries Inbox)**:
     - Thay thế `INITIAL_INQUIRIES` bằng `adminApi.getInquiries(params)`.
     - Lọc thư chưa đọc, xem nội dung chi tiết và bấm "Đánh Dấu Đã Xử Lý" $\rightarrow$ Gọi `adminApi.markInquiryRead(id)`.
 - **Tiêu chí hoàn thành**: Admin thực hiện trọn vẹn quyền quản trị nền tảng qua REST API thật.

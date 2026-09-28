@@ -123,7 +123,9 @@ Route::prefix('v1/admin')->middleware(['auth:sanctum', 'role:admin'])->group(fun
     Route::post('/categories', [CategoryController::class, 'store']);
     Route::put('/categories/{id}', [CategoryController::class, 'update']);
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+    Route::get('/products', [ProductController::class, 'adminIndex']);
     Route::patch('/products/{id}/toggle-hide', [ProductController::class, 'toggleHide']);
+    Route::get('/reviews', [ReviewController::class, 'adminIndex']);
     Route::patch('/reviews/{id}/toggle-hide', [ReviewController::class, 'toggleHide']);
     Route::get('/announcements', [AnnouncementController::class, 'index']);
     Route::post('/announcements', [AnnouncementController::class, 'store']);
