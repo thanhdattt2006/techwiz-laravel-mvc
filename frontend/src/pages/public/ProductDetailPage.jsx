@@ -15,6 +15,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import { useProductDetail } from '../../hooks/useProductDetail';
+import { useCart } from '../../context/CartContext';
 import ProductStallInfoCard from '../../components/products/ProductStallInfoCard';
 import ProductReviewsList from '../../components/products/ProductReviewsList';
 
@@ -27,6 +28,7 @@ import ProductReviewsList from '../../components/products/ProductReviewsList';
 export default function ProductDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { openCheckout } = useCart();
 
   const {
     product,
@@ -98,7 +100,7 @@ export default function ProductDetailPage() {
   const handlePreOrderNow = async () => {
     const success = await addToCart();
     if (success) {
-      navigate('/orders');
+      openCheckout();
     }
   };
 
@@ -347,7 +349,7 @@ export default function ProductDetailPage() {
                   className="w-full py-3 rounded-xl bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-white font-bold text-xs shadow-xs transition cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   <Calendar className="w-4 h-4" />
-                  <span>Pre-Order & View Orders</span>
+                  <span>Pre-Order Now (Reserve Pickup)</span>
                 </button>
               </div>
             </div>

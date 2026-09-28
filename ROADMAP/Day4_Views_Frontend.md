@@ -5,8 +5,11 @@
 **Mục tiêu**: Xây dựng toàn bộ giao diện Single Page Application (SPA) bằng **React 19 + JavaScript + Vite** kết nối trực tiếp với Laravel REST Web API qua Axios Client. Thiết kế hiện đại 100% bằng **TailwindCSS**, chia tách module rõ ràng (DRY, SOLID), chuẩn hóa theo bảng màu nông sản (Fresh Botanical & Harvest Gold), gỡ bỏ triệt để các UI thừa/mock rác và tích hợp trọn vẹn các tính năng nghiệp vụ đặc thù cho 3 vai trò (`admin`, `farmer`, `customer`).
 
 > [!IMPORTANT]
+>
 > ### ⚠️ NGUYÊN TẮC BẮT BUỘC TRƯỚC KHI CODE DAY 4:
+>
 > Developer và AI **BẮT BUỘC** phải đọc và tuân thủ tuyệt đối:
+>
 > 1. [`RULE.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/RULE.md):
 >    - **100% Tiếng Anh cho source code** (tên file, component, props, hooks, biến, hàm, inline comments).
 >    - **Tiếng Việt cho kế hoạch và tài liệu Markdown**.
@@ -26,24 +29,24 @@
 
 Qua trace chuyên sâu giữa toàn bộ Frontend React (`frontend/src/`) và Backend Laravel API (`backend/`):
 
-| Phân Hệ / Chức Năng | Hiện Trạng Frontend Hiện Tại | Backend API Đã Sẵn Sàng (Day 3) | Đánh Giá Tương Thích & Hướng Xử Lý |
-| :--- | :--- | :--- | :--- |
-| **Authentication & Demo Login** | `AuthContext.jsx` để `USE_BACKEND_API = false`. Dùng `@gmail.com`, pass `password123`. Vai trò `operator`, `user`. | `POST /api/v1/auth/login`. Tài khoản Seeder: `admin@marketlink.com`, `farmer@marketlink.com`, `customer@marketlink.com` / `password`. Role: `admin`, `farmer`, `customer`. | ❌ **Lệch hoàn toàn**: Bật `USE_BACKEND_API = true`, chuẩn hóa 3 role `admin`, `farmer`, `customer`, cập nhật credentials seeder. |
-| **Social Sign-In (Google)** | Component `GoogleSignInButton.jsx` fake login thành `elena.shopper@gmail.com`. | **Không hỗ trợ** (SRS TechWiz không có Social OAuth). | ⚠️ **UI THỪA**: Gỡ bỏ hoàn toàn `GoogleSignInButton.jsx` khỏi Login & Register. |
-| **Quên Mật Khẩu (Forgot Password)** | `ForgotPasswordPage.jsx` giả lập gửi OTP mã `123456`. | **Không có endpoint OTP**. Chỉ có `PUT /api/v1/auth/change-password` khi đã đăng nhập. | ⚠️ **UI THỪA**: Gỡ bỏ flow OTP giả lập. Thay bằng hướng dẫn liên hệ Admin qua email/form contact. |
-| **Đăng Ký Mở Sạp Nông Dân** | `RegisterPage.jsx` chỉ có form đăng ký Customer. | `POST /api/v1/auth/register-farmer` (chờ Admin duyệt). | ❌ **THIẾU NGHIỆP VỤ**: Bổ sung Tab đăng ký Mở Sạp cho Nông dân (Farmer Stall Application). |
-| **Catalog & Danh Bạ Chợ** | `HomePage`, `MarketsPage`, `ProductsPage` đang import file JSON tĩnh `markets.json`, `products.json`. | `GET /api/v1/markets`, `GET /api/v1/products`, `GET /api/v1/categories`. | ❌ **Dữ liệu tĩnh**: Thay bằng gọi API thật qua `axiosClient`, map chính xác các trường dữ liệu API. |
-| **Giỏ Hàng (Shopping Cart)** | **Chưa có giỏ hàng**: Không có `CartContext`, không có `CartDrawer`. | `GET/POST/PUT/DELETE /api/v1/cart/*` (Gom nhóm item theo từng sạp nông dân `CartResource`). | ❌ **THIẾU CỐT LÕI**: Xây dựng `CartContext.jsx`, `CartDrawer.jsx` và icon giỏ hàng trên Navbar. |
-| **Đặt Hàng Pre-Order & Khung Giờ** | `ProductDetailPage.jsx` có form pre-order giả lập với nút Autofill, sinh mã `MLB-2026-XXXX` ngẫu nhiên. | `GET /api/v1/orders/slots`, `POST /api/v1/orders/checkout`. Tự động tính slot theo cutoff hours và tách đơn theo sạp. | ❌ **Sai luồng & UI thừa**: Gỡ bỏ form autofill trên trang chi tiết; Thay bằng quy trình Pre-Order Checkout chuẩn qua Giỏ hàng. |
-| **Hàng Đợi Nông Dân (Farmer Queue)** | `FarmerDashboard.jsx` dùng mảng mock `INITIAL_QUEUE`. | `GET /api/v1/farmer/orders` + 4 transition endpoints (`accept`, `ready`, `complete`, `decline`). | ❌ **Dữ liệu mock**: Kết nối API quản lý đơn thật, modal bắt buộc nhập lý do khi từ chối đơn. |
-| **Mẫu Kho Tuần (Weekly Rollover)** | **Chưa có UI**: Nông dân không thể cấu hình định mức bán theo thứ trong tuần. | `GET/PUT /api/v1/farmer/products/{id}/template`, `POST /api/v1/farmer/apply-weekly-templates`. | ❌ **THIẾU TÍNH NĂNG CỐT LÕI**: Tạo Tab Quản lý Mẫu Kho Tuần 7 ngày cho Nông dân. |
-| **Cấu Hình Sạp Tại Chợ** | **Chưa có UI**: Không có chỗ cho Nông dân đăng ký sạp vào các chợ phiên. | `GET/POST/PUT/DELETE /api/v1/farmer/markets/*`. | ❌ **THIẾU UI**: Tạo Tab Cấu hình Sạp tại Chợ cho Nông dân (giờ mở, giờ đóng, slot, cutoff). |
-| **Phê Duyệt Sạp (Admin Approval)** | `AdminDashboard.jsx` dùng mảng mock `INITIAL_VENDOR_APPLICATIONS`. | `GET /api/v1/admin/farmers/pending`, `PATCH approve`, `PATCH reject` (kèm reason). | ❌ **Dữ liệu mock**: Kết nối API phê duyệt thực tế, modal bắt buộc nhập lý do từ chối. |
-| **Quản Trị Người Dùng & Thống Kê** | `AdminDashboard.jsx` dùng mảng mock users và số liệu giả lập. | `GET /api/v1/admin/stats/overview`, `GET /api/v1/admin/users`, `PATCH /users/{id}/status`. | ❌ **Dữ liệu mock**: Kết nối API thống kê thời gian thực và quản trị tài khoản (active/banned). |
-| **Thông Báo Toàn Sàn (Announcements)** | `AdminDashboard.jsx` chưa có tab quản lý announcements. | `GET /api/v1/announcements/active`, CRUD `/api/v1/admin/announcements`. | ❌ **THIẾU UI**: Cần banner thông báo trang chủ và tab quản trị announcement trong Admin. |
-| **Hộp Thư Liên Hệ (Inquiries)** | `AdminDashboard.jsx` dùng mảng mock `INITIAL_INQUIRIES`. | `POST /api/v1/contact`, `GET /api/v1/admin/inquiries`, `PATCH /{id}/read`. | ❌ **Dữ liệu mock**: Kết nối Contact form công khai và hộp thư quản trị Admin. |
-| **Thông Báo In-App (Notifications)** | **Chưa có UI**: Không có chuông thông báo trên Navbar/Dashboard. | `GET /api/v1/notifications`, `PATCH /{id}/read`, `PATCH /read-all`. | ❌ **THIẾU UI**: Thêm Dropdown chuông thông báo kèm badge đếm tin chưa đọc. |
-| **Đánh Giá & Phản Hồi (Reviews)** | Dùng dữ liệu mock in-memory, không kiểm tra trạng thái đơn hàng. | `POST /api/v1/reviews` (chỉ đơn `completed`), `POST /api/v1/farmer/reviews/{id}/reply`. | ❌ **Dữ liệu mock**: Tích hợp Modal đánh giá cho đơn hoàn tất và form phản hồi cho nông dân. |
+| Phân Hệ / Chức Năng                    | Hiện Trạng Frontend Hiện Tại                                                                                       | Backend API Đã Sẵn Sàng (Day 3)                                                                                                                                            | Đánh Giá Tương Thích & Hướng Xử Lý                                                                                                |
+| :------------------------------------- | :----------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------- |
+| **Authentication & Demo Login**        | `AuthContext.jsx` để `USE_BACKEND_API = false`. Dùng `@gmail.com`, pass `password123`. Vai trò `operator`, `user`. | `POST /api/v1/auth/login`. Tài khoản Seeder: `admin@marketlink.com`, `farmer@marketlink.com`, `customer@marketlink.com` / `password`. Role: `admin`, `farmer`, `customer`. | ❌ **Lệch hoàn toàn**: Bật `USE_BACKEND_API = true`, chuẩn hóa 3 role `admin`, `farmer`, `customer`, cập nhật credentials seeder. |
+| **Social Sign-In (Google)**            | Component `GoogleSignInButton.jsx` fake login thành `elena.shopper@gmail.com`.                                     | **Không hỗ trợ** (SRS TechWiz không có Social OAuth).                                                                                                                      | ⚠️ **UI THỪA**: Gỡ bỏ hoàn toàn `GoogleSignInButton.jsx` khỏi Login & Register.                                                   |
+| **Quên Mật Khẩu (Forgot Password)**    | `ForgotPasswordPage.jsx` giả lập gửi OTP mã `123456`.                                                              | **Không có endpoint OTP**. Chỉ có `PUT /api/v1/auth/change-password` khi đã đăng nhập.                                                                                     | ⚠️ **UI THỪA**: Gỡ bỏ flow OTP giả lập. Thay bằng hướng dẫn liên hệ Admin qua email/form contact.                                 |
+| **Đăng Ký Mở Sạp Nông Dân**            | `RegisterPage.jsx` chỉ có form đăng ký Customer.                                                                   | `POST /api/v1/auth/register-farmer` (chờ Admin duyệt).                                                                                                                     | ❌ **THIẾU NGHIỆP VỤ**: Bổ sung Tab đăng ký Mở Sạp cho Nông dân (Farmer Stall Application).                                       |
+| **Catalog & Danh Bạ Chợ**              | `HomePage`, `MarketsPage`, `ProductsPage` đang import file JSON tĩnh `markets.json`, `products.json`.              | `GET /api/v1/markets`, `GET /api/v1/products`, `GET /api/v1/categories`.                                                                                                   | ❌ **Dữ liệu tĩnh**: Thay bằng gọi API thật qua `axiosClient`, map chính xác các trường dữ liệu API.                              |
+| **Giỏ Hàng (Shopping Cart)**           | **Chưa có giỏ hàng**: Không có `CartContext`, không có `CartDrawer`.                                               | `GET/POST/PUT/DELETE /api/v1/cart/*` (Gom nhóm item theo từng sạp nông dân `CartResource`).                                                                                | ❌ **THIẾU CỐT LÕI**: Xây dựng `CartContext.jsx`, `CartDrawer.jsx` và icon giỏ hàng trên Navbar.                                  |
+| **Đặt Hàng Pre-Order & Khung Giờ**     | `ProductDetailPage.jsx` có form pre-order giả lập với nút Autofill, sinh mã `MLB-2026-XXXX` ngẫu nhiên.            | `GET /api/v1/orders/slots`, `POST /api/v1/orders/checkout`. Tự động tính slot theo cutoff hours và tách đơn theo sạp.                                                      | ❌ **Sai luồng & UI thừa**: Gỡ bỏ form autofill trên trang chi tiết; Thay bằng quy trình Pre-Order Checkout chuẩn qua Giỏ hàng.   |
+| **Hàng Đợi Nông Dân (Farmer Queue)**   | `FarmerDashboard.jsx` dùng mảng mock `INITIAL_QUEUE`.                                                              | `GET /api/v1/farmer/orders` + 4 transition endpoints (`accept`, `ready`, `complete`, `decline`).                                                                           | ❌ **Dữ liệu mock**: Kết nối API quản lý đơn thật, modal bắt buộc nhập lý do khi từ chối đơn.                                     |
+| **Mẫu Kho Tuần (Weekly Rollover)**     | **Chưa có UI**: Nông dân không thể cấu hình định mức bán theo thứ trong tuần.                                      | `GET/PUT /api/v1/farmer/products/{id}/template`, `POST /api/v1/farmer/apply-weekly-templates`.                                                                             | ❌ **THIẾU TÍNH NĂNG CỐT LÕI**: Tạo Tab Quản lý Mẫu Kho Tuần 7 ngày cho Nông dân.                                                 |
+| **Cấu Hình Sạp Tại Chợ**               | **Chưa có UI**: Không có chỗ cho Nông dân đăng ký sạp vào các chợ phiên.                                           | `GET/POST/PUT/DELETE /api/v1/farmer/markets/*`.                                                                                                                            | ❌ **THIẾU UI**: Tạo Tab Cấu hình Sạp tại Chợ cho Nông dân (giờ mở, giờ đóng, slot, cutoff).                                      |
+| **Phê Duyệt Sạp (Admin Approval)**     | `AdminDashboard.jsx` dùng mảng mock `INITIAL_VENDOR_APPLICATIONS`.                                                 | `GET /api/v1/admin/farmers/pending`, `PATCH approve`, `PATCH reject` (kèm reason).                                                                                         | ❌ **Dữ liệu mock**: Kết nối API phê duyệt thực tế, modal bắt buộc nhập lý do từ chối.                                            |
+| **Quản Trị Người Dùng & Thống Kê**     | `AdminDashboard.jsx` dùng mảng mock users và số liệu giả lập.                                                      | `GET /api/v1/admin/stats/overview`, `GET /api/v1/admin/users`, `PATCH /users/{id}/status`.                                                                                 | ❌ **Dữ liệu mock**: Kết nối API thống kê thời gian thực và quản trị tài khoản (active/banned).                                   |
+| **Thông Báo Toàn Sàn (Announcements)** | `AdminDashboard.jsx` chưa có tab quản lý announcements.                                                            | `GET /api/v1/announcements/active`, CRUD `/api/v1/admin/announcements`.                                                                                                    | ❌ **THIẾU UI**: Cần banner thông báo trang chủ và tab quản trị announcement trong Admin.                                         |
+| **Hộp Thư Liên Hệ (Inquiries)**        | `AdminDashboard.jsx` dùng mảng mock `INITIAL_INQUIRIES`.                                                           | `POST /api/v1/contact`, `GET /api/v1/admin/inquiries`, `PATCH /{id}/read`.                                                                                                 | ❌ **Dữ liệu mock**: Kết nối Contact form công khai và hộp thư quản trị Admin.                                                    |
+| **Thông Báo In-App (Notifications)**   | **Chưa có UI**: Không có chuông thông báo trên Navbar/Dashboard.                                                   | `GET /api/v1/notifications`, `PATCH /{id}/read`, `PATCH /read-all`.                                                                                                        | ❌ **THIẾU UI**: Thêm Dropdown chuông thông báo kèm badge đếm tin chưa đọc.                                                       |
+| **Đánh Giá & Phản Hồi (Reviews)**      | Dùng dữ liệu mock in-memory, không kiểm tra trạng thái đơn hàng.                                                   | `POST /api/v1/reviews` (chỉ đơn `completed`), `POST /api/v1/farmer/reviews/{id}/reply`.                                                                                    | ❌ **Dữ liệu mock**: Tích hợp Modal đánh giá cho đơn hoàn tất và form phản hồi cho nông dân.                                      |
 
 ---
 
@@ -52,6 +55,7 @@ Qua trace chuyên sâu giữa toàn bộ Frontend React (`frontend/src/`) và Ba
 Qua nghiên cứu mã nguồn, các thành phần sau **không được Backend hỗ trợ** hoặc **sai lệch nghiệp vụ SRS**, cần loại bỏ sạch sẽ:
 
 ### 2.1. Gỡ Bỏ Đăng Nhập Mạng Xã Hội Google (`GoogleSignInButton.jsx`)
+
 - **Vị trí**:
   - `frontend/src/components/common/GoogleSignInButton.jsx`
   - `frontend/src/pages/auth/LoginPage.jsx` (dòng 5, 269-279)
@@ -60,15 +64,17 @@ Qua nghiên cứu mã nguồn, các thành phần sau **không được Backend 
 - **Hành động**: Xóa bỏ component `GoogleSignInButton.jsx`, gỡ khối "Or sign in with Google" khỏi cả 2 trang `LoginPage.jsx` và `RegisterPage.jsx`.
 
 ### 2.2. Gỡ Bỏ Quy Trình Quên Mật Khẩu Bằng OTP Giả Lập (`ForgotPasswordPage.jsx`)
+
 - **Vị trí**:
   - `frontend/src/pages/auth/ForgotPasswordPage.jsx`
   - Link "Forgot password?" trên `frontend/src/pages/auth/LoginPage.jsx` (dòng 237-242)
 - **Lý do**: Backend không tích hợp SMTP Email hay SMS Provider để gửi OTP. Mã OTP `123456` là logic mock cục bộ. Backend chỉ có API `PUT /api/v1/auth/change-password` khi người dùng đã đăng nhập.
 - **Hành động**:
-  - Chuyển `ForgotPasswordPage.jsx` thành trang hướng dẫn hoặc thay link "Forgot password?" thành modal thông báo: *"Để đặt lại mật khẩu, vui lòng liên hệ Ban quản trị qua trang Liên Hệ hoặc email support@marketlink.com"*.
+  - Chuyển `ForgotPasswordPage.jsx` thành trang hướng dẫn hoặc thay link "Forgot password?" thành modal thông báo: _"Để đặt lại mật khẩu, vui lòng liên hệ Ban quản trị qua trang Liên Hệ hoặc email support@marketlink.com"_.
   - Gỡ bỏ hàm `resetPassword` mock khỏi `AuthContext.jsx`.
 
 ### 2.3. Gỡ Bỏ Form Pre-Order Trực Tiếp Kèm Autofill Trên Trang Chi Tiết Nông Sản (`ProductDetailPage.jsx`)
+
 - **Vị trí**:
   - `frontend/src/pages/public/ProductDetailPage.jsx` (dòng 31-39, 61-92, form đặt hàng bên phải)
 - **Lý do**:
@@ -80,6 +86,7 @@ Qua nghiên cứu mã nguồn, các thành phần sau **không được Backend 
   - Thay bằng: **Bộ chọn số lượng (Quantity Selector)** + nút **"Thêm Vào Giỏ Hàng" (Add to Cart)** + nút **"Đặt Trước Nhanh" (Pre-Order Now)** mở modal checkout chuẩn.
 
 ### 2.4. Gỡ Bỏ Tab Preferences Rác Không Có Trong Database (`CustomerProfilePage.jsx`)
+
 - **Vị trí**:
   - `frontend/src/pages/customer/CustomerProfilePage.jsx` (dòng 27-38, 70-78, 188-225, tab PREFERENCES)
 - **Lý do**:
@@ -93,7 +100,8 @@ Qua nghiên cứu mã nguồn, các thành phần sau **không được Backend 
     2. **Bảo mật & Đổi mật khẩu (Security & Change Password)**: Mật khẩu hiện tại (`current_password`), Mật khẩu mới (`new_password`), Xác nhận mật khẩu (`new_password_confirmation`) $\rightarrow$ Kết nối API `PUT /api/v1/auth/change-password`.
 
 ### 2.5. Gỡ Bỏ Các Trường/Form Không Tồn Tại Trong Backend ERD
-- **Thanh toán trực tuyến (Online Payment Gateway)**: Tuyệt đối không để sót form nhập thẻ Visa, MoMo, VNPay hay trường chọn cổng thanh toán. Cố định hiển thị: *"Thanh toán tiền mặt tại sạp khi nhận hàng (Cash on Pickup at Stall)"* (Tuân thủ ràng buộc SRS).
+
+- **Thanh toán trực tuyến (Online Payment Gateway)**: Tuyệt đối không để sót form nhập thẻ Visa, MoMo, VNPay hay trường chọn cổng thanh toán. Cố định hiển thị: _"Thanh toán tiền mặt tại sạp khi nhận hàng (Cash on Pickup at Stall)"_ (Tuân thủ ràng buộc SRS).
 - **Giao hàng tận nhà (Home Delivery / Shipping Address / Shipping Fee)**: Khách hàng chỉ nhận hàng trực tiếp tại sạp nông dân theo khung giờ đã đặt trước. Mọi trường nhập phí vận chuyển, đơn vị giao hàng đều là thừa và không được xuất hiện.
 
 ---
@@ -322,21 +330,21 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.9: Quy Trình Đặt Hàng Pre-Order & Chọn Khung Giờ (Checkout Flow)
+### Phase 4.9: Quy Trình Đặt Hàng Pre-Order & Chọn Khung Giờ (Checkout Flow) [x]
 
 - **Mục tiêu**: Xây dựng modal Checkout Pre-Order cho phép chọn Chợ phiên, chọn Ngày họp chợ, gọi API lấy Pickup Slots hợp lệ (kiểm tra cutoff hours) và gửi đơn đặt hàng.
 - **Files tác động**:
   - Tạo mới: `frontend/src/components/common/PreOrderCheckoutModal.jsx`
   - Tích hợp vào `CartDrawer.jsx` và `ProductDetailPage.jsx`.
 - **Checklist công việc**:
-  - `[ ]` `PreOrderCheckoutModal.jsx`:
+  - `[x]` `PreOrderCheckoutModal.jsx`:
     - **Bước 1**: Chọn Chợ phiên nhận hàng từ danh sách chợ sạp tham gia.
     - **Bước 2**: Chọn Ngày họp chợ nhận hàng (tự động lọc các ngày sạp có mở bán).
     - **Bước 3**: Gọi API `GET /api/v1/orders/slots?market_id=...&pickup_date=...` để tải danh sách khung giờ nhận hàng khả dụng (tự động loại trừ các slot đã quá giờ chốt đơn `cutoff_hours`).
     - **Bước 4**: Khách chọn khung giờ (ví dụ: `08:30 - 09:00`), nhập ghi chú dặn dò nông dân.
     - **Bước 5**: Hiển thị cam kết thanh toán tiền mặt tại sạp khi nhận hàng (0 online fees).
     - **Bước 6**: Bấm "Xác Nhận Đặt Trước" $\rightarrow$ Gọi `orderApi.checkout(data)`.
-  - `[ ]` Xử lý tách đơn tự động theo sạp, trừ tồn kho trong DB transaction, hiển thị danh sách các mã đơn hàng được tạo và chuyển hướng đến trang Theo Dõi Đơn Hàng.
+  - `[x]` Xử lý tách đơn tự động theo sạp, trừ tồn kho trong DB transaction, hiển thị danh sách các mã đơn hàng được tạo và chuyển hướng đến trang Theo Dõi Đơn Hàng.
 - **Tiêu chí hoàn thành**: Đặt hàng thành công qua API `/api/v1/orders/checkout`, giỏ hàng được làm sạch, đơn hàng được tạo trong database.
 
 ---

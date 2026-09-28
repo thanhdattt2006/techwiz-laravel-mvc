@@ -17,6 +17,8 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [checkoutStall, setCheckoutStall] = useState(null);
 
   const isCustomer = isAuthenticated && (role === 'customer' || role === 'user');
 
@@ -47,6 +49,8 @@ export function CartProvider({ children }) {
     } else {
       setCart(null);
       setIsOpen(false);
+      setIsCheckoutOpen(false);
+      setCheckoutStall(null);
     }
   }, [isCustomer, refreshCart]);
 
@@ -54,6 +58,17 @@ export function CartProvider({ children }) {
   const openCart = useCallback(() => setIsOpen(true), []);
   const closeCart = useCallback(() => setIsOpen(false), []);
   const toggleCart = useCallback(() => setIsOpen((prev) => !prev), []);
+
+  // Checkout Modal toggles
+  const openCheckout = useCallback((stall = null) => {
+    setCheckoutStall(stall);
+    setIsCheckoutOpen(true);
+  }, []);
+
+  const closeCheckout = useCallback(() => {
+    setIsCheckoutOpen(false);
+    setCheckoutStall(null);
+  }, []);
 
   // Add Item to Cart
   const addToCart = useCallback(
@@ -215,6 +230,10 @@ export function CartProvider({ children }) {
       openCart,
       closeCart,
       toggleCart,
+      isCheckoutOpen,
+      checkoutStall,
+      openCheckout,
+      closeCheckout,
       addToCart,
       updateQuantity,
       removeItem,
@@ -229,6 +248,10 @@ export function CartProvider({ children }) {
       openCart,
       closeCart,
       toggleCart,
+      isCheckoutOpen,
+      checkoutStall,
+      openCheckout,
+      closeCheckout,
       addToCart,
       updateQuantity,
       removeItem,
