@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { ShoppingBag, LogIn, LayoutDashboard } from 'lucide-react';
+import { ShoppingBag, LogIn, LayoutDashboard, Heart } from 'lucide-react';
 
 export default function NavbarMobileDrawer({
   isOpen,
@@ -54,6 +54,20 @@ export default function NavbarMobileDrawer({
             {cartCount} {cartCount === 1 ? 'item' : 'items'}
           </span>
         </button>
+
+        {isAuthenticated && (role === 'customer' || role === 'user') && (
+          <Link
+            to="/user/dashboard?tab=favorites"
+            onClick={onClose}
+            className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl bg-rose-50 text-rose-600 font-bold text-xs border border-rose-200 transition"
+          >
+            <div className="flex items-center gap-2">
+              <Heart className="w-4 h-4 text-rose-500" />
+              <span>Saved Favorites</span>
+            </div>
+            <span className="text-[10px] font-semibold text-rose-500">Wishlist</span>
+          </Link>
+        )}
 
         {!isAuthenticated ? (
           <Link

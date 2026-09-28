@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
+import { useModal } from '../../context/ModalContext';
 import {
   Sprout,
   ShoppingBag,
@@ -15,6 +16,7 @@ import {
   Mail,
   Menu,
   X,
+  Heart,
 } from 'lucide-react';
 import NotificationDropdown from '../common/NotificationDropdown';
 import NavbarMobileDrawer from './NavbarMobileDrawer';
@@ -33,8 +35,27 @@ const NAV_LINKS = [
 export default function PublicNavbar() {
   const { user, role, isAuthenticated, logout } = useAuth();
   const { cartCount, openCart } = useCart();
+  const { showConfirm } = useModal();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const handleFavoritesClick = async () => {
+    if (isAuthenticated) {
+      navigate('/user/dashboard?tab=favorites');
+      return;
+    }
+    const confirmed = await showConfirm({
+      title: 'Sign In Required',
+      message: 'Please sign in to view and save your favorite farmers markets and fresh harvests.',
+      type: 'info',
+      confirmText: 'Sign In',
+      cancelText: 'Stay as Guest',
+    });
+    if (confirmed) {
+      navigate('/login', { state: { from: location } });
+    }
+  };
 
   const getDashboardPath = () => {
     if (role === 'admin') return '/admin/dashboard';
@@ -139,6 +160,17 @@ export default function PublicNavbar() {
               <span>Sign In</span>
             </Link>
           )}
+
+          {/* Favorites Wishlist Trigger Button */}
+          <button
+            type="button"
+            onClick={handleFavoritesClick}
+            aria-label="View Saved Favorites"
+            className="p-2 rounded-xl bg-slate-100 hover:bg-rose-50 text-[#0F172A] hover:text-rose-600 border border-[#E2E8DF] transition cursor-pointer"
+            title="Saved Favorites"
+          >
+            <Heart className="w-4 h-4 text-rose-500" />
+          </button>
 
           {/* Shopping Basket Trigger Button */}
           <button

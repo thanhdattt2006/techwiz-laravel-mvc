@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // Layouts
 import PublicLayout from '../components/layout/PublicLayout';
@@ -89,6 +89,8 @@ export default function AppRoutes() {
             <Route element={<UserLayout />}>
               <Route path="/user/dashboard" element={<CustomerDashboard />} />
               <Route path="/customer/dashboard" element={<CustomerDashboard />} />
+              <Route path="/user/favorites" element={<Navigate to="/user/dashboard?tab=favorites" replace />} />
+              <Route path="/customer/favorites" element={<Navigate to="/user/dashboard?tab=favorites" replace />} />
               <Route path="/user/profile" element={<CustomerProfilePage />} />
               <Route path="/customer/profile" element={<CustomerProfilePage />} />
               <Route path="/user/history" element={<CustomerOrdersPage />} />

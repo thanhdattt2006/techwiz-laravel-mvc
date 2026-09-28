@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, Link, NavLink, useNavigate } from 'react-router-dom';
+import { Outlet, Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
   LogOut,
@@ -9,11 +9,16 @@ import {
   SlidersHorizontal,
   Clock,
   Store,
+  Heart,
 } from 'lucide-react';
 
 export default function UserLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isFavoritesActive = location.pathname.includes('/user/dashboard') && location.search.includes('favorites');
+  const isDashboardActive = location.pathname.includes('/user/dashboard') && !location.search.includes('favorites');
 
   const handleLogout = async () => {
     await logout();
@@ -83,9 +88,9 @@ export default function UserLayout() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center gap-2 overflow-x-auto py-2">
           <NavLink
             to="/user/dashboard"
-            className={({ isActive }) =>
+            className={() =>
               `flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                isActive
+                isDashboardActive
                   ? 'bg-emerald-50 text-[#16A34A] border border-emerald-200 shadow-2xs'
                   : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAF6]'
               }`
@@ -93,6 +98,20 @@ export default function UserLayout() {
           >
             <ShoppingBag className="w-4 h-4 text-[#16A34A]" />
             <span>Shopper Dashboard</span>
+          </NavLink>
+
+          <NavLink
+            to="/user/dashboard?tab=favorites"
+            className={() =>
+              `flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                isFavoritesActive
+                  ? 'bg-rose-50 text-rose-600 border border-rose-200 shadow-2xs font-bold'
+                  : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAF6]'
+              }`
+            }
+          >
+            <Heart className={`w-4 h-4 ${isFavoritesActive ? 'fill-rose-500 text-rose-500' : 'text-rose-500'}`} />
+            <span>Saved Favorites</span>
           </NavLink>
 
           <NavLink

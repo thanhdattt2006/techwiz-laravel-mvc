@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCustomerOrders } from '../../hooks/useCustomerOrders';
 import { useCustomerFavorites } from '../../hooks/useCustomerFavorites';
@@ -19,14 +19,27 @@ import {
  * CustomerDashboard (Phase 4.11)
  * Live shopper dashboard with real-time pre-order metrics,
  * upcoming stall pickup pass, and dedicated Favorites management tab.
- * Strictly adheres to S.O.L.I.D & D.R.Y (< 160 lines).
+ * Strictly adheres to S.O.L.I.D & D.R.Y (< 190 lines).
  */
 export default function CustomerDashboard() {
   const { user } = useAuth();
   const { orders, loading: ordersLoading, counts: orderCounts } = useCustomerOrders();
   const { counts: favoriteCounts } = useCustomerFavorites();
 
-  const [activeTab, setActiveTab] = useState('OVERVIEW'); // 'OVERVIEW' | 'FAVORITES'
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isFavQuery = searchParams.get('tab')?.toUpperCase() === 'FAVORITES';
+  const [activeTab, setActiveTab] = useState(isFavQuery ? 'FAVORITES' : 'OVERVIEW');
+
+  useEffect(() => {
+    const tabParam = searchParams.get('tab')?.toUpperCase();
+    if (tabParam === 'FAVORITES') setActiveTab('FAVORITES');
+    else if (tabParam === 'OVERVIEW') setActiveTab('OVERVIEW');
+  }, [searchParams]);
+
+  const switchTab = (tab) => {
+    setActiveTab(tab);
+    setSearchParams(tab === 'FAVORITES' ? { tab: 'favorites' } : {});
+  };
 
   // Next active upcoming pre-order reservation
   const upcomingOrder = orders.find(
@@ -79,7 +92,7 @@ export default function CustomerDashboard() {
       <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white border border-[#E2E8DF] shadow-xs">
         <button
           type="button"
-          onClick={() => setActiveTab('OVERVIEW')}
+          onClick={() => switchTab('OVERVIEW')}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition cursor-pointer ${
             activeTab === 'OVERVIEW'
               ? 'bg-[#16A34A] text-white shadow-xs'
@@ -92,7 +105,7 @@ export default function CustomerDashboard() {
 
         <button
           type="button"
-          onClick={() => setActiveTab('FAVORITES')}
+          onClick={() => switchTab('FAVORITES')}
           className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition cursor-pointer ${
             activeTab === 'FAVORITES'
               ? 'bg-[#16A34A] text-white shadow-xs'
