@@ -28,24 +28,25 @@ export default function StatusBadge({ status = 'Placed', size = 'sm', className 
 
   if (
     normalized.includes('ready') ||
-    normalized === 'ready for pickup' ||
+    normalized === 'ready_for_pickup' ||
     normalized === 'active' ||
     normalized === 'approved'
   ) {
     config = {
-      label: status === 'ready' ? 'Ready for Pickup' : status,
+      label: normalized === 'ready_for_pickup' || normalized === 'ready' ? 'Ready for Pickup' : status,
       bg: 'bg-emerald-100 text-[#16A34A] border-emerald-200',
       icon: CheckCircle2,
       pulse: true,
     };
   } else if (
+    normalized.includes('accept') ||
     normalized.includes('harvest') ||
     normalized.includes('packed') ||
     normalized.includes('confirmed') ||
     normalized.includes('preparing')
   ) {
     config = {
-      label: status,
+      label: normalized === 'accepted' ? 'Farmer Accepted' : status,
       bg: 'bg-amber-100 text-amber-800 border-amber-200',
       icon: Package,
       pulse: false,
@@ -56,7 +57,7 @@ export default function StatusBadge({ status = 'Placed', size = 'sm', className 
     normalized.includes('pending')
   ) {
     config = {
-      label: status,
+      label: normalized === 'placed' ? 'Order Placed' : status,
       bg: 'bg-blue-50 text-blue-700 border-blue-200',
       icon: ShoppingBag,
       pulse: false,
@@ -67,18 +68,19 @@ export default function StatusBadge({ status = 'Placed', size = 'sm', className 
     normalized.includes('picked up')
   ) {
     config = {
-      label: status,
+      label: normalized === 'completed' ? 'Completed Pickup' : status,
       bg: 'bg-slate-100 text-[#475569] border-slate-200',
       icon: CheckCircle2,
       pulse: false,
     };
   } else if (
     normalized.includes('cancel') ||
+    normalized.includes('decline') ||
     normalized.includes('reject') ||
     normalized.includes('failed')
   ) {
     config = {
-      label: status,
+      label: normalized === 'declined' ? 'Farmer Declined' : normalized === 'cancelled' ? 'Cancelled' : status,
       bg: 'bg-rose-100 text-rose-700 border-rose-200',
       icon: XCircle,
       pulse: false,

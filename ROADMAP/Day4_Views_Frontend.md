@@ -349,19 +349,22 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.10: Cổng Khách Hàng - Lịch Sử Đơn Hàng & Tra Cứu Tiến Độ (Customer Orders & Tracking)
+### Phase 4.10: Cổng Khách Hàng - Lịch Sử Đơn Hàng & Tra Cứu Tiến Độ (Customer Orders & Tracking) [x]
 
 - **Mục tiêu**: Kết nối trang Lịch Sử Đơn Hàng và Trang Tra Cứu Tiến Độ Đơn Hàng theo đúng State Machine 4 bước.
 - **Files tác động**:
   - `frontend/src/pages/customer/CustomerOrdersPage.jsx`
   - `frontend/src/pages/public/OrderPickupTrackerPage.jsx`
+  - `frontend/src/hooks/useCustomerOrders.js`
+  - `frontend/src/hooks/useOrderTracking.js`
+  - `frontend/src/components/orders/*`
 - **Checklist công việc**:
-  - `[ ]` `CustomerOrdersPage.jsx`:
+  - `[x]` `CustomerOrdersPage.jsx`:
     - Thay thế `MOCK_ORDERS` bằng `orderApi.getMyOrders()`.
     - Bộ lọc trạng thái theo đúng Enum Backend: `placed`, `accepted`, `ready_for_pickup`, `completed`, `cancelled`, `declined`.
     - Nút **Huỷ Đơn Hàng**: Gọi `orderApi.cancelOrder(id, reason)` (chỉ hiển thị khi đơn chưa vượt quá cutoff).
     - Nút In phiếu đơn hàng dạng thẻ hoá đơn tiện xem.
-  - `[ ]` `OrderPickupTrackerPage.jsx`:
+  - `[x]` `OrderPickupTrackerPage.jsx`:
     - Thay thế dữ liệu mock và timer đếm lùi giả lập bằng `orderApi.trackOrder(orderCode)`.
     - Hiển thị đúng 4 bước theo State Machine:
       1. Đã tiếp nhận đơn đặt trước (`placed`)

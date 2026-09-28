@@ -100,7 +100,7 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
 - `[x]` **Phase 4.7**: Chi Tiết Nông Sản & Gỡ Bỏ Form Pre-Order Autofill (`ProductDetailPage.jsx`, `useProductDetail.js`, reviews, quantity picker).
 - `[x]` **Phase 4.8**: Xây Dựng Hệ Thống Giỏ Hàng Toàn Cục (`CartContext.jsx`, `CartDrawer.jsx` gom nhóm theo sạp).
 - `[x]` **Phase 4.9**: Quy Trình Đặt Hàng Pre-Order & Chọn Khung Giờ (`PreOrderCheckoutModal.jsx`, slots, cutoff).
-- `[ ]` **Phase 4.10**: Cổng Khách Hàng - Lịch Sử Đơn Hàng & Tra Cứu Tiến Độ (`CustomerOrdersPage.jsx`, `OrderPickupTrackerPage.jsx`).
+- `[x]` **Phase 4.10**: Cổng Khách Hàng - Lịch Sử Đơn Hàng & Tra Cứu Tiến Độ (`CustomerOrdersPage.jsx`, `OrderPickupTrackerPage.jsx`).
 - `[ ]` **Phase 4.11**: Cổng Khách Hàng - Đánh Giá 5 Sao, Hồ Sơ & Mục Yêu Thích (`ReviewModal.jsx`, `CustomerProfilePage.jsx` gỡ preferences rác).
 - `[ ]` **Phase 4.12**: Cổng Nông Dân - Hàng Đợi Duyệt Đơn Pre-Order (`FarmerDashboard.jsx` Queue: accept, ready, complete, decline reason).
 - `[ ]` **Phase 4.13**: Cổng Nông Dân - Quản Lý Kho & Mẫu Kho Tuần 7 Ngày (`FarmerDashboard.jsx` Inventory CRUD & Weekly Stock Rollover).
