@@ -13,6 +13,7 @@ Thumbs.db
 .env.production
 .env.local
 .env.*.local
+!frontend/.env.production
 
 # Backend dependencies & cache
 backend/vendor/

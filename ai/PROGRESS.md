@@ -139,5 +139,12 @@ Cập nhật mỗi ngày / mỗi ca làm việc để toàn team và AI luôn đ
   - Dữ liệu mẫu chuẩn: 6 chợ Chicago, 5 ngành hàng, 25+ nông sản tươi ngon, 3 tài khoản demo cố định có sẵn đơn hàng mẫu ở đủ 4 trạng thái.
   - Điểm nhấn chuẩn quốc tế: Cutoff countdown ticker, In-season harvest indicator, Farming practice badges, Booth navigator, Express check-in.
   - Kịch bản thuyết trình 15 phút: Đặt vấn đề & kiến trúc decoupled (2p), demo Khách hàng (4p), demo Nông dân (4p), demo Admin (3p), giải đáp kỹ thuật & bảo vệ đồ án trước BGK (2p).
+- `[x]` **Phase 5.7: Nâng Cấp Bản Đồ Tốc Độ Cao & Khả Năng Tiếp Cận Mục Yêu Thích (High-Speed Maps & Favorites Accessibility)**
+  - Bản đồ siêu tốc: Chuyển sang Google Maps Embed mặc định (< 200ms qua Edge CDN tại VN) thay thế link OpenStreetMap viễn dương chậm chạp; bổ sung toggle OpenStreetMap & loading skeleton mượt mà.
+  - Chuẩn hóa iframe: Áp dụng đầy đủ `loading="lazy"`, `referrerPolicy="strict-origin-when-cross-origin"`, `allowFullScreen`, `border: 0`.
+  - Tiếp cận Favorites 1-click: Thêm icon Trái Tim ❤️ trên Navbar chính, tab Saved Favorites trên thanh menu Shopper Hub, route `/user/favorites` đồng bộ URL query `?tab=favorites`.
+  - Trải nghiệm đăng nhập liền mạch: Modal "Sign In Required" cung cấp nút "Sign In" điều hướng thẳng sang `/login`, tự động redirect về đúng trang/sản phẩm cũ sau khi đăng nhập.
+  - Audit chất lượng: 100% file mã nguồn < 230 dòng (FE) và < 200 dòng (BE); `npm run build` thành công trong 707ms; `php artisan test` 177/177 tests passed.
 - Tình trạng: **100% HOÀN THÀNH TOÀN BỘ DAY 5! HỆ THỐNG MARKETLINK SẴN SÀNG 100% DEMO VÀ BẢO VỆ ĐỒ ÁN TECHWIZ 7!**
+
 

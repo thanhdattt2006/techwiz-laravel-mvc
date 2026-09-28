@@ -1,10 +1,20 @@
 import axios from 'axios';
 
 const getBaseUrl = () => {
-  if (typeof import.meta !== 'undefined' && import.meta?.env?.VITE_API_BASE_URL) {
-    return import.meta.env.VITE_API_BASE_URL;
+  const envUrl = typeof import.meta !== 'undefined' ? import.meta?.env?.VITE_API_BASE_URL : null;
+  const isBrowser = typeof window !== 'undefined';
+  const isRemoteHost = isBrowser && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+
+  // Prevent accidental localhost leaks when deployed on production domain (e.g. vercel.app)
+  if (isRemoteHost) {
+    if (!envUrl || envUrl.includes('127.0.0.1') || envUrl.includes('localhost')) {
+      return 'https://techwiz-laravel-mvc.onrender.com/api/v1';
+    }
+    return envUrl;
   }
-  return 'http://127.0.0.1:8000/api/v1';
+
+  // Local development or explicit envUrl
+  return envUrl || (import.meta?.env?.PROD ? 'https://techwiz-laravel-mvc.onrender.com/api/v1' : 'http://127.0.0.1:8000/api/v1');
 };
 
 const axiosClient = axios.create({
