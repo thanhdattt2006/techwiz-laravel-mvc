@@ -1,119 +1,183 @@
 import React from 'react';
+import { Search, Plus, Sprout, Loader2, RefreshCw, AlertCircle } from 'lucide-react';
+import FarmerProductCard from './FarmerProductCard';
+import FarmerProductModal from './FarmerProductModal';
 
 /**
- * FarmerStockTab
- * Displays weekly stall produce stock with live quantity adjustments
- * and status toggles (In Stock, Low, Sold Out).
+ * FarmerStockTab (Phase 4.13)
+ * Full Produce Inventory CRUD tab connected directly to Backend APIs.
  */
-export default function FarmerStockTab({ stockList, onAdjustStock, onToggleStockStatus }) {
+export default function FarmerStockTab({ hook }) {
+  const {
+    products,
+    categories,
+    filteredProducts,
+    loading,
+    error,
+    searchQuery,
+    setSearchQuery,
+    selectedCategory,
+    setSelectedCategory,
+    availabilityFilter,
+    setAvailabilityFilter,
+    actionLoadingId,
+    modalOpen,
+    editingProduct,
+    submitting,
+    openCreateModal,
+    openEditModal,
+    closeModal,
+    handleSaveProduct,
+    handleDeleteProduct,
+    handleQuickAdjustStock,
+    handleQuickToggleAvailability,
+    refetch,
+  } = hook;
+
   return (
     <div className="bg-white border border-[#E2E8DF] rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
       {/* Header Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E2E8DF]">
         <div>
-          <h2 className="text-base font-bold text-[#0F172A]">Weekly Stall Produce Stock</h2>
-          <p className="text-xs text-[#475569]">
-            Adjust live quantities brought to market. Shoppers see real-time availability in the public catalog.
+          <div className="flex items-center gap-2">
+            <h2 className="text-base font-bold text-[#0F172A]">Stall Produce Inventory</h2>
+            <span className="text-xs font-bold text-[#16A34A] bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+              {products.length} Items Listed
+            </span>
+          </div>
+          <p className="text-xs text-[#475569] mt-0.5">
+            Manage live harvest quantities and pricing. Changes reflect immediately in the public catalog.
           </p>
         </div>
-        <span className="text-xs font-bold text-[#16A34A] bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200 self-start sm:self-auto">
-          {stockList.length} Active Harvest Listings
-        </span>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={refetch}
+            className="p-2.5 rounded-xl border border-[#E2E8DF] text-slate-500 hover:text-[#16A34A] hover:bg-slate-50 transition cursor-pointer"
+            title="Refresh inventory"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={openCreateModal}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-xs cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add Produce</span>
+          </button>
+        </div>
       </div>
+
+      {/* Filter & Search Bar */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        {/* Search */}
+        <div className="relative flex-1">
+          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search by crop name or harvest note..."
+            className="w-full pl-9.5 pr-4 py-2 rounded-xl border border-[#E2E8DF] bg-[#F8FAF6] text-xs font-medium focus:ring-2 focus:ring-[#16A34A] focus:outline-hidden"
+          />
+        </div>
+
+        {/* Category & Availability Filters */}
+        <div className="flex items-center gap-2">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="px-3 py-2 rounded-xl border border-[#E2E8DF] bg-[#F8FAF6] text-xs font-medium focus:ring-2 focus:ring-[#16A34A] focus:outline-hidden"
+          >
+            <option value="ALL">All Categories</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={availabilityFilter}
+            onChange={(e) => setAvailabilityFilter(e.target.value)}
+            className="px-3 py-2 rounded-xl border border-[#E2E8DF] bg-[#F8FAF6] text-xs font-medium focus:ring-2 focus:ring-[#16A34A] focus:outline-hidden"
+          >
+            <option value="ALL">All Availability</option>
+            <option value="available">Available Only</option>
+            <option value="sold_out">Sold Out Only</option>
+            <option value="unavailable">Unavailable Only</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Loading State */}
+      {loading && (
+        <div className="py-16 text-center space-y-3">
+          <Loader2 className="w-8 h-8 text-[#16A34A] animate-spin mx-auto" />
+          <p className="text-xs text-[#475569] font-medium">Loading stall inventory from server...</p>
+        </div>
+      )}
+
+      {/* Error State */}
+      {!loading && error && (
+        <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+          <button
+            type="button"
+            onClick={refetch}
+            className="underline font-bold hover:text-rose-900 cursor-pointer"
+          >
+            Try Again
+          </button>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!loading && !error && filteredProducts.length === 0 && (
+        <div className="text-center py-12 px-4 border border-dashed border-[#CBD5E1] rounded-2xl bg-[#F8FAF6] space-y-3">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-[#16A34A] flex items-center justify-center mx-auto">
+            <Sprout className="w-6 h-6" />
+          </div>
+          <h4 className="text-sm font-bold text-[#0F172A]">No produce items found</h4>
+          <p className="text-xs text-[#475569] max-w-sm mx-auto">
+            {products.length === 0
+              ? 'You have not listed any produce items yet. Click "+ Add Produce" above to create your first crop listing!'
+              : 'No items match your filter criteria. Try clearing the search or category filter.'}
+          </p>
+        </div>
+      )}
 
       {/* Produce Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {stockList.map((item) => (
-          <div
-            key={item.id}
-            className="border border-[#E2E8DF] rounded-2xl p-4 bg-[#F8FAF6] space-y-4 hover:border-emerald-300 transition"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex items-center gap-3">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-12 h-12 rounded-xl object-cover border border-[#E2E8DF]"
-                />
-                <div>
-                  <h4 className="text-xs font-bold text-[#0F172A]">{item.name}</h4>
-                  <p className="text-[11px] text-[#475569]">
-                    {item.category} • {item.harvestWindow}
-                  </p>
-                </div>
-              </div>
-              <span className="text-xs font-black text-[#16A34A]">
-                ${Number(item.price || 0).toFixed(2)}/{item.unit}
-              </span>
-            </div>
+      {!loading && !error && filteredProducts.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {filteredProducts.map((product) => (
+            <FarmerProductCard
+              key={product.id}
+              product={product}
+              onEdit={openEditModal}
+              onDelete={handleDeleteProduct}
+              onAdjustStock={handleQuickAdjustStock}
+              onToggleAvailability={handleQuickToggleAvailability}
+              loadingId={actionLoadingId}
+            />
+          ))}
+        </div>
+      )}
 
-            {/* Stock Controls */}
-            <div className="flex items-center justify-between pt-2 border-t border-[#E2E8DF]">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-[#475569]">Available:</span>
-                <div className="inline-flex items-center border border-[#E2E8DF] rounded-xl bg-white shadow-2xs">
-                  <button
-                    type="button"
-                    onClick={() => onAdjustStock(item.id, -1)}
-                    className="px-2.5 py-1 text-xs font-bold text-[#475569] hover:bg-slate-100 rounded-l-xl transition cursor-pointer"
-                    aria-label="Decrease stock"
-                  >
-                    -
-                  </button>
-                  <span className="px-3 py-1 text-xs font-bold text-[#0F172A] font-mono">
-                    {item.stockQty} {item.unit}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => onAdjustStock(item.id, 1)}
-                    className="px-2.5 py-1 text-xs font-bold text-[#475569] hover:bg-slate-100 rounded-r-xl transition cursor-pointer"
-                    aria-label="Increase stock"
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              {/* Stock Status Pills */}
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={() => onToggleStockStatus(item.id, 'IN_STOCK')}
-                  className={`px-2 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer ${
-                    item.stockStatus === 'IN_STOCK'
-                      ? 'bg-emerald-600 text-white'
-                      : 'bg-white text-[#475569] border border-[#E2E8DF]'
-                  }`}
-                >
-                  In Stock
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onToggleStockStatus(item.id, 'LOW_STOCK')}
-                  className={`px-2 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer ${
-                    item.stockStatus === 'LOW_STOCK'
-                      ? 'bg-amber-500 text-white'
-                      : 'bg-white text-[#475569] border border-[#E2E8DF]'
-                  }`}
-                >
-                  Low
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onToggleStockStatus(item.id, 'SOLD_OUT')}
-                  className={`px-2 py-1 rounded-lg text-[10px] font-bold transition cursor-pointer ${
-                    item.stockStatus === 'SOLD_OUT'
-                      ? 'bg-rose-600 text-white'
-                      : 'bg-white text-[#475569] border border-[#E2E8DF]'
-                  }`}
-                >
-                  Sold Out
-                </button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      {/* Create / Edit Modal */}
+      <FarmerProductModal
+        isOpen={modalOpen}
+        onClose={closeModal}
+        onSave={handleSaveProduct}
+        product={editingProduct}
+        categories={categories}
+        submitting={submitting}
+      />
     </div>
   );
 }

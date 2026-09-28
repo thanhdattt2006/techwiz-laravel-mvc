@@ -420,17 +420,24 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.13: Cổng Nông Dân - Quản Lý Kho & Mẫu Kho Tuần 7 Ngày (Inventory & Weekly Stock)
+### Phase 4.13: Cổng Nông Dân - Quản Lý Kho & Mẫu Kho Tuần 7 Ngày (Inventory & Weekly Stock) [x]
 
 - **Mục tiêu**: Kết nối CRUD Kho Nông Sản và xây dựng Tab Mẫu Kho Bán Theo Tuần 7 ngày (Weekly Stock Rollover).
 - **Files tác động**:
   - `frontend/src/pages/farmer/FarmerDashboard.jsx` (Tab Stock & Tab Weekly Stock)
+  - `frontend/src/components/farmer/FarmerStockTab.jsx`
+  - `frontend/src/components/farmer/FarmerProductCard.jsx`
+  - `frontend/src/components/farmer/FarmerProductModal.jsx`
+  - `frontend/src/components/farmer/WeeklyStockTab.jsx`
+  - `frontend/src/components/farmer/WeeklyStockTemplateForm.jsx`
+  - `frontend/src/hooks/useFarmerProducts.js`
+  - `frontend/src/hooks/useWeeklyStock.js`
 - **Checklist công việc**:
-  - `[ ]` **Tab Quản Lý Kho Nông Sản (Produce Inventory)**:
+  - `[x]` **Tab Quản Lý Kho Nông Sản (Produce Inventory)**:
     - Thay thế `INITIAL_STALL_STOCK` bằng `productApi.getFarmerProducts()`.
     - Modal Thêm mới / Chỉnh sửa nông sản: Tên, mô tả, giá bán, đơn vị tính (`kg`, `bundle`, `box`...), tồn kho ban đầu, ảnh, danh mục $\rightarrow$ Gọi `productApi.createProduct` / `updateProduct`.
     - Nút Xoá nông sản an toàn $\rightarrow$ Gọi `productApi.deleteProduct(id)`.
-  - `[ ]` **Tab Mẫu Kho Bán Theo Tuần (Weekly Stock Rollover)**:
+  - `[x]` **Tab Mẫu Kho Bán Theo Tuần (Weekly Stock Rollover)**:
     - Xem và cấu hình định mức tồn kho cho từng thứ trong tuần (Chủ Nhật đến Thứ Bảy) qua `weeklyStockApi.getTemplates(productId)` và `updateTemplates(productId, templates)`.
     - Nút 1-Click **"Áp Dụng Định Mức Kho Tuần Tới"** gọi `weeklyStockApi.applyWeeklyTemplates(data)` để cập nhật tồn kho mở bán cho phiên chợ sắp tới.
 - **Tiêu chí hoàn thành**: Thêm/sửa/xoá nông sản thành công; Cấu hình mẫu kho và áp dụng kho tuần cập nhật tồn kho mở bán tức thì.
