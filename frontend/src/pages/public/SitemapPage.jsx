@@ -70,13 +70,6 @@ export default function SitemapPage() {
               <p className="text-[11px] text-[#475569] mt-0.5">Zero food miles mission, family farm profiles, SRS compliance standards.</p>
             </li>
             <li>
-              <Link to="/gallery" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
-                <span>/gallery (Harvest Gallery)</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-              <p className="text-[11px] text-[#475569] mt-0.5">Visual documentation of certified farm stalls and seasonal harvests.</p>
-            </li>
-            <li>
               <Link to="/feedback" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
                 <span>/feedback (Customer Reviews)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -90,6 +83,13 @@ export default function SitemapPage() {
               </Link>
               <p className="text-[11px] text-[#475569] mt-0.5">Chicago Green Loop HQ locator map, helpline, and manager inquiry form.</p>
             </li>
+            <li>
+              <Link to="/sitemap" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
+                <span>/sitemap (Platform Directory)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <p className="text-[11px] text-[#475569] mt-0.5">Complete architectural index of public catalogs and role portals.</p>
+            </li>
           </ul>
         </div>
 
@@ -101,39 +101,46 @@ export default function SitemapPage() {
           </div>
           <ul className="space-y-2.5 text-xs text-[#475569]">
             <li>
-              <Link to="/user/dashboard" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
-                <span>/user/dashboard (Shopper)</span>
+              <Link to="/customer/dashboard" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
+                <span>/customer/dashboard (Shopper)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <p className="text-[11px] text-[#475569] mt-0.5">Active pickup reservations, pickup day reminders, and local farm favorites.</p>
             </li>
             <li>
-              <Link to="/user/history" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
-                <span>/user/history (Order Log)</span>
+              <Link to="/customer/favorites" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
+                <span>/customer/favorites (Saved Produce)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <p className="text-[11px] text-[#475569] mt-0.5">Bookmarked organic produce listings and preferred family growers.</p>
+            </li>
+            <li>
+              <Link to="/customer/orders" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
+                <span>/customer/orders (Order History)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <p className="text-[11px] text-[#475569] mt-0.5">Past market visits, itemized in-person cash receipts, and re-order shortcuts.</p>
             </li>
             <li>
-              <Link to="/user/profile" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
-                <span>/user/profile (Account)</span>
+              <Link to="/customer/profile" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
+                <span>/customer/profile (Account)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <p className="text-[11px] text-[#475569] mt-0.5">Shopper contact info, preferred pickup markets, and SMS pickup alerts.</p>
             </li>
             <li>
-              <Link to="/operator/dashboard" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
-                <span>/operator/dashboard (Operator)</span>
+              <Link to="/farmer/dashboard" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
+                <span>/farmer/dashboard (Farmer & Stall)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
-              <p className="text-[11px] text-[#475569] mt-0.5">Stall Master queue: real-time crate check-in, customer inspection, cash collection.</p>
+              <p className="text-[11px] text-[#475569] mt-0.5">Live crate check-in, weekly stock template rollover, and sales analytics.</p>
             </li>
             <li>
               <Link to="/admin/dashboard" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
                 <span>/admin/dashboard (Admin)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
-              <p className="text-[11px] text-[#475569] mt-0.5">Market registry, stall allocations, produce categories, and platform analytics.</p>
+              <p className="text-[11px] text-[#475569] mt-0.5">Market registry, stall approvals, produce categories, and platform analytics.</p>
             </li>
           </ul>
         </div>
@@ -154,10 +161,17 @@ export default function SitemapPage() {
             </li>
             <li>
               <Link to="/register" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
-                <span>/register (Registration)</span>
+                <span>/register (Shopper Registration)</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <p className="text-[11px] text-[#475569] mt-0.5">Local consumer registration with address validation and terms acceptance.</p>
+            </li>
+            <li>
+              <Link to="/register-farmer" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">
+                <span>/register-farmer (Farmer Stall Application)</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <p className="text-[11px] text-[#475569] mt-0.5">Grower & stall vendor onboarding with farm details and admin approval flow.</p>
             </li>
             <li>
               <Link to="/forgot-password" className="flex items-center justify-between font-semibold text-[#0F172A] hover:text-[#16A34A]">

@@ -26,7 +26,6 @@ const NAV_LINKS = [
   { to: '/markets', label: 'Markets' },
   { to: '/products', label: 'Produce' },
   { to: '/about', label: 'About' },
-  { to: '/gallery', label: 'Gallery' },
   { to: '/feedback', label: 'Feedback' },
   { to: '/contact', label: 'Contact' },
   { to: '/sitemap', label: 'Sitemap' },

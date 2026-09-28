@@ -42,9 +42,6 @@ export default function PublicFooter() {
                 <Link to="/about" className="hover:text-white transition">About MarketLink</Link>
               </li>
               <li>
-                <Link to="/gallery" className="hover:text-white transition">Harvest & Stalls Gallery</Link>
-              </li>
-              <li>
                 <Link to="/feedback" className="hover:text-white transition">Customer Reviews</Link>
               </li>
               <li>

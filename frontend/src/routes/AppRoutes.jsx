@@ -16,7 +16,6 @@ import PageFallback from '../components/common/PageFallback';
 // Code-split Public Pages (React.lazy)
 const HomePage = lazy(() => import('../pages/public/HomePage'));
 const AboutPage = lazy(() => import('../pages/public/AboutPage'));
-const GalleryPage = lazy(() => import('../pages/public/GalleryPage'));
 const FeedbackPage = lazy(() => import('../pages/public/FeedbackPage'));
 const ContactPage = lazy(() => import('../pages/public/ContactPage'));
 const SitemapPage = lazy(() => import('../pages/public/SitemapPage'));
@@ -56,7 +55,6 @@ export default function AppRoutes() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/tracking/:id" element={<OrderPickupTrackerPage />} />
             <Route path="/orders/track/:id" element={<OrderPickupTrackerPage />} />
-            <Route path="/gallery" element={<GalleryPage />} />
             <Route path="/feedback" element={<FeedbackPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/sitemap" element={<SitemapPage />} />
