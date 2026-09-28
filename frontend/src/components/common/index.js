@@ -8,3 +8,4 @@ export { default as FilterSidebar } from './FilterSidebar';
 export { default as AnnouncementBanner } from './AnnouncementBanner';
 export { default as CartDrawer } from './CartDrawer';
 export { default as PreOrderCheckoutModal } from './PreOrderCheckoutModal';
+export { default as ReviewModal } from './ReviewModal';

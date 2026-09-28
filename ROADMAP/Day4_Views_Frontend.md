@@ -376,20 +376,25 @@ Nhằm đảm bảo **tính độc lập, rõ ràng, tránh quá tải ngữ c�
 
 ---
 
-### Phase 4.11: Cổng Khách Hàng - Đánh Giá, Hồ Sơ & Mục Yêu Thích (Reviews, Profile & Favorites)
+### Phase 4.11: Cổng Khách Hàng - Đánh Giá, Hồ Sơ & Mục Yêu Thích (Reviews, Profile & Favorites) [x]
 
 - **Mục tiêu**: Tích hợp Modal Đánh giá 5 sao cho đơn completed, gỡ bỏ tab Preferences rác trong Profile và quản lý mục Yêu thích.
 - **Files tác động**:
   - Tạo mới: `frontend/src/components/common/ReviewModal.jsx`
+  - `frontend/src/components/customer/ProfileInfoForm.jsx`
+  - `frontend/src/components/customer/ProfileSecurityForm.jsx`
+  - `frontend/src/components/customer/FavoritesTab.jsx`
+  - `frontend/src/components/customer/UpcomingPickupCard.jsx`
   - `frontend/src/pages/customer/CustomerProfilePage.jsx`
   - `frontend/src/pages/customer/CustomerDashboard.jsx`
+  - `frontend/src/hooks/useCustomerFavorites.js`
 - **Checklist công việc**:
-  - `[ ]` `ReviewModal.jsx`: Cho phép chọn 1-5 sao, viết nhận xét cảm nhận $\rightarrow$ Gọi `reviewApi.submitReview(data)` (chỉ cho phép khi đơn `completed`).
-  - `[ ]` `CustomerProfilePage.jsx`:
+  - `[x]` `ReviewModal.jsx`: Cho phép chọn 1-5 sao, viết nhận xét cảm nhận $\rightarrow$ Gọi `reviewApi.submitReview(data)` (chỉ cho phép khi đơn `completed`, tuân thủ ràng buộc XOR giữa sạp nông dân hoặc món nông sản).
+  - `[x]` `CustomerProfilePage.jsx`:
     - **Gỡ bỏ hoàn toàn**: Tab `PREFERENCES` lưu `localStorage` và nút "1-Click Demo Fill".
     - Kết nối form thông tin cá nhân với `authApi.updateProfile({ fullname, phone, address })`.
     - Kết nối form đổi mật khẩu với `authApi.changePassword({ current_password, new_password, new_password_confirmation })`.
-  - `[ ]` `CustomerDashboard.jsx`: Thêm Tab Mục Yêu Thích gọi `favoriteApi.getFavorites()` hiển thị danh sách nông sản và chợ đã thả tim.
+  - `[x]` `CustomerDashboard.jsx`: Thêm Tab Mục Yêu Thích gọi `favoriteApi.getFavorites()` hiển thị danh sách nông sản và chợ đã thả tim.
 - **Tiêu chí hoàn thành**: Viết đánh giá thành công sau khi hoàn tất đơn; Cập nhật hồ sơ và đổi mật khẩu hoạt động với Backend API.
 
 ---

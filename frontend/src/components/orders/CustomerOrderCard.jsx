@@ -20,6 +20,7 @@ import { StatusBadge } from '../common';
 export default function CustomerOrderCard({
   order,
   onOpenSlip,
+  onOpenReview,
   onCancelOrder,
   isCancelling = false,
 }) {
@@ -132,13 +133,14 @@ export default function CustomerOrderCard({
 
           {isCompleted && (
             <div className="pt-2">
-              <Link
-                to={`/feedback?orderCode=${encodeURIComponent(order.order_code)}`}
-                className="inline-flex items-center gap-1 text-[11px] font-bold text-[#16A34A] hover:underline"
+              <button
+                type="button"
+                onClick={() => onOpenReview ? onOpenReview(order) : null}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold border border-amber-200 transition cursor-pointer"
               >
                 <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
-                <span>Leave Stall Feedback</span>
-              </Link>
+                <span>Rate & Review Harvest</span>
+              </button>
             </div>
           )}
 

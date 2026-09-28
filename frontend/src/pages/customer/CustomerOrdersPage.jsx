@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { useCustomerOrders } from '../../hooks/useCustomerOrders';
 import { CustomerOrderCard, InspectionSlipModal } from '../../components/orders';
+import { ReviewModal } from '../../components/common';
 
 /**
  * CustomerOrdersPage (Phase 4.10)
@@ -34,6 +35,8 @@ export default function CustomerOrdersPage() {
     counts,
     refetch,
   } = useCustomerOrders();
+
+  const [selectedReviewOrder, setSelectedReviewOrder] = React.useState(null);
 
   return (
     <div className="space-y-8 pb-16">
@@ -170,6 +173,7 @@ export default function CustomerOrdersPage() {
               key={ord.id}
               order={ord}
               onOpenSlip={setSelectedSlipOrder}
+              onOpenReview={setSelectedReviewOrder}
               onCancelOrder={cancelOrder}
               isCancelling={cancellingId === ord.id}
             />
@@ -181,6 +185,14 @@ export default function CustomerOrdersPage() {
       <InspectionSlipModal
         order={selectedSlipOrder}
         onClose={() => setSelectedSlipOrder(null)}
+      />
+
+      {/* 5-Star Harvest Review Modal */}
+      <ReviewModal
+        isOpen={Boolean(selectedReviewOrder)}
+        order={selectedReviewOrder}
+        onClose={() => setSelectedReviewOrder(null)}
+        onSuccess={refetch}
       />
     </div>
   );
