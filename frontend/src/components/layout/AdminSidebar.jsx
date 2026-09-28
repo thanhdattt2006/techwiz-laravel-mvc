@@ -82,7 +82,7 @@ export default function AdminSidebar({
               <Link
                 key={item.id}
                 to={`/admin/dashboard?tab=${item.tab}`}
-                title={isCollapsed ? item.label : undefined}
+                title={isCollapsed ? `${item.label}${item.badge ? ` (${item.badge})` : ''}` : undefined}
                 className={`flex items-center ${
                   isCollapsed ? 'justify-center px-2' : 'gap-3 px-3.5'
                 } py-2.5 rounded-xl text-xs font-bold transition-all ${
@@ -91,13 +91,25 @@ export default function AdminSidebar({
                     : 'text-[#475569] hover:bg-[#F8FAF6] hover:text-[#0F172A]'
                 }`}
               >
-                <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-[#16A34A]'}`} />
+                <div className="relative shrink-0 flex items-center justify-center">
+                  <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-[#16A34A]'}`} />
+                  {isCollapsed && item.badge != null && (
+                    <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500 ring-2 ring-white" />
+                  )}
+                </div>
                 {!isCollapsed && (
                   <>
                     <div className="flex-1 truncate">
                       <span>{item.label}</span>
                     </div>
-                    {isActive && <ChevronRight className="w-3.5 h-3.5 opacity-80" />}
+                    {item.badge != null && (
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-black shrink-0 ${
+                        isActive ? 'bg-white text-[#16A34A]' : 'bg-amber-500 text-white'
+                      }`}>
+                        {item.badge}
+                      </span>
+                    )}
+                    {isActive && <ChevronRight className="w-3.5 h-3.5 opacity-80 shrink-0" />}
                   </>
                 )}
               </Link>

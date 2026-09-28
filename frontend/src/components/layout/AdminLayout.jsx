@@ -12,22 +12,16 @@ import {
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
+  Tag,
+  Bell,
 } from 'lucide-react';
+import { useAdminOverview } from '../../hooks/useAdminOverview';
 import NotificationDropdown from '../common/NotificationDropdown';
 import AdminSidebar from './AdminSidebar';
 import AdminMobileDrawer from './AdminMobileDrawer';
 
-const NAV_ITEMS = [
-  { id: 'markets', label: 'Markets Registry', icon: Store, tab: 'markets' },
-  { id: 'vendors', label: 'Stall Applications', icon: ShieldCheck, tab: 'vendors' },
-  { id: 'users', label: 'User Accounts', icon: Users, tab: 'users' },
-  { id: 'reviews', label: 'Review Moderation', icon: MessageSquare, tab: 'moderation' },
-  { id: 'messages', label: 'Inquiries Inbox', icon: Mail, tab: 'messages' },
-  { id: 'reports', label: 'Reports & Analytics', icon: BarChart3, tab: 'overview' },
-];
-
 /**
- * AdminLayout (Phase 4.17)
+ * AdminLayout (Phase 4.18)
  * Layout shell for Platform Governance with Notification Dropdown and responsive navigation.
  */
 export default function AdminLayout() {
@@ -42,6 +36,33 @@ export default function AdminLayout() {
       return false;
     }
   });
+
+  const { stats } = useAdminOverview();
+  const pendingFarmersCount = stats?.users?.pending_farmers || 0;
+  const unreadInquiriesCount = stats?.inquiries?.unread || 0;
+
+  const navItems = [
+    { id: 'overview', label: 'Overview & Analytics', icon: BarChart3, tab: 'overview' },
+    { id: 'markets', label: 'Markets Registry', icon: Store, tab: 'markets' },
+    { id: 'categories', label: 'Produce Categories', icon: Tag, tab: 'categories' },
+    {
+      id: 'vendors',
+      label: 'Stall Applications',
+      icon: ShieldCheck,
+      tab: 'vendors',
+      badge: pendingFarmersCount > 0 ? pendingFarmersCount : null,
+    },
+    { id: 'moderation', label: 'Review & Products', icon: MessageSquare, tab: 'moderation' },
+    { id: 'users', label: 'User Accounts', icon: Users, tab: 'users' },
+    { id: 'notices', label: 'System Bulletins', icon: Bell, tab: 'notices' },
+    {
+      id: 'messages',
+      label: 'Inquiries Inbox',
+      icon: Mail,
+      tab: 'messages',
+      badge: unreadInquiriesCount > 0 ? unreadInquiriesCount : null,
+    },
+  ];
 
   const toggleCollapse = () => {
     setIsCollapsed((prev) => {
@@ -69,7 +90,7 @@ export default function AdminLayout() {
         isCollapsed={isCollapsed}
         toggleCollapse={toggleCollapse}
         currentTab={currentTab}
-        navItems={NAV_ITEMS}
+        navItems={navItems}
         user={user}
         handleLogout={handleLogout}
       />
@@ -79,7 +100,7 @@ export default function AdminLayout() {
         isOpen={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
         currentTab={currentTab}
-        navItems={NAV_ITEMS}
+        navItems={navItems}
         user={user}
         handleLogout={handleLogout}
       />

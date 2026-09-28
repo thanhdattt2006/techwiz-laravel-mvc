@@ -37,9 +37,28 @@ export default function AdminCategoriesTab({ categoryHook }) {
   };
 
   return (
-    <div className="overflow-x-auto rounded-2xl border border-[#E2E8DF]">
-      {loading ? (
-        <div className="p-8 text-center text-xs text-slate-400">Loading categories...</div>
+    <div className="space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#E2E8DF]">
+        <div>
+          <h2 className="text-base font-bold text-[#0F172A]">Produce Categories</h2>
+          <p className="text-xs text-[#475569]">
+            Classify local harvest varieties for catalog filtering, search, and seasonal product discovery.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => { setEditingCategory(null); setIsCatModalOpen(true); }}
+          className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-xs cursor-pointer self-start sm:self-auto"
+        >
+          <PlusCircle className="w-4 h-4" />
+          <span>Add Category</span>
+        </button>
+      </div>
+
+      <div className="overflow-x-auto rounded-2xl border border-[#E2E8DF]">
+        {loading ? (
+          <div className="p-8 text-center text-xs text-slate-400">Loading categories...</div>
       ) : categories.length === 0 ? (
         <div className="p-8 text-center text-xs text-slate-400">No categories found.</div>
       ) : (
@@ -99,6 +118,7 @@ export default function AdminCategoriesTab({ categoryHook }) {
           </tbody>
         </table>
       )}
+      </div>
 
       <AdminCategoryModal
         isOpen={isCatModalOpen}

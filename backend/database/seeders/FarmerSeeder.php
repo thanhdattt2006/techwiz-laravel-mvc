@@ -104,5 +104,25 @@ class FarmerSeeder extends Seeder
                 ]
             );
         }
+
+        // 3. Pending Farmer Stall Application (Awaiting admin approval)
+        $farmerUser3 = User::where('username', 'robert_chen')->first();
+        if ($farmerUser3) {
+            Farmer::updateOrCreate(
+                ['user_id' => $farmerUser3->id],
+                [
+                    'stall_name' => 'Prairie Roots Microgreens',
+                    'contact_person' => 'Robert Chen',
+                    'contact_phone' => '(312) 555-0177',
+                    'address' => '450 Country Ridge Rd, Aurora, IL 60504',
+                    'latitude' => 41.7606,
+                    'longitude' => -88.3201,
+                    'description' => 'Hydroponic microgreens, specialty edible flowers, baby culinary herbs, and organic pea shoots grown sustainably indoors.',
+                    'logo' => 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?auto=format&fit=crop&w=400&q=80',
+                    'avg_rating' => 0.00,
+                    'review_count' => 0,
+                ]
+            );
+        }
     }
 }

@@ -61,7 +61,16 @@ export default function AdminMobileDrawer({
                     <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#16A34A]'}`} />
                     <span>{item.label}</span>
                   </div>
-                  {isActive && <ChevronRight className="w-3.5 h-3.5 opacity-80" />}
+                  <div className="flex items-center gap-2">
+                    {item.badge != null && (
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-black shrink-0 ${
+                        isActive ? 'bg-white text-[#16A34A]' : 'bg-amber-500 text-white'
+                      }`}>
+                        {item.badge}
+                      </span>
+                    )}
+                    {isActive && <ChevronRight className="w-3.5 h-3.5 opacity-80" />}
+                  </div>
                 </Link>
               );
             })}

@@ -94,5 +94,20 @@ class UserSeeder extends Seeder
             ]
         );
         Cart::updateOrCreate(['user_id' => $customer2->id]);
+
+        // 6. Pending Farmer Applicant (Robert Chen)
+        User::updateOrCreate(
+            ['username' => 'robert_chen'],
+            [
+                'fullname' => 'Robert Chen (Prairie Roots)',
+                'email' => 'robert.chen@prairieroots.com',
+                'phone' => '(312) 555-0177',
+                'address' => '450 Country Ridge Rd, Aurora, IL 60504',
+                'role' => User::ROLE_FARMER,
+                'status' => User::STATUS_PENDING,
+                'password' => $defaultPassword,
+                'email_verified_at' => now(),
+            ]
+        );
     }
 }
