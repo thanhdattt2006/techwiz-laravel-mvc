@@ -23,100 +23,64 @@ class AdminController extends Controller
 {
     use ApiResponse;
 
-    /**
-     * Get platform overview statistics (Admin).
-     * Delegated to AdminAnalyticsService for SRP compliance.
-     */
     public function overviewStats(AdminAnalyticsService $analyticsService): JsonResponse
     {
-        return $this->successResponse(
-            $analyticsService->getOverviewStats(),
-            'Platform overview statistics retrieved successfully.'
-        );
+        return $this->successResponse($analyticsService->getOverviewStats(), 'Platform overview statistics retrieved successfully.');
     }
 
-    /**
-     * List all platform users with filtering and search (Admin).
-     */
     public function users(Request $request): JsonResponse
     {
         $query = User::with('farmer');
-
         if ($request->filled('role')) {
             $query->where('role', (string) $request->query('role'));
         }
-
         if ($request->filled('status')) {
             $query->where('status', (string) $request->query('status'));
         }
-
         if ($request->filled('search')) {
-            $search = (string) $request->query('search');
-            $query->where(static function ($q) use ($search): void {
-                $q->where('fullname', 'like', "%{$search}%")
-                    ->orWhere('username', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('phone', 'like', "%{$search}%");
-            });
+            $s = (string) $request->query('search');
+            $query->where(fn ($q) => $q->where('fullname', 'like', "%{$s}%")
+                ->orWhere('username', 'like', "%{$s}%")
+                ->orWhere('email', 'like', "%{$s}%")
+                ->orWhere('phone', 'like', "%{$s}%"));
         }
 
-        $users = $query->latest('created_at')->get();
-
-        return $this->successResponse(
-            UserResource::collection($users),
-            'Users retrieved successfully.'
-        );
+        return $this->successResponse(UserResource::collection($query->latest('created_at')->get()), 'Users retrieved successfully.');
     }
 
-    /**
-     * Update account status of a user (Admin).
-     */
     public function updateUserStatus(UpdateUserStatusRequest $request, int $id): JsonResponse
     {
         if ($id === $request->user()->id) {
             return $this->errorResponse('You cannot modify your own account status.', 422);
         }
-
         $user = User::with('farmer')->find($id);
-
         if (! $user) {
             return $this->errorResponse('User not found.', 404);
         }
 
-        $user->status = (string) $request->status;
+        $newStatus = (string) $request->status;
+        $user->status = $newStatus;
         $user->save();
 
-        return $this->successResponse(
-            new UserResource($user),
-            'User status updated successfully.'
-        );
+        if ($newStatus === User::STATUS_BANNED || $newStatus === User::STATUS_INACTIVE) {
+            $user->tokens()->delete();
+        }
+
+        return $this->successResponse(new UserResource($user), 'User status updated successfully.');
     }
 
-    /**
-     * List pending farmer applications awaiting approval (Admin).
-     */
     public function pendingFarmers(): JsonResponse
     {
         $farmers = Farmer::with('user')
-            ->whereHas('user', static function ($q): void {
-                $q->where('status', User::STATUS_PENDING);
-            })
-            ->latest('created_at')
-            ->get();
+            ->whereHas('user', fn ($q) => $q->where('status', User::STATUS_PENDING))
+            ->latest('created_at')->get();
 
-        return $this->successResponse(
-            FarmerResource::collection($farmers),
-            'Pending farmer applications retrieved successfully.'
-        );
+        return $this->successResponse(FarmerResource::collection($farmers), 'Pending farmer applications retrieved successfully.');
     }
 
-    /**
-     * Approve a pending farmer stall application (Admin).
-     */
     public function approveFarmer(int $id): JsonResponse
     {
         $farmer = Farmer::with('user')->find($id);
-
         if (! $farmer || ! $farmer->user) {
             return $this->errorResponse('Farmer stall application not found.', 404);
         }
@@ -132,25 +96,19 @@ class AdminController extends Controller
             'is_read' => false,
         ]);
 
-        return $this->successResponse(
-            new FarmerResource($farmer),
-            'Farmer stall approved successfully.'
-        );
+        return $this->successResponse(new FarmerResource($farmer), 'Farmer stall approved successfully.');
     }
 
-    /**
-     * Reject a pending farmer stall application (Admin).
-     */
     public function rejectFarmer(RejectFarmerRequest $request, int $id): JsonResponse
     {
         $farmer = Farmer::with('user')->find($id);
-
         if (! $farmer || ! $farmer->user) {
             return $this->errorResponse('Farmer stall application not found.', 404);
         }
 
         $farmer->user->status = User::STATUS_INACTIVE;
         $farmer->user->save();
+        $farmer->user->tokens()->delete();
 
         Notification::create([
             'user_id' => $farmer->user_id,
@@ -160,47 +118,28 @@ class AdminController extends Controller
             'is_read' => false,
         ]);
 
-        return $this->successResponse(
-            new FarmerResource($farmer),
-            'Farmer stall application rejected.'
-        );
+        return $this->successResponse(new FarmerResource($farmer), 'Farmer stall application rejected.');
     }
 
-    /**
-     * List contact inquiries sent by visitors (Admin).
-     */
     public function inquiries(Request $request): JsonResponse
     {
         $query = ContactMessage::query();
-
         if ($request->has('is_read')) {
             $query->where('is_read', $request->boolean('is_read'));
         }
-
         if ($request->filled('search')) {
-            $search = (string) $request->query('search');
-            $query->where(static function ($q) use ($search): void {
-                $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('subject', 'like', "%{$search}%");
-            });
+            $s = (string) $request->query('search');
+            $query->where(fn ($q) => $q->where('name', 'like', "%{$s}%")
+                ->orWhere('email', 'like', "%{$s}%")
+                ->orWhere('subject', 'like', "%{$s}%"));
         }
 
-        $inquiries = $query->latest('created_at')->get();
-
-        return $this->successResponse(
-            ContactMessageResource::collection($inquiries),
-            'Inquiries retrieved successfully.'
-        );
+        return $this->successResponse(ContactMessageResource::collection($query->latest('created_at')->get()), 'Inquiries retrieved successfully.');
     }
 
-    /**
-     * Mark an inquiry as handled / read (Admin).
-     */
     public function markInquiryRead(int $id): JsonResponse
     {
         $message = ContactMessage::find($id);
-
         if (! $message) {
             return $this->errorResponse('Inquiry not found.', 404);
         }
@@ -208,9 +147,6 @@ class AdminController extends Controller
         $message->is_read = true;
         $message->save();
 
-        return $this->successResponse(
-            new ContactMessageResource($message),
-            'Inquiry marked as read.'
-        );
+        return $this->successResponse(new ContactMessageResource($message), 'Inquiry marked as read.');
     }
 }

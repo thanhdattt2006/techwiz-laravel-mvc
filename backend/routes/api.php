@@ -36,7 +36,7 @@ Route::prefix('v1/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 
     // Protected routes (requires Bearer token)
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware(['auth:sanctum', 'account.active'])->group(function () {
         Route::get('/me', [AuthController::class, 'me']);
         Route::put('/profile', [AuthController::class, 'profile']);
         Route::put('/change-password', [AuthController::class, 'changePassword']);
@@ -57,7 +57,7 @@ Route::prefix('v1')->group(function () {
 });
 
 // Farmer Protected routes (requires active farmer stall)
-Route::prefix('v1/farmer')->middleware(['auth:sanctum', 'role:farmer', 'farmer.active'])->group(function () {
+Route::prefix('v1/farmer')->middleware(['auth:sanctum', 'account.active', 'role:farmer', 'farmer.active'])->group(function () {
     Route::get('/profile', [FarmerController::class, 'profile']);
     Route::put('/profile', [FarmerController::class, 'updateProfile']);
     Route::get('/markets', [FarmerController::class, 'markets']);
@@ -80,7 +80,7 @@ Route::prefix('v1/farmer')->middleware(['auth:sanctum', 'role:farmer', 'farmer.a
 });
 
 // Customer Shopping Cart routes
-Route::prefix('v1/cart')->middleware(['auth:sanctum', 'role:customer,admin'])->group(function () {
+Route::prefix('v1/cart')->middleware(['auth:sanctum', 'account.active', 'role:customer,admin'])->group(function () {
     Route::get('/', [CartController::class, 'index']);
     Route::post('/items', [CartController::class, 'addItem']);
     Route::put('/items/{id}', [CartController::class, 'updateItem']);
@@ -91,7 +91,7 @@ Route::prefix('v1/cart')->middleware(['auth:sanctum', 'role:customer,admin'])->g
 // Customer Pre-Order routes & Public Tracking / Slots
 Route::get('v1/orders/track/{orderCode}', [OrderController::class, 'track']);
 Route::get('v1/orders/slots', [OrderController::class, 'getPickupSlots']);
-Route::prefix('v1/orders')->middleware(['auth:sanctum', 'role:customer,admin'])->group(function () {
+Route::prefix('v1/orders')->middleware(['auth:sanctum', 'account.active', 'role:customer,admin'])->group(function () {
     Route::post('/checkout', [OrderController::class, 'checkout']);
     Route::get('/my-orders', [OrderController::class, 'myOrders']);
     Route::get('/my-orders/{id}', [OrderController::class, 'showMyOrder']);
@@ -99,7 +99,7 @@ Route::prefix('v1/orders')->middleware(['auth:sanctum', 'role:customer,admin'])-
 });
 
 // Admin Protected Management routes
-Route::prefix('v1/admin')->middleware(['auth:sanctum', 'role:admin'])->group(function () {
+Route::prefix('v1/admin')->middleware(['auth:sanctum', 'account.active', 'role:admin'])->group(function () {
     // Platform Stats Overview
     Route::get('/stats/overview', [AdminController::class, 'overviewStats']);
 
@@ -141,12 +141,12 @@ Route::get('v1/reviews/product/{productId}', [ReviewController::class, 'productR
 Route::get('v1/reviews/farmer/{farmerId}', [ReviewController::class, 'farmerReviews']);
 
 // Customer Protected Review routes
-Route::prefix('v1/reviews')->middleware(['auth:sanctum', 'role:customer,admin'])->group(function () {
+Route::prefix('v1/reviews')->middleware(['auth:sanctum', 'account.active', 'role:customer,admin'])->group(function () {
     Route::post('/', [ReviewController::class, 'store']);
 });
 
 // Customer Protected Favorite routes
-Route::prefix('v1/favorites')->middleware(['auth:sanctum', 'role:customer,admin'])->group(function () {
+Route::prefix('v1/favorites')->middleware(['auth:sanctum', 'account.active', 'role:customer,admin'])->group(function () {
     Route::get('/', [FavoriteController::class, 'index']);
     Route::post('/toggle', [FavoriteController::class, 'toggle']);
 });
@@ -155,7 +155,7 @@ Route::prefix('v1/favorites')->middleware(['auth:sanctum', 'role:customer,admin'
 Route::get('v1/announcements/active', [AnnouncementController::class, 'active']);
 
 // Protected User In-app Notification routes
-Route::prefix('v1/notifications')->middleware('auth:sanctum')->group(function () {
+Route::prefix('v1/notifications')->middleware(['auth:sanctum', 'account.active'])->group(function () {
     Route::get('/', [NotificationController::class, 'index']);
     Route::patch('/read-all', [NotificationController::class, 'markAllAsRead']);
     Route::patch('/{id}/read', [NotificationController::class, 'markAsRead']);

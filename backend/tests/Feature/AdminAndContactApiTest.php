@@ -95,6 +95,7 @@ class AdminAndContactApiTest extends TestCase
     {
         $admin = $this->createAdmin();
         $targetUser = $this->createCustomer();
+        $token = $targetUser->createToken('auth-token')->plainTextToken;
 
         $response = $this->actingAs($admin)
             ->patchJson("/api/v1/admin/users/{$targetUser->id}/status", [
@@ -107,6 +108,13 @@ class AdminAndContactApiTest extends TestCase
 
         $targetUser->refresh();
         $this->assertSame(User::STATUS_BANNED, $targetUser->status);
+        $this->assertCount(0, $targetUser->tokens);
+
+        $this->app['auth']->forgetGuards();
+
+        $meResponse = $this->withHeader('Authorization', "Bearer {$token}")
+            ->getJson('/api/v1/auth/me');
+        $meResponse->assertStatus(401);
     }
 
     public function test_admin_cannot_modify_own_status(): void

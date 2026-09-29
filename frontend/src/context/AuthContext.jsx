@@ -53,8 +53,30 @@ export const AuthProvider = ({ children }) => {
       clearSession();
     };
 
+    const handleVisibilityChange = () => {
+      if (typeof document !== 'undefined' && document.visibilityState === 'visible' && getStoredToken()) {
+        checkAuth();
+      }
+    };
+
+    const heartbeatInterval = setInterval(() => {
+      if (getStoredToken()) {
+        checkAuth();
+      }
+    }, 30000);
+
     window.addEventListener('auth:unauthorized', handleUnauthorized);
-    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
+    if (typeof document !== 'undefined') {
+      document.addEventListener('visibilitychange', handleVisibilityChange);
+    }
+
+    return () => {
+      window.removeEventListener('auth:unauthorized', handleUnauthorized);
+      if (typeof document !== 'undefined') {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+      }
+      clearInterval(heartbeatInterval);
+    };
   }, [checkAuth]);
 
   const login = async (loginInput, password) => {

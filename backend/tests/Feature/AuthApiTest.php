@@ -226,6 +226,23 @@ class AuthApiTest extends TestCase
             ->assertJsonPath('errors.status', User::STATUS_BANNED);
     }
 
+    public function test_banned_user_token_is_rejected_on_protected_endpoints(): void
+    {
+        $user = User::factory()->create([
+            'status' => User::STATUS_BANNED,
+        ]);
+        $token = $user->createToken('banned-token')->plainTextToken;
+
+        $response = $this->withHeader('Authorization', "Bearer {$token}")
+            ->getJson('/api/v1/auth/me');
+
+        $response->assertStatus(401)
+            ->assertJsonPath('success', false)
+            ->assertJsonPath('errors.status', User::STATUS_BANNED);
+
+        $this->assertCount(0, $user->fresh()->tokens);
+    }
+
     public function test_authenticated_user_can_fetch_me_profile(): void
     {
         $user = User::factory()->create([
