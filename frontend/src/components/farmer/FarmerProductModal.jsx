@@ -37,10 +37,12 @@ export default function FarmerProductModal({
         description: product.description || '',
       });
     } else {
+      const firstCat = categories[0];
+      const defaultImg = firstCat?.slug ? `/images/categories/${firstCat.slug}.webp` : '/images/categories/fresh-vegetables.webp';
       setFormData({
-        name: '', category_id: categories.length > 0 ? String(categories[0].id) : '',
+        name: '', category_id: firstCat ? String(firstCat.id) : '',
         price: '', unit: 'kg', stock_quantity: '15',
-        availability: 'available', image: '', description: '',
+        availability: 'available', image: defaultImg, description: '',
       });
     }
     setValidationError('');
@@ -57,6 +59,14 @@ export default function FarmerProductModal({
     const stockNum = parseFloat(formData.stock_quantity);
     if (isNaN(stockNum) || stockNum < 0) { setValidationError('Please provide a valid stock quantity.'); return; }
 
+    let finalImage = formData.image?.trim() || null;
+    if (!finalImage && formData.category_id) {
+      const selectedCat = categories.find((c) => String(c.id) === String(formData.category_id));
+      if (selectedCat?.slug) {
+        finalImage = `/images/categories/${selectedCat.slug}.webp`;
+      }
+    }
+
     setValidationError('');
     onSave({
       name: formData.name.trim(),
@@ -65,7 +75,7 @@ export default function FarmerProductModal({
       unit: formData.unit.trim() || 'kg',
       stock_quantity: stockNum,
       availability: formData.availability,
-      image: formData.image.trim() || null,
+      image: finalImage,
       description: formData.description.trim() || null,
     });
   };
