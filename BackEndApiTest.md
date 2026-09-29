@@ -8,8 +8,10 @@
 ## 1. Authentication & User Profile (Phase 3.2)
 
 ### 1.1. Customer Register
+
 - **Method**: `POST /api/v1/auth/register`
 - **Body**:
+
 ```json
 {
   "fullname": "Jane Doe",
@@ -24,8 +26,10 @@
 ---
 
 ### 1.2. Farmer Register (Stall Application)
+
 - **Method**: `POST /api/v1/auth/register-farmer`
 - **Body**:
+
 ```json
 {
   "fullname": "Robert Sterling",
@@ -38,8 +42,8 @@
   "contact_phone": "+13125550190",
   "address": "Plot #44, Batavia, IL 60510",
   "description": "Certified organic heirloom apples, raw honey, and cold-pressed cider.",
-  "latitude": 41.8500,
-  "longitude": -88.3100,
+  "latitude": 41.85,
+  "longitude": -88.31,
   "logo": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=300&q=80"
 }
 ```
@@ -47,21 +51,26 @@
 ---
 
 ### 1.3. User Login
+
 - **Method**: `POST /api/v1/auth/login`
 - **Body**:
+
 ```json
 {
   "login": "jane.doe@example.com",
   "password": "SecurePassword123!"
 }
 ```
-*(Or test with demo accounts: `admin@marketlink.com`, `farmer@marketlink.com`, `customer@marketlink.com` with password `password`)*
+
+_(Or test with demo accounts: `admin@marketlink.com`, `farmer@marketlink.com`, `customer@marketlink.com` with password `password`)_
 
 ---
 
 ### 1.4. Current User Profile
+
 - **Method**: `GET /api/v1/auth/me`
 - **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
@@ -69,12 +78,16 @@ Authorization: Bearer <token>
 ---
 
 ### 1.5. Update Profile
+
 - **Method**: `PUT /api/v1/auth/profile`
 - **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
+
 - **Body**:
+
 ```json
 {
   "fullname": "Jane Doe Updated",
@@ -86,12 +99,16 @@ Authorization: Bearer <token>
 ---
 
 ### 1.6. Change Password
+
 - **Method**: `PUT /api/v1/auth/change-password`
 - **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
+
 - **Body**:
+
 ```json
 {
   "current_password": "SecurePassword123!",
@@ -103,8 +120,10 @@ Authorization: Bearer <token>
 ---
 
 ### 1.7. User Logout
+
 - **Method**: `POST /api/v1/auth/logout`
 - **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
@@ -114,6 +133,7 @@ Authorization: Bearer <token>
 ## 2. Farmers Markets Directory & Schedules (Phase 3.3)
 
 ### 2.1. List Markets
+
 - **Method**: `GET /api/v1/markets`
 - **Query Params (Optional)**:
   - `?search=Lincoln`
@@ -122,18 +142,23 @@ Authorization: Bearer <token>
 ---
 
 ### 2.2. Get Market Details
+
 - **Method**: `GET /api/v1/markets/{id}`
-*(Example: `GET /api/v1/markets/1`)*
+  _(Example: `GET /api/v1/markets/1`)_
 
 ---
 
 ### 2.3. Create Market [Admin Only]
+
 - **Method**: `POST /api/v1/admin/markets`
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 ```
+
 - **Body**:
+
 ```json
 {
   "name": "Pilsen Community Farmers Market",
@@ -162,13 +187,17 @@ Authorization: Bearer <admin_token>
 ---
 
 ### 2.4. Update Market [Admin Only]
+
 - **Method**: `PUT /api/v1/admin/markets/{id}`
-*(Example: `PUT /api/v1/admin/markets/1`)*
+  _(Example: `PUT /api/v1/admin/markets/1`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 ```
+
 - **Body**:
+
 ```json
 {
   "name": "Lincoln Park Farmers Market (Extended Hours)",
@@ -189,9 +218,11 @@ Authorization: Bearer <admin_token>
 ---
 
 ### 2.5. Delete Market [Admin Only]
+
 - **Method**: `DELETE /api/v1/admin/markets/{id}`
-*(Example: `DELETE /api/v1/admin/markets/7`)*
+  _(Example: `DELETE /api/v1/admin/markets/7`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 ```
@@ -201,6 +232,7 @@ Authorization: Bearer <admin_token>
 ## 3. Farmers & Market Stall Configuration (Phase 3.4)
 
 ### 3.1. List Farmers Directory
+
 - **Method**: `GET /api/v1/farmers`
 - **Query Params (Optional)**:
   - `?search=Green`
@@ -210,14 +242,17 @@ Authorization: Bearer <admin_token>
 ---
 
 ### 3.2. Get Farmer Details
+
 - **Method**: `GET /api/v1/farmers/{id}`
-*(Example: `GET /api/v1/farmers/1`)*
+  _(Example: `GET /api/v1/farmers/1`)_
 
 ---
 
 ### 3.3. View Own Stall Profile [Farmer Only]
+
 - **Method**: `GET /api/v1/farmer/profile`
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
@@ -225,12 +260,16 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 3.4. Update Stall Profile [Farmer Only]
+
 - **Method**: `PUT /api/v1/farmer/profile`
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
+
 - **Body**:
+
 ```json
 {
   "stall_name": "Green Valley Organics (Updated)",
@@ -245,8 +284,10 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 3.5. List Registered Market Stalls [Farmer Only]
+
 - **Method**: `GET /api/v1/farmer/markets`
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
@@ -254,12 +295,16 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 3.6. Register Stall at New Market [Farmer Only]
+
 - **Method**: `POST /api/v1/farmer/markets`
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
+
 - **Body**:
+
 ```json
 {
   "market_id": 1,
@@ -276,13 +321,17 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 3.7. Update Stall Schedule & Slots at Market [Farmer Only]
+
 - **Method**: `PUT /api/v1/farmer/markets/{marketId}`
-*(Example: `PUT /api/v1/farmer/markets/1`)*
+  _(Example: `PUT /api/v1/farmer/markets/1`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
+
 - **Body**:
+
 ```json
 {
   "stall_location": "Booth #A-14 (North Pavilion - Corner)",
@@ -298,9 +347,11 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 3.8. Unregister Stall from Market [Farmer Only]
+
 - **Method**: `DELETE /api/v1/farmer/markets/{marketId}`
-*(Example: `DELETE /api/v1/farmer/markets/1`)*
+  _(Example: `DELETE /api/v1/farmer/markets/1`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
@@ -310,23 +361,29 @@ Authorization: Bearer <farmer_token>
 ## 4. Categories & Produce Catalog (Phase 3.5)
 
 ### 4.1. List Categories
+
 - **Method**: `GET /api/v1/categories`
 
 ---
 
 ### 4.2. Get Category Details
+
 - **Method**: `GET /api/v1/categories/{id}`
-*(Example: `GET /api/v1/categories/1`)*
+  _(Example: `GET /api/v1/categories/1`)_
 
 ---
 
 ### 4.3. Create Category [Admin Only]
+
 - **Method**: `POST /api/v1/admin/categories`
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 ```
+
 - **Body**:
+
 ```json
 {
   "name": "Microgreens & Shoots",
@@ -338,13 +395,17 @@ Authorization: Bearer <admin_token>
 ---
 
 ### 4.4. Update Category [Admin Only]
+
 - **Method**: `PUT /api/v1/admin/categories/{id}`
-*(Example: `PUT /api/v1/admin/categories/1`)*
+  _(Example: `PUT /api/v1/admin/categories/1`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 ```
+
 - **Body**:
+
 ```json
 {
   "name": "Fresh Organic Vegetables",
@@ -356,9 +417,11 @@ Authorization: Bearer <admin_token>
 ---
 
 ### 4.5. Delete Category [Admin Only]
+
 - **Method**: `DELETE /api/v1/admin/categories/{id}`
-*(Example: `DELETE /api/v1/admin/categories/6`)*
+  _(Example: `DELETE /api/v1/admin/categories/6`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 ```
@@ -366,6 +429,7 @@ Authorization: Bearer <admin_token>
 ---
 
 ### 4.6. List Products Catalog (Public)
+
 - **Method**: `GET /api/v1/products`
 - **Query Params (Optional)**:
   - `?category_id=1`
@@ -380,17 +444,21 @@ Authorization: Bearer <admin_token>
 ---
 
 ### 4.7. Get Product Details (Public)
+
 - **Method**: `GET /api/v1/products/{id}`
-*(Example: `GET /api/v1/products/1`)*
+  _(Example: `GET /api/v1/products/1`)_
 
 ---
 
 ### 4.8. List Stall Products [Farmer Only]
+
 - **Method**: `GET /api/v1/farmer/products`
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
+
 - **Query Params (Optional)**:
   - `?category_id=1`
   - `?availability=available`
@@ -399,18 +467,22 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 4.9. Add Product to Stall [Farmer Only]
+
 - **Method**: `POST /api/v1/farmer/products`
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
+
 - **Body**:
+
 ```json
 {
   "category_id": 1,
   "name": "Heirloom Cherokee Purple Tomatoes",
   "description": "Rich, sweet heirloom beefsteak tomatoes harvested at peak ripeness.",
-  "price": 5.50,
+  "price": 5.5,
   "unit": "kg",
   "stock_quantity": 35,
   "availability": "available",
@@ -421,17 +493,21 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 4.10. Update Stall Product [Farmer Only]
+
 - **Method**: `PUT /api/v1/farmer/products/{id}`
-*(Example: `PUT /api/v1/farmer/products/1`)*
+  _(Example: `PUT /api/v1/farmer/products/1`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
+
 - **Body**:
+
 ```json
 {
   "name": "Heirloom Cherokee Purple Tomatoes (Large)",
-  "price": 6.00,
+  "price": 6.0,
   "stock_quantity": 25,
   "availability": "available"
 }
@@ -440,9 +516,11 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 4.11. Delete Product [Farmer Only]
+
 - **Method**: `DELETE /api/v1/farmer/products/{id}`
-*(Example: `DELETE /api/v1/farmer/products/1`)*
+  _(Example: `DELETE /api/v1/farmer/products/1`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
@@ -450,9 +528,11 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 4.12. Toggle Product Moderation Hide [Admin Only]
+
 - **Method**: `PATCH /api/v1/admin/products/{id}/toggle-hide`
-*(Example: `PATCH /api/v1/admin/products/1/toggle-hide`)*
+  _(Example: `PATCH /api/v1/admin/products/1/toggle-hide`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 ```
@@ -462,9 +542,11 @@ Authorization: Bearer <admin_token>
 ## 5. Weekly Stock Templates (Phase 3.6)
 
 ### 5.1. View Product Weekly Stock Template [Farmer Only]
+
 - **Method**: `GET /api/v1/farmer/products/{id}/template`
-*(Example: `GET /api/v1/farmer/products/1/template`)*
+  _(Example: `GET /api/v1/farmer/products/1/template`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
@@ -472,24 +554,28 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 5.2. Configure Weekly Stock Template [Farmer Only]
+
 - **Method**: `PUT /api/v1/farmer/products/{id}/template`
-*(Example: `PUT /api/v1/farmer/products/1/template`)*
+  _(Example: `PUT /api/v1/farmer/products/1/template`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
+
 - **Body**:
+
 ```json
 {
   "templates": [
     {
       "day_of_week": 6,
-      "default_quantity": 60.00,
+      "default_quantity": 60.0,
       "is_active": true
     },
     {
       "day_of_week": 0,
-      "default_quantity": 40.00,
+      "default_quantity": 40.0,
       "is_active": true
     }
   ]
@@ -499,22 +585,30 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 5.3. 1-Click Apply Weekly Stock Templates [Farmer Only]
+
 - **Method**: `POST /api/v1/farmer/apply-weekly-templates`
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
+
 - **Body Option 1 (Auto-detect upcoming market day)**:
+
 ```json
 {}
 ```
+
 - **Body Option 2 (Explicit target day: 0=Sun ... 6=Sat)**:
+
 ```json
 {
   "target_day": 6
 }
 ```
+
 - **Body Option 3 (Specific target date)**:
+
 ```json
 {
   "target_date": "2026-09-27"
@@ -526,8 +620,10 @@ Authorization: Bearer <farmer_token>
 ## 6. Shopping Cart (Phase 3.7)
 
 ### 6.1. Get Shopping Cart [Customer Only]
+
 - **Method**: `GET /api/v1/cart`
 - **Headers**:
+
 ```http
 Authorization: Bearer <customer_token>
 ```
@@ -535,12 +631,16 @@ Authorization: Bearer <customer_token>
 ---
 
 ### 6.2. Add Item to Cart [Customer Only]
+
 - **Method**: `POST /api/v1/cart/items`
 - **Headers**:
+
 ```http
 Authorization: Bearer <customer_token>
 ```
+
 - **Body**:
+
 ```json
 {
   "product_id": 1,
@@ -551,13 +651,17 @@ Authorization: Bearer <customer_token>
 ---
 
 ### 6.3. Update Cart Item Quantity [Customer Only]
+
 - **Method**: `PUT /api/v1/cart/items/{id}`
-*(Example: `PUT /api/v1/cart/items/1`)*
+  _(Example: `PUT /api/v1/cart/items/1`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <customer_token>
 ```
+
 - **Body**:
+
 ```json
 {
   "quantity": 4
@@ -567,9 +671,11 @@ Authorization: Bearer <customer_token>
 ---
 
 ### 6.4. Remove Single Item from Cart [Customer Only]
+
 - **Method**: `DELETE /api/v1/cart/items/{id}`
-*(Example: `DELETE /api/v1/cart/items/1`)*
+  _(Example: `DELETE /api/v1/cart/items/1`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <customer_token>
 ```
@@ -577,8 +683,10 @@ Authorization: Bearer <customer_token>
 ---
 
 ### 6.5. Clear Entire Cart [Customer Only]
+
 - **Method**: `DELETE /api/v1/cart/clear`
 - **Headers**:
+
 ```http
 Authorization: Bearer <customer_token>
 ```
@@ -588,13 +696,17 @@ Authorization: Bearer <customer_token>
 ## 7. Pre-Orders & Order Lifecycle (Phase 3.8)
 
 ### 7.1. Checkout Pre-Order for Stall Pickup [Customer Only]
+
 - **Method**: `POST /api/v1/orders/checkout`
 - **Headers**:
+
 ```http
 Authorization: Bearer <customer_token>
 Content-Type: application/json
 ```
+
 - **Body**:
+
 ```json
 {
   "market_id": 1,
@@ -609,8 +721,10 @@ Content-Type: application/json
 ---
 
 ### 7.2. Get Customer Order History [Customer Only]
+
 - **Method**: `GET /api/v1/orders/my-orders?status=placed`
 - **Headers**:
+
 ```http
 Authorization: Bearer <customer_token>
 ```
@@ -618,9 +732,11 @@ Authorization: Bearer <customer_token>
 ---
 
 ### 7.3. Get Customer Order Details [Customer Only]
+
 - **Method**: `GET /api/v1/orders/my-orders/{id}`
-*(Example: `GET /api/v1/orders/my-orders/1`)*
+  _(Example: `GET /api/v1/orders/my-orders/1`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <customer_token>
 ```
@@ -628,20 +744,25 @@ Authorization: Bearer <customer_token>
 ---
 
 ### 7.4. Public Track Order via Order Code [Public]
+
 - **Method**: `GET /api/v1/orders/track/{orderCode}`
-*(Example: `GET /api/v1/orders/track/ML-2026-F01-7782`)*
+  _(Example: `GET /api/v1/orders/track/ML-2026-F01-7782`)_
 
 ---
 
 ### 7.5. Cancel Order Before Cutoff Deadline [Customer Only]
+
 - **Method**: `PATCH /api/v1/orders/{id}/cancel`
-*(Example: `PATCH /api/v1/orders/1/cancel`)*
+  _(Example: `PATCH /api/v1/orders/1/cancel`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <customer_token>
 Content-Type: application/json
 ```
+
 - **Body**:
+
 ```json
 {
   "cancel_reason": "Schedule conflict, cannot attend the market."
@@ -651,8 +772,10 @@ Content-Type: application/json
 ---
 
 ### 7.6. Get Farmer Incoming Pre-Orders [Farmer Only]
+
 - **Method**: `GET /api/v1/farmer/orders?status=placed`
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
@@ -660,9 +783,11 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 7.7. Accept Pre-Order [Farmer Only]
+
 - **Method**: `PATCH /api/v1/farmer/orders/{id}/accept`
-*(Example: `PATCH /api/v1/farmer/orders/1/accept`)*
+  _(Example: `PATCH /api/v1/farmer/orders/1/accept`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
@@ -670,14 +795,18 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 7.8. Decline Pre-Order & Restock [Farmer Only]
+
 - **Method**: `PATCH /api/v1/farmer/orders/{id}/decline`
-*(Example: `PATCH /api/v1/farmer/orders/1/decline`)*
+  _(Example: `PATCH /api/v1/farmer/orders/1/decline`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 Content-Type: application/json
 ```
+
 - **Body**:
+
 ```json
 {
   "cancel_reason": "Crop harvest affected by sudden frost."
@@ -687,9 +816,11 @@ Content-Type: application/json
 ---
 
 ### 7.9. Mark Order Ready for Stall Pickup [Farmer Only]
+
 - **Method**: `PATCH /api/v1/farmer/orders/{id}/ready`
-*(Example: `PATCH /api/v1/farmer/orders/1/ready`)*
+  _(Example: `PATCH /api/v1/farmer/orders/1/ready`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
@@ -697,9 +828,11 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 7.10. Complete Order at Stall (Cash Settled) [Farmer Only]
+
 - **Method**: `PATCH /api/v1/farmer/orders/{id}/complete`
-*(Example: `PATCH /api/v1/farmer/orders/1/complete`)*
+  _(Example: `PATCH /api/v1/farmer/orders/1/complete`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 ```
@@ -707,6 +840,7 @@ Authorization: Bearer <farmer_token>
 ---
 
 ### 7.11. Generate Available Pickup Slots [Public / Customer]
+
 - **Method**: `GET /api/v1/orders/slots?farmer_id=1&market_id=1&pickup_date=2026-10-03`
 
 ---
@@ -714,13 +848,17 @@ Authorization: Bearer <farmer_token>
 ## 8. Reviews & Favorites (Phase 3.9)
 
 ### 8.1. Submit Review for Completed Order [Customer Only]
+
 - **Method**: `POST /api/v1/reviews`
 - **Headers**:
+
 ```http
 Authorization: Bearer <customer_token>
 Content-Type: application/json
 ```
+
 - **Body (Review a Farmer Stall)**:
+
 ```json
 {
   "order_id": 1,
@@ -730,7 +868,9 @@ Content-Type: application/json
   "comment": "Wonderful fresh produce and super welcoming farmer!"
 }
 ```
+
 - **Body (Review a Specific Produce Item)**:
+
 ```json
 {
   "order_id": 1,
@@ -744,26 +884,32 @@ Content-Type: application/json
 ---
 
 ### 8.2. Get Public Reviews for a Produce Item [Public]
+
 - **Method**: `GET /api/v1/reviews/product/{productId}`
-*(Example: `GET /api/v1/reviews/product/2`)*
+  _(Example: `GET /api/v1/reviews/product/2`)_
 
 ---
 
 ### 8.3. Get Public Reviews for a Farmer Stall [Public]
+
 - **Method**: `GET /api/v1/reviews/farmer/{farmerId}`
-*(Example: `GET /api/v1/reviews/farmer/1`)*
+  _(Example: `GET /api/v1/reviews/farmer/1`)_
 
 ---
 
 ### 8.4. Respond to Produce Review [Farmer Only]
+
 - **Method**: `POST /api/v1/farmer/reviews/{id}/reply`
-*(Example: `POST /api/v1/farmer/reviews/1/reply`)*
+  _(Example: `POST /api/v1/farmer/reviews/1/reply`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <farmer_token>
 Content-Type: application/json
 ```
+
 - **Body**:
+
 ```json
 {
   "farmer_reply": "Thank you for supporting our orchard! Look forward to seeing you at the stall."
@@ -773,9 +919,11 @@ Content-Type: application/json
 ---
 
 ### 8.5. Moderate Review Visibility [Admin Only]
+
 - **Method**: `PATCH /api/v1/admin/reviews/{id}/toggle-hide`
-*(Example: `PATCH /api/v1/admin/reviews/1/toggle-hide`)*
+  _(Example: `PATCH /api/v1/admin/reviews/1/toggle-hide`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 ```
@@ -783,9 +931,11 @@ Authorization: Bearer <admin_token>
 ---
 
 ### 8.6. List Customer Favorites [Customer Only]
+
 - **Method**: `GET /api/v1/favorites`
-*(Or filter by type: `GET /api/v1/favorites?type=product` | `GET /api/v1/favorites?type=farmer` | `GET /api/v1/favorites?type=market`)*
+  _(Or filter by type: `GET /api/v1/favorites?type=product` | `GET /api/v1/favorites?type=farmer` | `GET /api/v1/favorites?type=market`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <customer_token>
 ```
@@ -793,29 +943,36 @@ Authorization: Bearer <customer_token>
 ---
 
 ### 8.7. Toggle Favorite Item (Polymorphic) [Customer Only]
+
 - **Method**: `POST /api/v1/favorites/toggle`
 - **Headers**:
+
 ```http
 Authorization: Bearer <customer_token>
 Content-Type: application/json
 ```
+
 - **Body**:
+
 ```json
 {
   "favoritable_type": "product",
   "favoritable_id": 1
 }
 ```
-*(Supports `favoritable_type`: `"farmer"`, `"product"`, `"market"`)*
+
+_(Supports `favoritable_type`: `"farmer"`, `"product"`, `"market"`)_
 
 ---
 
 ## 9. Notifications & Announcements (Phase 3.10)
 
 ### 9.1. Get In-App Notifications with Unread Count [Protected]
+
 - **Method**: `GET /api/v1/notifications`
-*(Or unread only: `GET /api/v1/notifications?unread_only=true`)*
+  _(Or unread only: `GET /api/v1/notifications?unread_only=true`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
@@ -823,9 +980,11 @@ Authorization: Bearer <token>
 ---
 
 ### 9.2. Mark Single Notification as Read [Protected]
+
 - **Method**: `PATCH /api/v1/notifications/{id}/read`
-*(Example: `PATCH /api/v1/notifications/1/read`)*
+  _(Example: `PATCH /api/v1/notifications/1/read`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
@@ -833,8 +992,10 @@ Authorization: Bearer <token>
 ---
 
 ### 9.3. Mark All Notifications as Read [Protected]
+
 - **Method**: `PATCH /api/v1/notifications/read-all`
 - **Headers**:
+
 ```http
 Authorization: Bearer <token>
 ```
@@ -842,15 +1003,18 @@ Authorization: Bearer <token>
 ---
 
 ### 9.4. Get Active Public Announcements [Public / Role-Aware]
+
 - **Method**: `GET /api/v1/announcements/active`
-*(Optional filter for guests: `GET /api/v1/announcements/active?role=farmer` | `GET /api/v1/announcements/active?role=customer`)*
+  _(Optional filter for guests: `GET /api/v1/announcements/active?role=farmer` | `GET /api/v1/announcements/active?role=customer`)_
 
 ---
 
 ### 9.5. List All Announcements for Moderation [Admin Only]
+
 - **Method**: `GET /api/v1/admin/announcements`
-*(Optional filters: `?is_active=true` | `?target_role=farmer`)*
+  _(Optional filters: `?is_active=true` | `?target_role=farmer`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 ```
@@ -858,13 +1022,17 @@ Authorization: Bearer <admin_token>
 ---
 
 ### 9.6. Publish Platform Announcement [Admin Only]
+
 - **Method**: `POST /api/v1/admin/announcements`
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 Content-Type: application/json
 ```
+
 - **Body**:
+
 ```json
 {
   "title": "Autumn Harvest Festival Announced",
@@ -873,19 +1041,24 @@ Content-Type: application/json
   "is_active": true
 }
 ```
-*(Supports `target_role`: `"all"`, `"farmer"`, `"customer"`)*
+
+_(Supports `target_role`: `"all"`, `"farmer"`, `"customer"`)_
 
 ---
 
 ### 9.7. Update Announcement [Admin Only]
+
 - **Method**: `PUT /api/v1/admin/announcements/{id}`
-*(Example: `PUT /api/v1/admin/announcements/1`)*
+  _(Example: `PUT /api/v1/admin/announcements/1`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 Content-Type: application/json
 ```
+
 - **Body**:
+
 ```json
 {
   "title": "Autumn Harvest Festival Announced - Updated Schedule",
@@ -896,9 +1069,11 @@ Content-Type: application/json
 ---
 
 ### 9.8. Delete Announcement [Admin Only]
+
 - **Method**: `DELETE /api/v1/admin/announcements/{id}`
-*(Example: `DELETE /api/v1/admin/announcements/1`)*
+  _(Example: `DELETE /api/v1/admin/announcements/1`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 ```
@@ -908,13 +1083,17 @@ Authorization: Bearer <admin_token>
 ## 10. Admin Governance & Contact Inquiries (Phase 3.11)
 
 ### 10.1. Submit Public Contact Inquiry [Public / Guest]
+
 - **Method**: `POST /api/v1/contact`
 - **Headers**:
+
 ```http
 Content-Type: application/json
 Accept: application/json
 ```
+
 - **Body**:
+
 ```json
 {
   "name": "Sarah Connor",
@@ -927,13 +1106,17 @@ Accept: application/json
 ---
 
 ### 10.2. Platform Overview Statistics [Admin Only]
+
 - **Method**: `GET /api/v1/admin/stats/overview`
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 Accept: application/json
 ```
+
 - **Response Shape**:
+
 ```json
 {
   "success": true,
@@ -988,9 +1171,11 @@ Accept: application/json
 ---
 
 ### 10.3. List & Filter Platform Users [Admin Only]
+
 - **Method**: `GET /api/v1/admin/users`
-*(Optional filters: `?role=customer` | `?role=farmer` | `?status=active` | `?search=john`)*
+  _(Optional filters: `?role=customer` | `?role=farmer` | `?status=active` | `?search=john`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 Accept: application/json
@@ -999,27 +1184,34 @@ Accept: application/json
 ---
 
 ### 10.4. Update User Account Status [Admin Only]
+
 - **Method**: `PATCH /api/v1/admin/users/{id}/status`
-*(Example: `PATCH /api/v1/admin/users/4/status`)*
+  _(Example: `PATCH /api/v1/admin/users/4/status`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 Content-Type: application/json
 Accept: application/json
 ```
+
 - **Body**:
+
 ```json
 {
   "status": "banned"
 }
 ```
-*(Supports status values: `"active"`, `"inactive"`, `"banned"`, `"pending"`. Self-modification is blocked).*
+
+_(Supports status values: `"active"`, `"inactive"`, `"banned"`, `"pending"`. Self-modification is blocked)._
 
 ---
 
 ### 10.5. List Pending Farmer Stall Applications [Admin Only]
+
 - **Method**: `GET /api/v1/admin/farmers/pending`
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 Accept: application/json
@@ -1028,40 +1220,50 @@ Accept: application/json
 ---
 
 ### 10.6. Approve Farmer Stall Application [Admin Only]
+
 - **Method**: `PATCH /api/v1/admin/farmers/{id}/approve`
-*(Example: `PATCH /api/v1/admin/farmers/3/approve`)*
+  _(Example: `PATCH /api/v1/admin/farmers/3/approve`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 Accept: application/json
 ```
-*(Updates user status to `active` and dispatches in-app notification `farmer_approved` to farmer).*
+
+_(Updates user status to `active` and dispatches in-app notification `farmer_approved` to farmer)._
 
 ---
 
 ### 10.7. Reject Farmer Stall Application [Admin Only]
+
 - **Method**: `PATCH /api/v1/admin/farmers/{id}/reject`
-*(Example: `PATCH /api/v1/admin/farmers/3/reject`)*
+  _(Example: `PATCH /api/v1/admin/farmers/3/reject`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 Content-Type: application/json
 Accept: application/json
 ```
+
 - **Body**:
+
 ```json
 {
   "reason": "Missing valid state agricultural vendor certification or invalid phone number."
 }
 ```
-*(Updates user status to `inactive` and dispatches in-app notification `farmer_rejected` with reason to farmer).*
+
+_(Updates user status to `inactive` and dispatches in-app notification `farmer_rejected` with reason to farmer)._
 
 ---
 
 ### 10.8. List Contact Inquiries Inbox [Admin Only]
+
 - **Method**: `GET /api/v1/admin/inquiries`
-*(Optional filters: `?is_read=false` | `?is_read=true` | `?search=honey`)*
+  _(Optional filters: `?is_read=false` | `?is_read=true` | `?search=honey`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 Accept: application/json
@@ -1070,18 +1272,12 @@ Accept: application/json
 ---
 
 ### 10.9. Mark Contact Inquiry as Read [Admin Only]
+
 - **Method**: `PATCH /api/v1/admin/inquiries/{id}/read`
-*(Example: `PATCH /api/v1/admin/inquiries/1/read`)*
+  _(Example: `PATCH /api/v1/admin/inquiries/1/read`)_
 - **Headers**:
+
 ```http
 Authorization: Bearer <admin_token>
 Accept: application/json
 ```
-
-
-
-
-
-
-
-

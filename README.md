@@ -1,201 +1,420 @@
-# MarketLink - eGreen Basket Marketplace Portal (TechWiz 7)
+# MarketLink – eGreen Basket Marketplace Portal (TechWiz 7)
 
-**Slogan**: *Farm Fresh Just a Click Away*  
-**Theme**: **eGreen Basket** (Nền tảng thương mại nông sản tươi & Sạp chợ nông dân địa phương)  
-Dự án áp dụng mô hình phân tách hoàn toàn Client - Server:
-- **Backend**: **Laravel 13 RESTful Web API** (PHP 8.4, Laravel Sanctum, MySQL 8.0, IaC Deploy Render)
-- **Frontend**: **React 19 (JavaScript) + Vite + TailwindCSS** (Deploy Vercel)
-- **Phân quyền 3 Roles (RBAC)**: `admin` (Quản trị sàn), `farmer` (Chủ sạp nông dân), `customer` (Khách mua nông sản)
+**Slogan**: *Farm Fresh Just a Click Away*
+**Theme**: **eGreen Basket** – Farm produce marketplace connecting local farmers markets & shoppers
+**Architecture**: Decoupled Client-Server (Laravel 13 RESTful API + React 19 SPA)
 
----
-
-## ⚠️ QUY TẮC PHÁT TRIỂN & BỘ TÀI LIỆU BẮT BUỘC (MANDATORY GUIDELINES)
-
-Trước khi tiến hành lập trình hoặc kiểm thử, Developer, Tester và AI **BẮT BUỘC** phải đọc và tuân thủ nghiêm ngặt các tài liệu sau:
-
-1. **[`RULE.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/RULE.md)**: Luật làm việc, quy tắc nhận task, chuẩn commit Git tiếng Anh (Conventional Commits), kiểm tra `git status`/`git diff`, cấm để lại rác debug (`dd()`, `dump()`, `console.log()`).
-2. **Bộ tài liệu thiết yếu trong thư mục [`ai/`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai)**:
-   - **[`ai/CONVENTION.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/CONVENTION.md)**: Quy chuẩn lập trình Clean Code, SOLID, DRY, strict types `declare(strict_types=1);`, chuẩn phản hồi JSON envelope, Form Request validation, API Resource transformation, chống N+1 query.
-   - **[`ai/DATABASE_ERD.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/DATABASE_ERD.md)**: Sơ đồ ERD quan hệ 18 bảng và Data Dictionary chi tiết (kiểu dữ liệu, constraints, foreign keys).
-   - **[`ai/WORKFLOW.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/WORKFLOW.md)**: Quy trình nghiệp vụ 3 vai trò, Order State Machine 4 bước, logic tính khung giờ Time Slot & giờ chốt đơn Cutoff.
-   - **[`ai/AGENTS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/AGENTS.md)**: Hướng dẫn kỹ thuật cho AI, ràng buộc cứng SRS TechWiz (không thanh toán online, không giao hàng tận nhà, 1 giao diện nền sáng tươi mát).
-   - **[`ai/PROGRESS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/PROGRESS.md)**: Bảng theo dõi tiến độ chi tiết từng ngày thi.
-   - **[`ai/BUGS.md`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ai/BUGS.md)**: Sổ ghi nhận và xử lý lỗi hệ thống.
-3. **Lộ trình thực hiện chi tiết trong [`ROADMAP/`](file:///c:/Users/Dave/Desktop/Aptech/my-project/Laravel_MVC/ROADMAP)**: Xem file tương ứng với ngày làm việc để nắm các phase cần hoàn thiện.
+| Layer | Technology | Deployment |
+|---|---|---|
+| Backend API | PHP 8.4 + Laravel 13 + Sanctum | Render.com (Docker) |
+| Frontend SPA | React 19 + Vite + TailwindCSS | Vercel |
+| Database | MySQL 8.0+ · Aiven Cloud · 18 tables | Aiven Cloud |
 
 ---
 
-## 📂 Cấu Trúc Thư Mục Dự Án (Project Structure)
+## ⚠️ Mandatory Guidelines (Read Before Coding)
 
-```text
+All developers, testers and AI assistants **MUST** read and strictly follow:
+
+| File | Purpose |
+|---|---|
+| [`RULE.md`](RULE.md) | Working rules, Git Conventional Commits, no debug leftovers |
+| [`ai/CONVENTION.md`](ai/CONVENTION.md) | SOLID, DRY, strict_types=1, JSON envelope, anti-N+1, FormRequest |
+| [`ai/DATABASE_ERD.md`](ai/DATABASE_ERD.md) | ERD of all 18 tables + full Data Dictionary |
+| [`ai/WORKFLOW.md`](ai/WORKFLOW.md) | Business workflows, Order State Machine, Time Slot & Cutoff logic |
+| [`ai/AGENTS.md`](ai/AGENTS.md) | AI technical guide, hard SRS constraints (no online payment, no delivery) |
+| [`ai/PROGRESS.md`](ai/PROGRESS.md) | Day-by-day progress tracker |
+| [`ai/BUGS.md`](ai/BUGS.md) | Bug tracking log |
+
+---
+
+## 📂 Project Structure
+
+```
 Laravel_MVC/
-├── backend/                  # Mã nguồn Laravel Framework 13 RESTful API
-│   ├── app/                  # Controllers, Models (17), FormRequests (18), Resources (15), Middleware
-│   ├── routes/api.php        # Danh sách API endpoints (/api/v1/...)
-│   ├── database/             # 18 Migrations (000001..000018), 10 Modular Seeders
-│   └── Dockerfile            # Cấu hình container PHP 8.4 deploy Render
-├── frontend/                 # Mã nguồn React JS (Vite) Single Page Application
-│   ├── src/                  # Components, Pages (3 portals: Admin, Farmer, Customer), AuthContext
-│   ├── package.json          # react-router-dom, axios, lucide-react, chart.js
-│   └── vercel.json           # Cấu hình rewrite SPA routing trên Vercel
-├── ai/                       # Tài liệu định hướng kiến trúc & conventions
-│   ├── AGENTS.md             # Hướng dẫn AI và kiến trúc tổng quan
-│   ├── CONVENTION.md         # Quy chuẩn code chuẩn mực (SOLID, DRY, Clean Code)
-│   ├── PROGRESS.md           # Bảng theo dõi tiến độ thực tế 5 ngày
-│   ├── BUGS.md               # Sổ ghi chép và khắc phục lỗi
-│   ├── DATABASE_ERD.md       # Sơ đồ CSDL quan hệ 18 bảng & Data Dictionary
-│   └── WORKFLOW.md           # Quy trình nghiệp vụ, Order State Machine & Cutoff logic
-├── ROADMAP/                  # Lộ trình chuẩn hóa 5 ngày thi TechWiz
+├── backend/                           Laravel 13 RESTful API
+│   ├── app/
+│   │   ├── Http/Controllers/Api/V1/   14 API Controllers
+│   │   │   ├── AuthController.php         MarketController.php
+│   │   │   ├── ProductController.php      OrderController.php
+│   │   │   ├── ReviewController.php       CartController.php
+│   │   │   ├── FarmerController.php       CategoryController.php
+│   │   │   ├── AdminController.php        ContactController.php
+│   │   │   ├── NotificationController.php FavoriteController.php
+│   │   │   ├── AnnouncementController.php WeeklyStockController.php
+│   │   ├── Http/Requests/             18 FormRequest validation classes
+│   │   ├── Http/Resources/            15 JsonResource transformation classes
+│   │   ├── Http/Middleware/           RoleMiddleware, EnsureFarmerActive,
+│   │   │                              EnsureAccountActive
+│   │   ├── Models/                    17 Eloquent Models
+│   │   │   ├── User.php  Farmer.php  Market.php  Product.php
+│   │   │   ├── Order.php  OrderItem.php  Review.php  Cart.php
+│   │   │   ├── CartItem.php  Category.php  FarmerMarket.php
+│   │   │   ├── MarketSchedule.php  WeeklyStockTemplate.php
+│   │   │   ├── Favorite.php  Notification.php  Announcement.php
+│   │   │   └── ContactMessage.php
+│   │   └── Services/                  7 Service classes
+│   │       ├── PreOrderCheckoutService.php
+│   │       ├── TimeSlotGeneratorService.php
+│   │       ├── RatingCalculationService.php
+│   │       ├── FarmerOrderService.php
+│   │       ├── CustomerOrderService.php
+│   │       ├── AdminAnalyticsService.php
+│   │       └── FarmerMarketService.php
+│   ├── routes/api.php                 All /api/v1/ endpoints
+│   ├── database/
+│   │   ├── migrations/                18 migration files (000001..000018)
+│   │   └── seeders/                   11 modular seeders
+│   │       ├── UserSeeder.php         MarketSeeder.php    FarmerSeeder.php
+│   │       ├── CategorySeeder.php     ProductSeeder.php   OrderSeeder.php
+│   │       ├── ReviewSeeder.php       NotificationSeeder.php
+│   │       ├── AnnouncementSeeder.php ContactMessageSeeder.php
+│   │       └── DatabaseSeeder.php     (orchestrator)
+│   └── Dockerfile                     PHP 8.4 container for Render.com
+│
+├── frontend/                          React 19 + Vite SPA
+│   ├── src/
+│   │   ├── api/                       15 API service modules
+│   │   │   ├── axiosClient.js         authApi.js   marketApi.js
+│   │   │   ├── productApi.js          orderApi.js  reviewApi.js
+│   │   │   ├── cartApi.js             farmerApi.js adminApi.js
+│   │   │   ├── categoryApi.js         contactApi.js favoriteApi.js
+│   │   │   ├── notificationApi.js     weeklyStockApi.js  index.js
+│   │   ├── components/
+│   │   │   ├── common/                ProductCard, MarketCard, StatusBadge,
+│   │   │   │                          FilterSidebar, RatingStars, Modal, ScrollToTop
+│   │   │   └── layout/                PublicNavbar, PublicFooter,
+│   │   │                              AdminLayout, FarmerLayout, CustomerLayout
+│   │   ├── context/
+│   │   │   ├── AuthContext.jsx        Global auth state (user, token, role)
+│   │   │   ├── CartContext.jsx        Global cart state + CartDrawer
+│   │   │   └── ModalContext.jsx       React Portal modal system
+│   │   ├── pages/
+│   │   │   ├── public/                HomePage, MarketsPage, ProductsPage,
+│   │   │   │                          ProductDetailPage, AboutPage, FeedbackPage,
+│   │   │   │                          ContactPage, SitemapPage,
+│   │   │   │                          OrderPickupTrackerPage, NotFoundPage
+│   │   │   ├── auth/                  LoginPage, RegisterPage,
+│   │   │   │                          ForgotPasswordPage, UnauthorizedPage
+│   │   │   ├── admin/                 AdminDashboard
+│   │   │   │                          (tabs: Markets, Vendors, Users,
+│   │   │   │                           Reviews, Messages, Reports & Analytics)
+│   │   │   ├── farmer/                FarmerDashboard
+│   │   │   │                          (tabs: Pre-Order Queue, Weekly Stock,
+│   │   │   │                           Markets Config, Reviews, Settings)
+│   │   │   └── customer/              CustomerDashboard, CustomerOrdersPage,
+│   │   │                              CustomerProfilePage
+│   │   └── routes/
+│   │       ├── AppRoutes.jsx          Full router with React.lazy + Suspense
+│   │       └── ProtectedRoute.jsx     RBAC HOC (admin / farmer / customer)
+│   ├── vercel.json                    SPA routing rewrite: /* -> /index.html
+│   └── package.json                   react-router-dom, axios, lucide-react,
+│                                       chart.js, tailwindcss
+│
+├── ai/                                Architecture docs & conventions
+│   ├── AGENTS.md                      AI guide & tech stack overview
+│   ├── CONVENTION.md                  Code standards (SOLID, DRY, Clean Code)
+│   ├── DATABASE_ERD.md                ERD 18 tables + full Data Dictionary
+│   ├── WORKFLOW.md                    Business workflows, Order State Machine
+│   ├── PROGRESS.md                    Day-by-day progress (Day 0 to Day 5)
+│   └── BUGS.md                        Bug tracker log
+│
+├── ROADMAP/                           5-day competition roadmap
 │   ├── Day0_Setup_DB_Deploy.md
 │   ├── Day1_Analysis_Database_Design.md
 │   ├── Day2_Models_Migrations.md
 │   ├── Day3_Controllers_Core_Logic.md
 │   ├── Day4_Views_Frontend.md
 │   └── Day5_Testing_Polish.md
-├── Document.txt              # Đặc tả chi tiết toàn bộ API Routes & Endpoints
-├── render.yaml               # Cấu hình hạ tầng Render (IaC)
-├── RULE.md                   # Luật làm việc, quy tắc Git & commit của team
-└── README.md                 # Hướng dẫn cài đặt và khởi chạy dự án
+│
+├── Document.txt                       Project documentation (Word report source)
+├── render.yaml                        Render.com IaC configuration
+├── RULE.md                            Team working rules & Git conventions
+└── README.md                          This file
 ```
 
 ---
 
-## 🗺️ Sơ Đồ Cây Phân Nhóm Route API (`/api/v1/`)
+## 🗺️ API Route Tree (`/api/v1/`)
 
-```text
+```
 /api/v1/
-├── [PUBLIC ROUTES] (Không cần Bearer Token)
-│   ├── POST /auth/register                     -> Đăng ký tài khoản Khách hàng (bắt buộc phone, address)
-│   ├── POST /auth/register-farmer              -> Đăng ký mở sạp Nông dân (status='pending')
-│   ├── POST /auth/login                        -> Đăng nhập hệ thống, cấp Sanctum Token & User Role
-│   ├── GET  /markets                           -> Danh bạ chợ (kèm bộ lọc ngày, toạ độ GPS)
-│   ├── GET  /markets/{id}                      -> Chi tiết chợ, lịch họp, danh sách sạp đang bán
-│   ├── GET  /farmers                           -> Danh sách sạp nông dân công khai
-│   ├── GET  /farmers/{id}                      -> Chi tiết sạp, danh mục nông sản đang mở bán
-│   ├── GET  /categories                        -> Danh mục 5 ngành hàng nông sản sạch
-│   ├── GET  /products                          -> Catalog nông sản (lọc category, giá, chợ, sạp, search)
-│   ├── GET  /products/{id}                     -> Chi tiết nông sản, xuất xứ, review
-│   ├── GET  /reviews/product/{productId}       -> Đánh giá của sản phẩm kèm phản hồi chủ sạp
-│   ├── GET  /reviews/farmer/{farmerId}         -> Đánh giá của sạp nông dân
-│   ├── GET  /announcements/active              -> Thông báo hệ thống đang kích hoạt
-│   ├── POST /contact                           -> Khách vãng lai gửi phản ánh / liên hệ (Contact Us)
-│   └── GET  /orders/track/{orderCode}          -> Tra cứu tiến độ đơn hàng nhận tại sạp qua mã code
-│
-├── [SHARED PROTECTED] (Yêu cầu auth:sanctum)
-│   ├── GET  /auth/me                           -> Lấy thông tin tài khoản hiện tại + hồ sơ Farmer
-│   ├── PUT  /auth/profile                      -> Cập nhật thông tin cá nhân
-│   ├── PUT  /auth/change-password              -> Đổi mật khẩu tài khoản
-│   ├── POST /auth/logout                       -> Huỷ Bearer Token hiện tại
-│   ├── GET  /notifications                     -> Danh sách thông báo in-app (kèm unread_count)
-│   ├── PATCH /notifications/{id}/read          -> Đánh dấu đã đọc 1 thông báo
-│   └── PATCH /notifications/read-all           -> Đánh dấu đã đọc tất cả thông báo
-│
-├── [CUSTOMER ROUTES] (auth:sanctum + role:customer)
-│   ├── GET    /cart                            -> Lấy giỏ hàng hiện tại (nhóm theo sạp/chợ)
-│   ├── POST   /cart/items                      -> Thêm món vào giỏ (product_id, quantity)
-│   ├── PUT    /cart/items/{id}                 -> Cập nhật số lượng món trong giỏ
-│   ├── DELETE /cart/items/{id}                 -> Xoá 1 món khỏi giỏ hàng
-│   ├── DELETE /cart/clear                      -> Dọn sạch toàn bộ giỏ hàng
-│   ├── POST   /orders/checkout                 -> Đặt trước Pre-Order (tự động tách đơn theo sạp)
-│   ├── GET    /orders/my-orders                -> Lịch sử đặt trước của khách
-│   ├── GET    /orders/my-orders/{id}           -> Chi tiết đơn pre-order của khách
-│   ├── PATCH  /orders/{id}/cancel              -> Khách huỷ đơn trước giờ cutoff_at (hoàn kho)
-│   ├── POST   /reviews                         -> Gửi đánh giá 1-5 sao sau khi đơn completed
-│   ├── GET    /favorites                       -> Danh sách mục yêu thích (chợ, sạp, sản phẩm)
-│   └── POST   /favorites/toggle                -> Thêm/Bỏ yêu thích nhanh (đa hình)
-│
-├── [FARMER ROUTES] (auth:sanctum + role:farmer + EnsureFarmerActive)
-│   ├── GET    /farmer/dashboard-stats          -> Thống kê sạp: Tổng đơn, Đơn chờ, Doanh thu ước tính
-│   ├── GET    /farmer/profile                  -> Xem chi tiết hồ sơ sạp hàng
-│   ├── PUT    /farmer/profile                  -> Cập nhật mô tả sạp, hotline, ảnh đại diện
-│   ├── GET    /farmer/markets                  -> Danh sách chợ sạp đang đăng ký bán
-│   ├── POST   /farmer/markets                  -> Đăng ký bán tại chợ mới (farmer_markets)
-│   ├── PUT    /farmer/markets/{marketId}       -> Cấu hình vị trí gian, ngày pickup, slot 30p, cutoff 12h
-│   ├── DELETE /farmer/markets/{marketId}       -> Rút sạp khỏi chợ
-│   ├── GET    /farmer/products                 -> Quản lý nông sản của riêng sạp
-│   ├── POST   /farmer/products                 -> Đăng nông sản mới
-│   ├── PUT    /farmer/products/{id}            -> Sửa nông sản (tên, giá, đơn vị, ảnh, availability)
-│   ├── DELETE /farmer/products/{id}            -> Xoá mềm nông sản (Soft Delete)
-│   ├── GET    /farmer/products/{id}/template   -> Xem mẫu kho định kỳ tuần của sản phẩm
-│   ├── PUT    /farmer/products/{id}/template   -> Cấu hình số lượng mở bán T7/CN
-│   ├── POST   /farmer/apply-weekly-templates   -> 1-Click áp dụng định mức kho tuần cho phiên chợ
-│   ├── GET    /farmer/orders                   -> Hàng chờ đơn đặt trước (Incoming Pre-orders)
-│   ├── PATCH  /farmer/orders/{id}/accept       -> Nông dân duyệt đơn đặt trước
-│   ├── PATCH  /farmer/orders/{id}/decline      -> Nông dân từ chối đơn (+ lý do & hoàn kho)
-│   ├── PATCH  /farmer/orders/{id}/ready        -> Báo nông sản đã chuẩn bị xong tại sạp
-│   ├── PATCH  /farmer/orders/{id}/complete     -> Xác nhận khách đã nhận hàng & trả tiền mặt
-│   └── POST   /farmer/reviews/{id}/reply       -> Nông dân trả lời đánh giá sản phẩm của sạp
-│
-└── [ADMIN ROUTES] (auth:sanctum + role:admin)
-    ├── GET    /admin/stats/overview            -> Báo cáo sàn: Doanh thu, Đơn hàng, Top nông dân
-    ├── GET    /admin/users                     -> Quản lý danh sách người dùng toàn sàn
-    ├── PATCH  /admin/users/{id}/status         -> Khóa/Mở khóa tài khoản (active/inactive/banned)
-    ├── GET    /admin/farmers/pending           -> Hàng chờ hồ sơ nông dân xin mở sạp
-    ├── PATCH  /admin/farmers/{id}/approve      -> Phê duyệt nông dân mở sạp
-    ├── PATCH  /admin/farmers/{id}/reject       -> Từ chối hồ sơ nông dân
-    ├── POST   /admin/markets                   -> Thêm chợ nông sản mới
-    ├── PUT    /admin/markets/{id}              -> Cập nhật thông tin chợ, toạ độ, bản đồ
-    ├── DELETE /admin/markets/{id}              -> Xoá mềm chợ
-    ├── POST   /admin/categories                -> Thêm ngành hàng nông sản
-    ├── PUT    /admin/categories/{id}           -> Cập nhật ngành hàng
-    ├── PATCH  /admin/products/{id}/toggle-hide -> Admin gỡ nông sản vi phạm (is_hidden)
-    ├── PATCH  /admin/reviews/{id}/toggle-hide  -> Admin ẩn review khiếm nhã/sai sự thật
-    ├── GET    /admin/announcements             -> Quản lý thông báo toàn sàn
-    ├── POST   /admin/announcements             -> Phát thông báo mới (target: all, farmer, customer)
-    ├── PUT    /admin/announcements/{id}        -> Sửa thông báo
-    ├── DELETE /admin/announcements/{id}        -> Xoá thông báo
-    ├── GET    /admin/inquiries                 -> Hộp thư tiếp nhận liên hệ / phản ánh
-    └── PATCH  /admin/inquiries/{id}/read       -> Đánh dấu đã xử lý phản ánh
+|
+|-- [PUBLIC] No authentication required
+|   POST /auth/register                    Register customer (phone + address required)
+|   POST /auth/register-farmer             Register farmer stall (status = pending)
+|   POST /auth/login                       Login -> Sanctum token + user role
+|   GET  /markets                          Markets directory (filter: day, GPS coords)
+|   GET  /markets/{id}                     Market detail + schedules + active stalls
+|   GET  /farmers                          Public farmer stall listing
+|   GET  /farmers/{id}                     Stall detail + produce catalog + reviews
+|   GET  /categories                       5 produce categories
+|   GET  /products                         Catalog (filter: category, price, stall, search)
+|   GET  /products/{id}                    Product detail + reviews
+|   GET  /reviews/product/{productId}      Product reviews + farmer replies
+|   GET  /reviews/farmer/{farmerId}        Farmer stall reviews
+|   GET  /announcements/active             Active platform announcements
+|   POST /contact                          Submit contact / feedback message
+|   GET  /orders/track/{orderCode}         Public order progress tracker
+|
+|-- [SHARED PROTECTED] auth:sanctum
+|   GET    /auth/me                        Current user info + farmer profile
+|   PUT    /auth/profile                   Update personal information
+|   PUT    /auth/change-password           Change password
+|   POST   /auth/logout                    Revoke Bearer token
+|   GET    /notifications                  In-app notifications (+ unread_count)
+|   PATCH  /notifications/{id}/read        Mark single notification read
+|   PATCH  /notifications/read-all         Mark all notifications read
+|
+|-- [CUSTOMER] auth:sanctum + role:customer
+|   GET    /cart                           Cart grouped by farmer stall
+|   POST   /cart/items                     Add item to cart
+|   PUT    /cart/items/{id}                Update item quantity
+|   DELETE /cart/items/{id}                Remove single item
+|   DELETE /cart/clear                     Clear entire cart
+|   POST   /orders/checkout                Place pre-order (auto-split by stall, DB Transaction)
+|   GET    /orders/my-orders               Order history
+|   GET    /orders/my-orders/{id}          Single order detail
+|   PATCH  /orders/{id}/cancel             Cancel order before cutoff_at (stock restored)
+|   POST   /reviews                        Submit 1-5 star review (XOR: farmer OR product)
+|   GET    /favorites                      Favorites list (markets, stalls, products)
+|   POST   /favorites/toggle               Toggle favorite (add / remove)
+|
+|-- [FARMER] auth:sanctum + role:farmer + EnsureFarmerActive
+|   GET    /farmer/dashboard-stats         Stall stats (orders, revenue estimate)
+|   GET    /farmer/profile                 View stall profile
+|   PUT    /farmer/profile                 Update stall profile
+|   GET    /farmer/markets                 Markets stall is registered at
+|   POST   /farmer/markets                 Register stall at new market
+|   PUT    /farmer/markets/{marketId}      Configure stall: pickup days, slots, cutoff
+|   DELETE /farmer/markets/{marketId}      Withdraw stall from market
+|   GET    /farmer/products                Manage stall products
+|   POST   /farmer/products                Create product
+|   PUT    /farmer/products/{id}           Update product
+|   DELETE /farmer/products/{id}           Soft-delete product
+|   GET    /farmer/products/{id}/template  View weekly stock template
+|   PUT    /farmer/products/{id}/template  Configure weekly stock (Sat / Sun quantities)
+|   POST   /farmer/apply-weekly-templates  1-Click apply stock templates for next session
+|   GET    /farmer/orders                  Incoming pre-order queue
+|   PATCH  /farmer/orders/{id}/accept      Accept pre-order
+|   PATCH  /farmer/orders/{id}/decline     Decline pre-order (+ reason, stock restored)
+|   PATCH  /farmer/orders/{id}/ready       Mark produce ready at stall
+|   PATCH  /farmer/orders/{id}/complete    Confirm customer collected & paid cash
+|   POST   /farmer/reviews/{id}/reply      Reply to product review
+|
+`-- [ADMIN] auth:sanctum + role:admin
+    GET    /admin/stats/overview           Platform KPI report
+    GET    /admin/users                    All users management
+    PATCH  /admin/users/{id}/status        Lock / unlock account
+    GET    /admin/farmers/pending          Pending stall applications
+    PATCH  /admin/farmers/{id}/approve     Approve farmer stall
+    PATCH  /admin/farmers/{id}/reject      Reject farmer stall
+    POST   /admin/markets                  Add market
+    PUT    /admin/markets/{id}             Update market
+    DELETE /admin/markets/{id}             Soft-delete market
+    POST   /admin/categories               Add category
+    PUT    /admin/categories/{id}          Update category
+    PATCH  /admin/products/{id}/toggle-hide  Hide / show violating product
+    PATCH  /admin/reviews/{id}/toggle-hide   Hide / show inappropriate review
+    GET    /admin/announcements            Manage announcements
+    POST   /admin/announcements            Create announcement (target: all/farmer/customer)
+    PUT    /admin/announcements/{id}       Edit announcement
+    DELETE /admin/announcements/{id}       Delete announcement
+    GET    /admin/inquiries                Admin inquiry inbox
+    PATCH  /admin/inquiries/{id}/read      Mark inquiry as handled
 ```
 
 ---
 
-## 🚀 Hướng Dẫn Khởi Chạy (Local Development)
+## 🗄️ Database – 18 Tables
 
-### 1. Khởi chạy Backend (Laravel Web API)
-Mở Terminal 1:
+| # | Table | Description |
+|---|---|---|
+| 1 | `users` | All accounts: admin, farmer, customer. role ENUM, status ENUM, SoftDeletes |
+| 2 | `personal_access_tokens` | Sanctum Bearer tokens for REST API auth |
+| 3 | `markets` | Farmers market directory. GPS coords, map embed URL. SoftDeletes |
+| 4 | `market_schedules` | Weekly operating hours per market (0=Sun … 6=Sat) |
+| 5 | `farmers` | Stall profiles 1-1 with users. avg_rating, review_count. SoftDeletes |
+| 6 | `farmer_markets` | Stall to Market link. pickup_days JSON, slot_minutes, cutoff_hours |
+| 7 | `categories` | 5 produce categories (vegetables, fruits, dairy, bakery, pantry/honey) |
+| 8 | `products` | Farm produce listings. price, stock_quantity, availability ENUM, FULLTEXT. SoftDeletes |
+| 9 | `weekly_stock_templates` | Recurring stock quantities per day-of-week for 1-Click reset |
+| 10 | `carts` | Shopping cart 1-1 with users |
+| 11 | `cart_items` | Individual items in cart |
+| 12 | `orders` | Pre-orders. order_code UNIQUE (ML-YYYY-F##-####), pickup slot, cutoff_at, status ENUM |
+| 13 | `order_items` | Price & name snapshot at checkout time (immutable price history) |
+| 14 | `favorites` | Polymorphic favorites: farmer / product / market |
+| 15 | `reviews` | 1-5 star ratings. XOR constraint: farmer_id OR product_id. farmer_reply. SoftDeletes |
+| 16 | `notifications` | In-app alerts triggered by order status events |
+| 17 | `announcements` | Admin platform-wide broadcasts (target_role: all / farmer / customer) |
+| 18 | `contact_messages` | Public contact form & feedback inbox for Admin |
+
+**Migration safe execution order**: users -> personal_access_tokens -> markets -> market_schedules -> farmers -> farmer_markets -> categories -> products -> weekly_stock_templates -> carts -> cart_items -> orders -> order_items -> favorites -> reviews -> notifications -> announcements -> contact_messages
+
+---
+
+## 🚀 Local Development Setup
+
+### System Requirements
+- PHP >= 8.4 (extensions: pdo_mysql, mbstring, openssl, xml, zip)
+- Composer >= 2.x
+- Node.js >= 20.x + npm >= 10.x
+- MySQL >= 8.0 (or Aiven Cloud MySQL account)
+- Git
+
+### 1. Backend (Laravel REST API)
+
 ```bash
 cd backend
 
-# Cài đặt thư viện PHP
+# Install PHP dependencies
 composer install
 
-# Cấu hình môi trường
+# Configure environment
 cp .env.example .env
+# Edit .env: set DB_HOST, DB_DATABASE, DB_USERNAME, DB_PASSWORD
+# Set SANCTUM_STATEFUL_DOMAINS=localhost:5173,127.0.0.1:5173
 
-# Tạo App Key
+# Generate application key
 php artisan key:generate
 
-# Chạy 18 Migrations & 10 Modular Seeders
+# Run 18 migrations + seed all demo data (11 seeders)
 php artisan migrate:fresh --seed
 
-# Khởi động server API (chạy tại http://127.0.0.1:8000)
+# Start API server -> http://127.0.0.1:8000
 php artisan serve
+
+# (Optional) Run full test suite
+php artisan test
+# Expected: 177 tests, 1,271 assertions, 100% PASSED
 ```
 
-### 2. Tài Khoản Demo Mẫu Sẵn (Seeders)
-| Vai trò | Email đăng nhập | Mật khẩu | Ghi chú |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin@marketlink.com` | `password123` | Quản trị sàn, duyệt sạp, thông báo, inbox |
-| **Farmer** | `farmer@marketlink.com` | `password123` | Chủ sạp Green Valley Organics |
-| **Customer** | `customer@marketlink.com` | `password123` | Khách mua hàng David Miller |
+### 2. Frontend (React + Vite SPA)
 
-### 3. Khởi chạy Frontend (React JS Vite)
-Mở Terminal 2:
 ```bash
 cd frontend
 
-# Cài đặt thư viện JavaScript
+# Install JavaScript dependencies
 npm install
 
-# Khởi động máy chủ phát triển Vite (chạy tại http://localhost:5173)
+# Create environment file
+echo "VITE_API_BASE_URL=http://127.0.0.1:8000/api/v1" > .env.local
+
+# Start Vite dev server -> http://localhost:5173
 npm run dev
+
+# (Optional) Production build
+npm run build
+# Output: frontend/dist/
+# Build time: ~707ms | Initial bundle: 92.74 kB (vs 1,057 kB before optimization)
+```
+
+### 3. Access the Application
+
+| Service | URL |
+|---|---|
+| Frontend SPA | http://localhost:5173 |
+| Backend API | http://127.0.0.1:8000/api/v1 |
+| API Health Check | GET http://127.0.0.1:8000/api/v1/categories |
+
+### CORS Configuration (if CORS errors appear)
+
+Open `backend/config/cors.php` and ensure:
+```php
+'allowed_origins' => [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+],
 ```
 
 ---
 
-## 📝 Quy Tắc Làm Việc Của Team
-- Đọc kỹ [RULE.md](RULE.md) trước khi code và commit.
-- Luôn cập nhật tiến độ vào [ai/PROGRESS.md](ai/PROGRESS.md).
-- Tuân thủ quy chuẩn viết code tại [ai/CONVENTION.md](ai/CONVENTION.md).
-- Xem sơ đồ thực thể ERD tại [ai/DATABASE_ERD.md](ai/DATABASE_ERD.md).
+## 🔑 Demo Login Credentials
+
+> All demo accounts use password: **`password123`**
+> Login page (local): **http://localhost:5173/login**
+
+| Role | Email | Password | Notes |
+|---|---|---|---|
+| **Admin** | `admin@marketlink.com` | `password123` | Full platform management rights |
+| **Farmer** | `farmer@marketlink.com` | `password123` | Green Valley Organics · **Active** |
+| **Farmer** | `sarah@marketlink.com` | `password123` | Sunny Meadow Dairy & Apiary · **Active** |
+| **Farmer** | `robert@marketlink.com` | `password123` | Prairie Roots Microgreens · **Pending** approval |
+| **Customer** | `customer@marketlink.com` | `password123` | David Miller · has sample orders in all 4 statuses |
+
+After login, the system automatically redirects by role:
+- Admin → `/admin/dashboard`
+- Farmer → `/farmer/dashboard`
+- Customer → `/user/dashboard`
+
+> 💡 **1-Click Demo Login** buttons on the Login page let you log in instantly without typing credentials (dev environment only).
+
+---
+
+## 📊 Quality & Performance Metrics
+
+| Metric | Result |
+|---|---|
+| Backend tests | **177** Feature + Unit tests |
+| Assertions | **1,271** total assertions |
+| Pass rate | **100%** (0 failures, 0 errors) |
+| N+1 queries | **0** – verified by `ZeroNPlusOneIntegrationTest.php` |
+| Debug artifacts | **0** – no `dd()`, `dump()`, or `console.log()` |
+| Initial JS bundle | **92.74 kB** (91.2% reduction from 1,057 kB via `React.lazy`) |
+| Production build | **707 ms** |
+| Files over 230 lines (FE) | **0** – all files < 230 lines (SRP enforced) |
+| Files over 200 lines (BE) | **0** – all files < 200 lines (SRP enforced) |
+
+---
+
+## 🔒 Core Business Constraints (SRS TechWiz 7)
+
+| Constraint | Detail |
+|---|---|
+| ❌ No online payment | Customers pay **cash at the stall** on pickup. No Stripe / PayPal / VNPay. |
+| ❌ No home delivery | Customers **come to the farmers market stall** to collect their produce. |
+| ✅ Pre-order for pickup | Reserve produce online → pick up at selected time slot on market day. |
+| ✅ 3-role RBAC | `admin` · `farmer` · `customer` – enforced by Sanctum + RoleMiddleware. |
+| ✅ Single light theme | Fresh Botanical `#F8FAF6` background. No dark mode toggle. |
+| ✅ 100% English source code | All code, comments, API messages, and test descriptions in English. |
+
+---
+
+## 🛠️ Full Tech Stack
+
+### Backend
+| Technology | Version / Detail |
+|---|---|
+| PHP | 8.4 – `strict_types=1`, typed properties, property hooks |
+| Laravel | 13 – RESTful API, JSON-only responses, Sanctum |
+| Laravel Sanctum | Token-based API authentication (Bearer) |
+| Eloquent ORM | 1-1, 1-N, N-N, Polymorphic, SoftDeletes, Eager Loading |
+| MySQL | 8.0+ on Aiven Cloud – FULLTEXT, JSON columns, CHECK constraints |
+| PHPUnit | 177 Feature & Unit tests – 100% pass |
+| Docker | PHP 8.4 container |
+| render.yaml | Infrastructure as Code (IaC) for Render.com |
+
+### Frontend
+| Technology | Version / Detail |
+|---|---|
+| React | 19 – Functional Components, Hooks (useState, useEffect, useContext, useCallback, useMemo) |
+| Vite | Latest – build tool, HMR, `manualChunks` vendor splitting |
+| TailwindCSS | 100% utility-first, Fresh Botanical & Harvest Gold design system |
+| Axios | HTTP client with Bearer token interceptor |
+| React Router DOM | SPA client-side routing with `React.lazy` + `Suspense` |
+| Chart.js (`chart.js/auto`) | Line, Doughnut, Bar charts for Admin Analytics |
+| Lucide React | Icon library |
+| Google Maps Embed | Market location map (< 200ms via Edge CDN) |
+
+---
+
+## 📝 Team Working Rules
+
+- Read [`RULE.md`](RULE.md) **before** writing any code or making commits.
+- Update [`ai/PROGRESS.md`](ai/PROGRESS.md) after completing each phase.
+- Follow all conventions in [`ai/CONVENTION.md`](ai/CONVENTION.md).
+- Consult [`ai/DATABASE_ERD.md`](ai/DATABASE_ERD.md) before touching any DB table.
+- Log every bug in [`ai/BUGS.md`](ai/BUGS.md) with file/line reference.
+- Git commits: **English only**, Conventional Commits (`feat:`, `fix:`, `docs:`, `refactor:`…).
+- **Always ask before committing.** Never self-commit without user confirmation.
+- No `dd()`, `dump()`, `console.log()` left in production code.

@@ -1,5 +1,7 @@
 # SƠ ĐỒ THIẾT KẾ CƠ SỞ DỮ LIỆU (ERD) & DATA DICTIONARY
+
 # DỰ ÁN: MARKETLINK - EGREEN BASKET PORTAL
+
 # CHUẨN HOÁ: 18 BẢNG QUAN HỆ (MYSQL 8.0+ / AIVEN CLOUD)
 
 Tài liệu này cung cấp sơ đồ thực thể quan hệ Entity-Relationship Diagram (ERD) hoàn chỉnh và từ điển dữ liệu (Data Dictionary) chi tiết cho toàn bộ 18 bảng của hệ thống **MarketLink**.
@@ -278,9 +280,10 @@ erDiagram
 ## 2. TỪ ĐIỂN DỮ LIỆU CHI TIẾT (DATA DICTIONARY)
 
 ### Bảng 1: `users`
+
 Lưu trữ toàn bộ người dùng hệ thống gồm Quản trị viên, Nông dân và Khách hàng.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
-| :--- | :--- | :---: | :--- | :--- |
+| :--------------------| :------------------| :----:| :---------------| :------------------------------------------------------------|
 | `id` | `BIGINT UNSIGNED` | NO | AUTO_INCREMENT | Khóa chính (Primary Key) |
 | `fullname` | `VARCHAR(100)` | NO | | Họ và tên đầy đủ |
 | `username` | `VARCHAR(50)` | NO | | UNIQUE - Tên đăng nhập duy nhất |
@@ -295,11 +298,13 @@ Lưu trữ toàn bộ người dùng hệ thống gồm Quản trị viên, Nôn
 | `created_at` | `TIMESTAMP` | YES | NULL | Thời gian tạo tài khoản |
 | `updated_at` | `TIMESTAMP` | YES | NULL | Thời gian cập nhật gần nhất |
 | `deleted_at` | `TIMESTAMP` | YES | NULL | Soft Delete (Xóa mềm) |
+
 - **Indexes**: `INDEX (role, status)`.
 
 ---
 
 ### Bảng 2: `personal_access_tokens` (Laravel Sanctum)
+
 Quản lý Bearer Token cho xác thực API giữa React Frontend và Laravel Backend.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -313,11 +318,13 @@ Quản lý Bearer Token cho xác thực API giữa React Frontend và Laravel Ba
 | `expires_at` | `TIMESTAMP` | YES | NULL | Thời điểm hết hạn |
 | `created_at` | `TIMESTAMP` | YES | NULL | |
 | `updated_at` | `TIMESTAMP` | YES | NULL | |
+
 - **Indexes**: `INDEX (tokenable_type, tokenable_id)`.
 
 ---
 
 ### Bảng 3: `markets`
+
 Danh bạ các chợ nông dân địa phương và tọa độ vị trí thực tế trên bản đồ.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -334,11 +341,13 @@ Danh bạ các chợ nông dân địa phương và tọa độ vị trí thực
 | `created_at` | `TIMESTAMP` | YES | NULL | |
 | `updated_at` | `TIMESTAMP` | YES | NULL | |
 | `deleted_at` | `TIMESTAMP` | YES | NULL | Soft Delete |
+
 - **Indexes**: `INDEX (status)`, `INDEX (latitude, longitude)`.
 
 ---
 
 ### Bảng 4: `market_schedules`
+
 Lịch mở cửa họp chợ theo từng ngày trong tuần.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -347,11 +356,13 @@ Lịch mở cửa họp chợ theo từng ngày trong tuần.
 | `day_of_week` | `TINYINT UNSIGNED` | NO | | 0 = Chủ nhật, 1 = T2, ..., 6 = Thứ 7 |
 | `open_time` | `TIME` | NO | | Giờ mở cửa chợ |
 | `close_time` | `TIME` | NO | | Giờ đóng cửa chợ |
+
 - **Ràng buộc**: `UNIQUE (market_id, day_of_week)`, `CHECK (open_time < close_time)`.
 
 ---
 
 ### Bảng 5: `farmers`
+
 Hồ sơ gian hàng và thông tin liên hệ đại diện của chủ sạp nông dân (1-1 với `users`).
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -374,6 +385,7 @@ Hồ sơ gian hàng và thông tin liên hệ đại diện của chủ sạp n�
 ---
 
 ### Bảng 6: `farmer_markets`
+
 Liên kết Nông dân với Chợ bán thực tế, quy định vị trí sạp và khung giờ nhận hàng.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -389,12 +401,14 @@ Liên kết Nông dân với Chợ bán thực tế, quy định vị trí sạp
 | `is_active` | `TINYINT(1)` | NO | `1` | Trạng thái hoạt động tại chợ này |
 | `created_at` | `TIMESTAMP` | YES | NULL | |
 | `updated_at` | `TIMESTAMP` | YES | NULL | |
+
 - **Ràng buộc**: `UNIQUE (farmer_id, market_id)`, `CHECK (pickup_start_time < pickup_end_time)`.
 - **Indexes**: `INDEX (market_id)`.
 
 ---
 
 ### Bảng 7: `categories`
+
 Phân loại ngành hàng nông sản (Rau ăn lá, Trái cây, Trứng sữa, Bánh mộc...).
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -409,6 +423,7 @@ Phân loại ngành hàng nông sản (Rau ăn lá, Trái cây, Trứng sữa, B
 ---
 
 ### Bảng 8: `products`
+
 Danh sách sản phẩm nông sản tươi sạch do nông dân niêm yết bán.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -428,11 +443,13 @@ Danh sách sản phẩm nông sản tươi sạch do nông dân niêm yết bán
 | `created_at` | `TIMESTAMP` | YES | NULL | |
 | `updated_at` | `TIMESTAMP` | YES | NULL | |
 | `deleted_at` | `TIMESTAMP` | YES | NULL | Soft Delete |
+
 - **Indexes**: `INDEX (farmer_id)`, `INDEX (category_id)`, `INDEX (price)`, `FULLTEXT (name, description)`.
 
 ---
 
 ### Bảng 9: `weekly_stock_templates`
+
 Mẫu số lượng tồn kho định kỳ hàng tuần giúp nông dân tái lập nhanh theo từng phiên chợ.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -441,11 +458,13 @@ Mẫu số lượng tồn kho định kỳ hàng tuần giúp nông dân tái l�
 | `day_of_week` | `TINYINT UNSIGNED` | NO | | 0 = Chủ nhật ... 6 = Thứ 7 |
 | `default_quantity` | `DECIMAL(10,2)` | NO | | CHECK `default_quantity >= 0` |
 | `is_active` | `TINYINT(1)` | NO | `1` | Kích hoạt mẫu này |
+
 - **Ràng buộc**: `UNIQUE (product_id, day_of_week)`.
 
 ---
 
 ### Bảng 10: `carts`
+
 Giỏ hàng hiện thời của người dùng.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -457,6 +476,7 @@ Giỏ hàng hiện thời của người dùng.
 ---
 
 ### Bảng 11: `cart_items`
+
 Chi tiết sản phẩm và số lượng đặt trong giỏ hàng.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -466,11 +486,13 @@ Chi tiết sản phẩm và số lượng đặt trong giỏ hàng.
 | `quantity` | `DECIMAL(10,2)` | NO | | CHECK `quantity > 0` |
 | `created_at` | `TIMESTAMP` | YES | NULL | |
 | `updated_at` | `TIMESTAMP` | YES | NULL | |
+
 - **Ràng buộc**: `UNIQUE (cart_id, product_id)`.
 
 ---
 
 ### Bảng 12: `orders`
+
 Đơn đặt trước nông sản giữ chỗ tại sạp chợ (Pre-Order for Pickup).
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -493,11 +515,13 @@ Chi tiết sản phẩm và số lượng đặt trong giỏ hàng.
 | `cancelled_at` | `DATETIME` | YES | NULL | Thời điểm đơn bị từ chối / huỷ |
 | `created_at` | `TIMESTAMP` | YES | NULL | |
 | `updated_at` | `TIMESTAMP` | YES | NULL | |
+
 - **Indexes**: `INDEX (customer_id, status)`, `INDEX (farmer_id, status)`, `INDEX (pickup_date)`, `INDEX (market_id)`.
 
 ---
 
 ### Bảng 13: `order_items`
+
 Bản ghi chi tiết các sản phẩm trong đơn, có cơ chế snapshot giá và tên tại thời điểm đặt.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -509,11 +533,13 @@ Bản ghi chi tiết các sản phẩm trong đơn, có cơ chế snapshot giá 
 | `unit_price` | `DECIMAL(10,2)` | NO | | Snapshot đơn giá lúc chốt đơn |
 | `quantity` | `DECIMAL(10,2)` | NO | | CHECK `quantity > 0` |
 | `subtotal` | `DECIMAL(10,2)` | NO | | Thành tiền của món (`unit_price * quantity`) |
+
 - **Indexes**: `INDEX (order_id)`, `INDEX (product_id)`.
 
 ---
 
 ### Bảng 14: `favorites`
+
 Danh sách mục yêu thích của người dùng (Polymorphic: Chợ, Nông dân, Sản phẩm).
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -522,12 +548,14 @@ Danh sách mục yêu thích của người dùng (Polymorphic: Chợ, Nông dâ
 | `favoritable_type` | `ENUM` | NO | | `'farmer'`, `'product'`, `'market'` |
 | `favoritable_id` | `BIGINT UNSIGNED` | NO | | ID tương ứng của đối tượng được thích |
 | `created_at` | `TIMESTAMP` | YES | NULL | |
+
 - **Ràng buộc**: `UNIQUE (user_id, favoritable_type, favoritable_id)`.
 - **Indexes**: `INDEX (favoritable_type, favoritable_id)`.
 
 ---
 
 ### Bảng 15: `reviews`
+
 Đánh giá chất lượng sạp hoặc sản phẩm sau khi đơn hoàn thành.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -544,6 +572,7 @@ Danh sách mục yêu thích của người dùng (Polymorphic: Chợ, Nông dâ
 | `created_at` | `TIMESTAMP` | YES | NULL | |
 | `updated_at` | `TIMESTAMP` | YES | NULL | |
 | `deleted_at` | `TIMESTAMP` | YES | NULL | Soft Delete |
+
 - **Ràng buộc**:
   - `CHECK ((farmer_id IS NULL) <> (product_id IS NULL))` (Chỉ review đúng 1 đối tượng).
   - `UNIQUE (customer_id, order_id, farmer_id, product_id)`.
@@ -551,6 +580,7 @@ Danh sách mục yêu thích của người dùng (Polymorphic: Chợ, Nông dâ
 ---
 
 ### Bảng 16: `notifications`
+
 Hệ thống thông báo đẩy trong ứng dụng (In-app Alerts) theo trạng thái đơn hàng.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -562,11 +592,13 @@ Hệ thống thông báo đẩy trong ứng dụng (In-app Alerts) theo trạng 
 | `order_id` | `BIGINT UNSIGNED` | YES | NULL | FK -> `orders.id` ON DELETE SET NULL |
 | `is_read` | `TINYINT(1)` | NO | `0` | 0 = Chưa đọc, 1 = Đã đọc |
 | `created_at` | `TIMESTAMP` | YES | NULL | |
+
 - **Indexes**: `INDEX (user_id, is_read)`.
 
 ---
 
 ### Bảng 17: `announcements`
+
 Thông báo và cảnh báo toàn sàn do Quản trị viên (Admin) phát đi.
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -580,6 +612,7 @@ Thông báo và cảnh báo toàn sàn do Quản trị viên (Admin) phát đi.
 | `updated_at` | `TIMESTAMP` | YES | NULL | |
 
 ### Bảng 18: `contact_messages`
+
 Hòm thư liên hệ, phản ánh và thắc mắc từ khách vãng lai / người dùng gửi tới Ban Quản Trị Sàn (Admin Inbox).
 | Tên cột | Kiểu dữ liệu | Null | Mặc định | Ràng buộc / Ý nghĩa |
 | :--- | :--- | :---: | :--- | :--- |
@@ -591,6 +624,7 @@ Hòm thư liên hệ, phản ánh và thắc mắc từ khách vãng lai / ngư�
 | `is_read` | `TINYINT(1)` | NO | `0` | 0 = Chưa đọc, 1 = Đã đọc |
 | `created_at` | `TIMESTAMP` | YES | NULL | |
 | `updated_at` | `TIMESTAMP` | YES | NULL | |
+
 - **Indexes**: `INDEX (is_read)`.
 
 ---
