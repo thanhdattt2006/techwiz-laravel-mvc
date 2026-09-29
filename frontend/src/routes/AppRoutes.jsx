@@ -93,6 +93,8 @@ export default function AppRoutes() {
               <Route path="/customer/profile" element={<CustomerProfilePage />} />
               <Route path="/user/history" element={<CustomerOrdersPage />} />
               <Route path="/customer/orders" element={<CustomerOrdersPage />} />
+              <Route path="/user/orders/:id" element={<OrderPickupTrackerPage />} />
+              <Route path="/customer/orders/:id" element={<OrderPickupTrackerPage />} />
             </Route>
           </Route>
 

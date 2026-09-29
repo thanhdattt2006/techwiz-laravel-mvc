@@ -18,6 +18,8 @@ export default function HomeFreshHarvest({
   onCategoryChange,
   sortByPrice = 'default',
   onSortByPriceChange,
+  onAddToCart,
+  onPreOrder,
 }) {
   const defaultCategories = ['VEGETABLES', 'FRUITS', 'DAIRY', 'BAKERY', 'PANTRY'];
   const displayedProducts = products.slice(0, 9);
@@ -132,7 +134,12 @@ export default function HomeFreshHarvest({
         <div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {displayedProducts.length > 0 ? (
             displayedProducts.map((item) => (
-              <ProductCard key={item.id} product={item} />
+              <ProductCard
+                key={item.id}
+                product={item}
+                onAddToCart={onAddToCart}
+                onPreOrder={onPreOrder}
+              />
             ))
           ) : (
             <div className="col-span-full py-12 text-center bg-white border border-[#E2E8DF] rounded-2xl">

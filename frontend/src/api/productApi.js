@@ -1,26 +1,29 @@
 import axiosClient from './axiosClient.js';
+import { globalApiCache } from '../utils/apiCache.js';
 
 /**
  * Produce Catalog & Inventory Operations API Service
  * Maps to /api/v1/products, /api/v1/farmer/products, /api/v1/admin/products
+ * Uses short TTL cache (30s) and inflight deduplication for fast page navigation.
  */
 export const productApi = {
   /**
-   * List public products with dynamic multi-criteria filters (Public).
+   * List public products with dynamic multi-criteria filters (Public, Cached 30s).
    * @param {object} [params] - { category_id, market_id, farmer_id, min_price, max_price, in_stock, search, sort_by, limit, page }
    * @returns {Promise<object>} Response envelope { success, message, data: [...] }
    */
   getProducts: (params = {}) => {
-    return axiosClient.get('/products', { params });
+    const key = `products_${JSON.stringify(params)}`;
+    return globalApiCache.fetch(key, () => axiosClient.get('/products', { params }), 30 * 1000);
   },
 
   /**
-   * Get single product details including stall and reviews (Public).
+   * Get single product details including stall and reviews (Public, Cached 30s).
    * @param {number|string} id - Product ID
    * @returns {Promise<object>} Response envelope { success, message, data: {...} }
    */
   getProduct: (id) => {
-    return axiosClient.get(`/products/${id}`);
+    return globalApiCache.fetch(`product_${id}`, () => axiosClient.get(`/products/${id}`), 30 * 1000);
   },
 
   /**
@@ -38,10 +41,12 @@ export const productApi = {
    * @param {object|FormData} data - Product details
    * @returns {Promise<object>} Response envelope { success, message, data: {...} }
    */
-  createProduct: (data) => {
+  createProduct: async (data) => {
     const isFormData = data instanceof FormData;
     const config = isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : {};
-    return axiosClient.post('/farmer/products', data, config);
+    const res = await axiosClient.post('/farmer/products', data, config);
+    globalApiCache.invalidate('product');
+    return res;
   },
 
   /**
@@ -51,14 +56,18 @@ export const productApi = {
    * @param {object|FormData} data - Updated details
    * @returns {Promise<object>} Response envelope { success, message, data: {...} }
    */
-  updateProduct: (id, data) => {
+  updateProduct: async (id, data) => {
+    let res;
     if (data instanceof FormData) {
       data.append('_method', 'PUT');
-      return axiosClient.post(`/farmer/products/${id}`, data, {
+      res = await axiosClient.post(`/farmer/products/${id}`, data, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+    } else {
+      res = await axiosClient.put(`/farmer/products/${id}`, data);
     }
-    return axiosClient.put(`/farmer/products/${id}`, data);
+    globalApiCache.invalidate('product');
+    return res;
   },
 
   /**
@@ -66,8 +75,10 @@ export const productApi = {
    * @param {number|string} id - Product ID
    * @returns {Promise<object>} Response envelope { success, message }
    */
-  deleteProduct: (id) => {
-    return axiosClient.delete(`/farmer/products/${id}`);
+  deleteProduct: async (id) => {
+    const res = await axiosClient.delete(`/farmer/products/${id}`);
+    globalApiCache.invalidate('product');
+    return res;
   },
 
   /**
@@ -75,8 +86,10 @@ export const productApi = {
    * @param {number|string} id - Product ID
    * @returns {Promise<object>} Response envelope { success, message, data: {...} }
    */
-  toggleHide: (id) => {
-    return axiosClient.patch(`/admin/products/${id}/toggle-hide`);
+  toggleHide: async (id) => {
+    const res = await axiosClient.patch(`/admin/products/${id}/toggle-hide`);
+    globalApiCache.invalidate('product');
+    return res;
   },
 
   /**

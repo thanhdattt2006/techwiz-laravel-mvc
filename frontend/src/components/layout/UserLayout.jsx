@@ -18,6 +18,7 @@ export default function UserLayout() {
 
   const isFavoritesActive = location.pathname.includes('/user/dashboard') && location.search.includes('favorites');
   const isDashboardActive = location.pathname.includes('/user/dashboard') && !location.search.includes('favorites');
+  const isOrdersActive = location.pathname.includes('/history') || location.pathname.includes('/orders');
 
   const handleLogout = async () => {
     await logout();
@@ -117,9 +118,9 @@ export default function UserLayout() {
 
           <NavLink
             to="/user/history"
-            className={({ isActive }) =>
+            className={() =>
               `flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
-                isActive
+                isOrdersActive
                   ? 'bg-emerald-50 text-[#16A34A] border border-emerald-200 shadow-2xs'
                   : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAF6]'
               }`

@@ -10,6 +10,7 @@ import {
   FALLBACK_HARVEST,
 } from '../../components/home';
 import { marketApi, productApi, categoryApi } from '../../api';
+import { useCart } from '../../context/CartContext';
 
 /**
  * HomePage Component
@@ -17,9 +18,19 @@ import { marketApi, productApi, categoryApi } from '../../api';
  * Cleanly separated into modular sub-components adhering to SOLID principles.
  */
 export default function HomePage() {
+  const { addToCart, openCart } = useCart();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [sortByPrice, setSortByPrice] = useState('default');
+
+  const handleAddToCart = async (product) => {
+    return await addToCart(product.id, 1);
+  };
+
+  const handlePreOrder = async (product) => {
+    const ok = await addToCart(product.id, 1);
+    if (ok) openCart();
+  };
 
   const [markets, setMarkets] = useState([]);
   const [loadingMarkets, setLoadingMarkets] = useState(true);
@@ -139,6 +150,8 @@ export default function HomePage() {
         onCategoryChange={setSelectedCategory}
         sortByPrice={sortByPrice}
         onSortByPriceChange={setSortByPrice}
+        onAddToCart={handleAddToCart}
+        onPreOrder={handlePreOrder}
       />
       <HomeHowItWorks />
       <HomeCommunitySpotlight />

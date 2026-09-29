@@ -44,7 +44,7 @@ export default function UpcomingPickupCard({ upcomingOrder, loading }) {
         {upcomingOrder && (
           <div className="flex items-center gap-2">
             <Link
-              to={`/orders/track/${encodeURIComponent(upcomingOrder.order_code)}`}
+              to={`/user/orders/${encodeURIComponent(upcomingOrder.order_code)}`}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold shadow-xs transition"
             >
               <span>Live Pickup Tracker</span>

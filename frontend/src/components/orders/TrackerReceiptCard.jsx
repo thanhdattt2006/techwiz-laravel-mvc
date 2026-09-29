@@ -1,5 +1,6 @@
 import React from 'react';
-import { Calendar, Info, Printer, XCircle, Loader2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Calendar, Info, Printer, XCircle, Loader2, Star } from 'lucide-react';
 
 /**
  * TrackerReceiptCard
@@ -110,6 +111,16 @@ export default function TrackerReceiptCard({
             )}
             <span>Cancel Pre-Order Reservation</span>
           </button>
+        )}
+
+        {order.status === 'completed' && (
+          <Link
+            to={`/feedback?requestId=${order.order_code}`}
+            className="w-full py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200 text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-2xs"
+          >
+            <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+            <span>Leave Stall Feedback & Review</span>
+          </Link>
         )}
       </div>
     </div>

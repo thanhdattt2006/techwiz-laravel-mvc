@@ -1,4 +1,5 @@
 import axiosClient from './axiosClient.js';
+import { globalApiCache } from '../utils/apiCache.js';
 
 /**
  * Notifications & Platform Announcements API Service
@@ -32,12 +33,13 @@ export const notificationApi = {
   },
 
   /**
-   * Get active public/role-aware platform announcements.
+   * Get active public/role-aware platform announcements (Cached 5 mins).
    * @param {object} [params] - Query parameters { role }
    * @returns {Promise<object>} Response envelope { success, message, data: [...] }
    */
   getActiveAnnouncements: (params = {}) => {
-    return axiosClient.get('/announcements/active', { params });
+    const key = `announcements_active_${JSON.stringify(params)}`;
+    return globalApiCache.fetch(key, () => axiosClient.get('/announcements/active', { params }), 5 * 60 * 1000);
   },
 
   /**
@@ -54,8 +56,10 @@ export const notificationApi = {
    * @param {object} data - { title, content, target_role, is_active }
    * @returns {Promise<object>} Response envelope { success, message, data: AnnouncementResource }
    */
-  createAnnouncement: (data) => {
-    return axiosClient.post('/admin/announcements', data);
+  createAnnouncement: async (data) => {
+    const res = await axiosClient.post('/admin/announcements', data);
+    globalApiCache.invalidate('announcements');
+    return res;
   },
 
   /**
@@ -64,8 +68,10 @@ export const notificationApi = {
    * @param {object} data - Updated announcement details
    * @returns {Promise<object>} Response envelope { success, message, data: AnnouncementResource }
    */
-  updateAnnouncement: (id, data) => {
-    return axiosClient.put(`/admin/announcements/${id}`, data);
+  updateAnnouncement: async (id, data) => {
+    const res = await axiosClient.put(`/admin/announcements/${id}`, data);
+    globalApiCache.invalidate('announcements');
+    return res;
   },
 
   /**
@@ -73,8 +79,10 @@ export const notificationApi = {
    * @param {number|string} id - Announcement ID
    * @returns {Promise<object>} Response envelope { success, message }
    */
-  deleteAnnouncement: (id) => {
-    return axiosClient.delete(`/admin/announcements/${id}`);
+  deleteAnnouncement: async (id) => {
+    const res = await axiosClient.delete(`/admin/announcements/${id}`);
+    globalApiCache.invalidate('announcements');
+    return res;
   },
 };
 

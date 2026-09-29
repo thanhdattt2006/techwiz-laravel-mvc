@@ -2,18 +2,10 @@ import React, { useState } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
-  Store,
-  LogOut,
-  ArrowLeft,
-  Clock,
-  Sprout,
-  Menu,
-  X,
-  Layers,
-  ExternalLink,
-  Settings,
+  Store, LogOut, ArrowLeft, Clock, Sprout, Menu, X, Layers, ExternalLink, Settings,
 } from 'lucide-react';
 import NotificationDropdown from '../common/NotificationDropdown';
+import OperatorSubnav from './OperatorSubnav';
 
 export default function OperatorLayout() {
   const { user, logout } = useAuth();
@@ -106,6 +98,9 @@ export default function OperatorLayout() {
           </div>
         </div>
       </header>
+
+      {/* Stall Master Subnavigation Tabs */}
+      <OperatorSubnav />
 
       {/* Mobile Drawer Navigation (< 1024px) */}
       {mobileMenuOpen && (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Receipt, Printer, X } from 'lucide-react';
 
 /**
@@ -6,6 +6,14 @@ import { Receipt, Printer, X } from 'lucide-react';
  * Itemized stall inspection and cash receipt slip ready for print and mobile display.
  */
 export default function InspectionSlipModal({ order, onClose }) {
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && onClose) onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   if (!order) return null;
 
   const handlePrint = () => {
@@ -20,8 +28,16 @@ export default function InspectionSlipModal({ order, onClose }) {
   const pickupWindow = order.pickup_time_slot || `${order.pickup_start_time} - ${order.pickup_end_time}`;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs" role="dialog" aria-modal="true">
-      <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-[#E2E8DF] space-y-6 relative animate-in fade-in zoom-in-95">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs cursor-pointer"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-[#E2E8DF] space-y-6 relative animate-in fade-in zoom-in-95 cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
         <button
           type="button"
           onClick={onClose}

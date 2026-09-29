@@ -11,46 +11,25 @@ import { useCart } from '../../context/CartContext';
  */
 export default function ProductsPage() {
   const {
-    products = [],
-    paginatedProducts,
-    currentPage,
-    setCurrentPage,
-    totalPages,
-    totalItems,
-    itemsPerPage,
-    categories,
-    markets,
-    loading,
-    categoriesLoading,
-    marketsLoading,
-    searchTerm,
-    setSearchTerm,
-    selectedCategory,
-    setSelectedCategory,
-    selectedMarketId,
-    setSelectedMarketId,
-    maxPrice,
-    setMaxPrice,
-    organicOnly,
-    setOrganicOnly,
-    inStockOnly,
-    setInStockOnly,
-    sortBy,
-    setSortBy,
-    hasActiveFilters,
-    favoritedIds,
-    toggleFavorite,
-    resetFilters,
+    products = [], paginatedProducts,
+    currentPage, setCurrentPage, totalPages, totalItems, itemsPerPage,
+    categories, markets, loading, categoriesLoading, marketsLoading,
+    searchTerm, setSearchTerm, selectedCategory, setSelectedCategory,
+    selectedMarketId, setSelectedMarketId, maxPrice, setMaxPrice,
+    organicOnly, setOrganicOnly, inStockOnly, setInStockOnly,
+    sortBy, setSortBy, hasActiveFilters, favoritedIds, toggleFavorite, resetFilters,
   } = useProducts();
 
   const { addToCart, openCart } = useCart();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const handleAddToCart = async (product) => {
+    return await addToCart(product.id, 1);
+  };
+
+  const handlePreOrder = async (product) => {
     const ok = await addToCart(product.id, 1);
-    if (ok) {
-      openCart();
-    }
+    if (ok) openCart();
   };
 
   return (
@@ -190,6 +169,7 @@ export default function ProductsPage() {
                       isFavorited={favoritedIds.includes(product.id)}
                       onToggleFavorite={toggleFavorite}
                       onAddToCart={handleAddToCart}
+                      onPreOrder={handlePreOrder}
                     />
                   ))}
                 </div>

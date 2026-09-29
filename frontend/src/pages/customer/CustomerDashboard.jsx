@@ -11,7 +11,6 @@ import {
   Sprout,
   DollarSign,
   Heart,
-  LayoutDashboard,
   CheckCircle2,
 } from 'lucide-react';
 
@@ -26,7 +25,7 @@ export default function CustomerDashboard() {
   const { orders, loading: ordersLoading, counts: orderCounts } = useCustomerOrders();
   const { counts: favoriteCounts } = useCustomerFavorites();
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const isFavQuery = searchParams.get('tab')?.toUpperCase() === 'FAVORITES';
   const [activeTab, setActiveTab] = useState(isFavQuery ? 'FAVORITES' : 'OVERVIEW');
 
@@ -35,11 +34,6 @@ export default function CustomerDashboard() {
     if (tabParam === 'FAVORITES') setActiveTab('FAVORITES');
     else if (tabParam === 'OVERVIEW') setActiveTab('OVERVIEW');
   }, [searchParams]);
-
-  const switchTab = (tab) => {
-    setActiveTab(tab);
-    setSearchParams(tab === 'FAVORITES' ? { tab: 'favorites' } : {});
-  };
 
   // Next active upcoming pre-order reservation
   const upcomingOrder = orders.find(
@@ -86,35 +80,6 @@ export default function CustomerDashboard() {
             </Link>
           </div>
         </div>
-      </div>
-
-      {/* 2. Top-level Tab Navigation: Overview vs Favorites */}
-      <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-white border border-[#E2E8DF] shadow-xs">
-        <button
-          type="button"
-          onClick={() => switchTab('OVERVIEW')}
-          className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition cursor-pointer ${
-            activeTab === 'OVERVIEW'
-              ? 'bg-[#16A34A] text-white shadow-xs'
-              : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAF6]'
-          }`}
-        >
-          <LayoutDashboard className="w-4 h-4" />
-          <span>Dashboard Overview</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => switchTab('FAVORITES')}
-          className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition cursor-pointer ${
-            activeTab === 'FAVORITES'
-              ? 'bg-[#16A34A] text-white shadow-xs'
-              : 'text-[#475569] hover:text-[#0F172A] hover:bg-[#F8FAF6]'
-          }`}
-        >
-          <Heart className="w-4 h-4" />
-          <span>Saved Favorites ({favoriteCounts.all})</span>
-        </button>
       </div>
 
       {/* TAB 1: OVERVIEW */}
