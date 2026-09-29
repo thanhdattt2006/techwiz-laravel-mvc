@@ -64,7 +64,7 @@ export default function CustomerOrderCard({
           </button>
 
           <Link
-            to={`/orders/track/${encodeURIComponent(order.order_code)}`}
+            to={`/user/orders/${encodeURIComponent(order.order_code)}`}
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-bold transition shadow-2xs"
           >
             <span>Track</span>

@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Send, X, AlertCircle, CheckCircle2, Store, Sprout, Loader2 } from 'lucide-react';
+import { Star, Send, X, AlertCircle, Store, Sprout, Loader2 } from 'lucide-react';
 import reviewApi from '../../api/reviewApi';
 import { useModal } from '../../context/ModalContext';
+
+const RATING_DESC = {
+  5: '★★★★★ Exceptional • Dawn fresh harvest',
+  4: '★★★★☆ Very Good • Great produce & service',
+  3: '★★★☆☆ Average • Satisfactory pickup',
+  2: '★★☆☆☆ Fair • Needs improvement',
+  1: '★☆☆☆☆ Poor • Quality below standard',
+};
 
 /**
  * ReviewModal (Phase 4.11)
@@ -10,8 +18,7 @@ import { useModal } from '../../context/ModalContext';
  */
 export default function ReviewModal({ isOpen, onClose, order, onSuccess }) {
   const { showAlert } = useModal();
-
-  const [targetType, setTargetType] = useState('farmer'); // 'farmer' | 'product'
+  const [targetType, setTargetType] = useState('farmer');
   const [selectedProductId, setSelectedProductId] = useState('');
   const [rating, setRating] = useState(5);
   const [hoverRating, setHoverRating] = useState(0);
@@ -19,7 +26,6 @@ export default function ReviewModal({ isOpen, onClose, order, onSuccess }) {
   const [submitting, setSubmitting] = useState(false);
 
   const items = Array.isArray(order?.items) ? order.items : [];
-  const farmerName = order?.farmer?.stall_name || 'Farmer Stall';
 
   useEffect(() => {
     if (order) {
@@ -34,7 +40,6 @@ export default function ReviewModal({ isOpen, onClose, order, onSuccess }) {
   }, [order, items.length]);
 
   if (!isOpen || !order) return null;
-
   const isCompleted = order.status === 'completed';
 
   const handleSubmit = async (e) => {
@@ -52,15 +57,9 @@ export default function ReviewModal({ isOpen, onClose, order, onSuccess }) {
       order_id: order.id,
       rating,
       comment: comment.trim() || null,
+      farmer_id: targetType === 'farmer' ? (order.farmer_id || order.farmer?.id) : null,
+      product_id: targetType === 'product' ? Number(selectedProductId) : null,
     };
-
-    if (targetType === 'farmer') {
-      payload.farmer_id = order.farmer_id || order.farmer?.id;
-      payload.product_id = null;
-    } else {
-      payload.product_id = Number(selectedProductId);
-      payload.farmer_id = null;
-    }
 
     setSubmitting(true);
     try {
@@ -73,12 +72,18 @@ export default function ReviewModal({ isOpen, onClose, order, onSuccess }) {
       onSuccess?.();
       onClose();
     } catch (err) {
-      const msg = err?.response?.data?.message || err?.response?.data?.errors?.order_id?.[0] || 'Failed to submit review.';
-      showAlert({
-        title: 'Submission Failed',
-        message: msg,
-        type: 'danger',
-      });
+      const isDuplicate = err?.response?.status === 422 &&
+        JSON.stringify(err?.response?.data || '').toLowerCase().includes('already submitted');
+      if (isDuplicate) {
+        showAlert({
+          title: 'Already Reviewed',
+          message: `You have already reviewed this ${targetType === 'farmer' ? 'farmer stall' : 'produce item'} for order #${order.order_code}. Please select another item from your order to review!`,
+          type: 'warning',
+        });
+      } else {
+        const msg = err?.response?.data?.message || err?.response?.data?.errors?.order_id?.[0] || 'Failed to submit review.';
+        showAlert({ title: 'Submission Failed', message: msg, type: 'danger' });
+      }
     } finally {
       setSubmitting(false);
     }
@@ -101,9 +106,7 @@ export default function ReviewModal({ isOpen, onClose, order, onSuccess }) {
             <Star className="w-6 h-6 fill-amber-400" />
           </div>
           <h3 className="text-xl font-black text-[#0F172A]">Review Harvest & Stall Experience</h3>
-          <p className="text-xs text-[#475569]">
-            Order #{order.order_code} • {order.pickup_date}
-          </p>
+          <p className="text-xs text-[#475569]">Order #{order.order_code} • {order.pickup_date}</p>
         </div>
 
         {!isCompleted ? (
@@ -113,41 +116,31 @@ export default function ReviewModal({ isOpen, onClose, order, onSuccess }) {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-5">
-            {/* Target Selection: Stall vs Item */}
             <div className="space-y-2">
-              <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider">
-                What are you reviewing?
-              </label>
+              <label className="block text-xs font-bold text-[#0F172A] uppercase tracking-wider">What are you reviewing?</label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setTargetType('farmer')}
                   className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold transition cursor-pointer ${
-                    targetType === 'farmer'
-                      ? 'bg-emerald-50 text-[#16A34A] border-emerald-300 shadow-2xs'
-                      : 'bg-white text-[#475569] border-[#E2E8DF] hover:bg-[#F8FAF6]'
+                    targetType === 'farmer' ? 'bg-emerald-50 text-[#16A34A] border-emerald-300 shadow-2xs' : 'bg-white text-[#475569] border-[#E2E8DF] hover:bg-[#F8FAF6]'
                   }`}
                 >
-                  <Store className="w-4 h-4" />
-                  <span className="truncate">Farmer Stall</span>
+                  <Store className="w-4 h-4" /> <span className="truncate">Farmer Stall</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setTargetType('product')}
                   disabled={items.length === 0}
                   className={`flex items-center justify-center gap-2 p-3 rounded-xl border text-xs font-bold transition cursor-pointer disabled:opacity-50 ${
-                    targetType === 'product'
-                      ? 'bg-emerald-50 text-[#16A34A] border-emerald-300 shadow-2xs'
-                      : 'bg-white text-[#475569] border-[#E2E8DF] hover:bg-[#F8FAF6]'
+                    targetType === 'product' ? 'bg-emerald-50 text-[#16A34A] border-emerald-300 shadow-2xs' : 'bg-white text-[#475569] border-[#E2E8DF] hover:bg-[#F8FAF6]'
                   }`}
                 >
-                  <Sprout className="w-4 h-4" />
-                  <span className="truncate">Produce Item</span>
+                  <Sprout className="w-4 h-4" /> <span className="truncate">Produce Item</span>
                 </button>
               </div>
             </div>
 
-            {/* Produce item selector if target is product */}
             {targetType === 'product' && items.length > 0 && (
               <div className="space-y-1.5">
                 <label className="block text-xs font-semibold text-[#0F172A]">Select Produce Item</label>
@@ -166,7 +159,6 @@ export default function ReviewModal({ isOpen, onClose, order, onSuccess }) {
               </div>
             )}
 
-            {/* Rating Stars */}
             <div className="text-center space-y-2 py-2 bg-[#F8FAF6] rounded-2xl border border-[#E2E8DF]">
               <span className="text-xs font-bold text-[#475569] block">Your Rating</span>
               <div className="flex items-center justify-center gap-2">
@@ -179,29 +171,15 @@ export default function ReviewModal({ isOpen, onClose, order, onSuccess }) {
                     onClick={() => setRating(star)}
                     className="p-1 transition transform hover:scale-125 cursor-pointer focus:outline-hidden"
                   >
-                    <Star
-                      className={`w-7 h-7 ${
-                        (hoverRating || rating) >= star
-                          ? 'text-amber-400 fill-amber-400'
-                          : 'text-slate-200'
-                      }`}
-                    />
+                    <Star className={`w-7 h-7 ${(hoverRating || rating) >= star ? 'text-amber-400 fill-amber-400' : 'text-slate-200'}`} />
                   </button>
                 ))}
               </div>
-              <span className="text-[11px] font-bold text-[#16A34A] block">
-                {rating === 5 && '★★★★★ Exceptional • Dawn fresh harvest'}
-                {rating === 4 && '★★★★☆ Very Good • Great produce & service'}
-                {rating === 3 && '★★★☆☆ Average • Satisfactory pickup'}
-                {rating <= 2 && '★★☆☆☆ Fair • Needs improvement'}
-              </span>
+              <span className="text-[11px] font-bold text-[#16A34A] block">{RATING_DESC[rating]}</span>
             </div>
 
-            {/* Review Comment */}
             <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-[#0F172A]">
-                Comments & Harvest Feedback (Optional)
-              </label>
+              <label className="block text-xs font-semibold text-[#0F172A]">Comments & Harvest Feedback (Optional)</label>
               <textarea
                 rows={3}
                 maxLength={2000}
@@ -212,7 +190,6 @@ export default function ReviewModal({ isOpen, onClose, order, onSuccess }) {
               />
             </div>
 
-            {/* Submit */}
             <div className="flex items-center gap-3 pt-2">
               <button
                 type="button"
