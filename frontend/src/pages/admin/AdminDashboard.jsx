@@ -121,7 +121,7 @@ export default function AdminDashboard() {
       )}
 
       {activeTab === 'MARKETS' && (
-        <AdminMarketsTab marketHook={adminMarkets} categoryHook={adminCategories} />
+        <AdminMarketsTab marketHook={adminMarkets} />
       )}
 
       {activeTab === 'CATEGORIES' && (
