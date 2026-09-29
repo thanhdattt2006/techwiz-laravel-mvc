@@ -58,12 +58,12 @@ export function useAdminUsers() {
     });
   }, [users, roleFilter, statusFilter, searchQuery]);
 
-  const handleToggleStatus = (targetUser) => {
+  const handleToggleStatus = async (targetUser) => {
     const isBanned = targetUser.status === 'banned';
     const nextStatus = isBanned ? 'active' : 'banned';
     const actionLabel = isBanned ? 'Unban Account' : 'Ban Account';
 
-    showConfirm({
+    const confirmed = await showConfirm({
       title: `${actionLabel}?`,
       message: isBanned
         ? `Restore platform access for "${targetUser.fullname}" (${targetUser.email})?`
@@ -71,31 +71,32 @@ export function useAdminUsers() {
       confirmText: actionLabel,
       cancelText: 'Cancel',
       type: isBanned ? 'success' : 'danger',
-      onConfirm: async () => {
-        setActionLoadingId(targetUser.id);
-        try {
-          const res = await adminApi.updateUserStatus(targetUser.id, nextStatus);
-          const updated = res?.data || res;
-          setUsers((prev) =>
-            prev.map((u) => (u.id === targetUser.id ? { ...u, status: nextStatus, ...updated } : u))
-          );
-          showAlert({
-            title: `Account ${isBanned ? 'Unbanned' : 'Banned'}`,
-            message: `User status changed to ${nextStatus}.`,
-            type: 'success',
-            autoCloseMs: 2000,
-          });
-        } catch (err) {
-          showAlert({
-            title: 'Action Failed',
-            message: err?.response?.data?.message || 'Could not update user status.',
-            type: 'danger',
-          });
-        } finally {
-          setActionLoadingId(null);
-        }
-      },
     });
+
+    if (!confirmed) return;
+
+    setActionLoadingId(targetUser.id);
+    try {
+      const res = await adminApi.updateUserStatus(targetUser.id, nextStatus);
+      const updated = res?.data || res;
+      setUsers((prev) =>
+        prev.map((u) => (u.id === targetUser.id ? { ...u, status: nextStatus, ...updated } : u))
+      );
+      showAlert({
+        title: `Account ${isBanned ? 'Unbanned' : 'Banned'}`,
+        message: `User status changed to ${nextStatus}.`,
+        type: 'success',
+        autoCloseMs: 2000,
+      });
+    } catch (err) {
+      showAlert({
+        title: 'Action Failed',
+        message: err?.response?.data?.message || 'Could not update user status.',
+        type: 'danger',
+      });
+    } finally {
+      setActionLoadingId(null);
+    }
   };
 
   return {

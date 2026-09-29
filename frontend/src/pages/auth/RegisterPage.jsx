@@ -11,7 +11,7 @@ import FarmerCalloutBox from '../../components/auth/FarmerCalloutBox';
 export default function RegisterPage() {
   const navigate = useNavigate();
   const { register } = useAuth();
-  const { alert } = useModal();
+  const { showAlert } = useModal();
 
   const [formData, setFormData] = useState({
     fullname: '', username: '', email: '', phone: '',
@@ -41,10 +41,15 @@ export default function RegisterPage() {
       };
       const result = await register(payload);
       if (result.success) {
-        await alert({ title: 'Welcome to MarketLink!', message: 'Your shopper account was created successfully. You are now signed in.', type: 'success' });
+        await showAlert({
+          title: 'Welcome to MarketLink!',
+          message: 'Your shopper account was created successfully. You are now signed in.',
+          type: 'success',
+          confirmText: 'Go to Dashboard',
+        });
         navigate('/customer/dashboard');
       } else {
-        setError(result.error || 'Registration failed. Please check your credentials.');
+        setError(result.message || result.error || 'Registration failed. Please check your credentials.');
       }
     } catch (err) {
       setError(err?.response?.data?.message || err.message || 'An unexpected error occurred.');

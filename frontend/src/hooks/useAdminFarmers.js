@@ -37,37 +37,38 @@ export function useAdminFarmers() {
     fetchPending();
   }, [fetchPending]);
 
-  const handleApprove = (farmer) => {
+  const handleApprove = async (farmer) => {
     const stallName = farmer.stall_name || farmer.user?.fullname || 'Farmer Stall';
 
-    showConfirm({
+    const confirmed = await showConfirm({
       title: 'Approve Stall Application?',
       message: `Authorize "${stallName}" to start listing produce and operating at local farmers markets?`,
       confirmText: 'Yes, Approve Stall',
       cancelText: 'Cancel',
       type: 'success',
-      onConfirm: async () => {
-        setActionLoadingId(farmer.id);
-        try {
-          await adminApi.approveFarmer(farmer.id);
-          setPendingFarmers((prev) => prev.filter((f) => f.id !== farmer.id));
-          showAlert({
-            title: 'Stall Approved!',
-            message: `"${stallName}" has been approved. The farmer can now log in and link market stalls.`,
-            type: 'success',
-            autoCloseMs: 2500,
-          });
-        } catch (err) {
-          showAlert({
-            title: 'Approval Failed',
-            message: err?.response?.data?.message || 'Could not approve farmer application.',
-            type: 'danger',
-          });
-        } finally {
-          setActionLoadingId(null);
-        }
-      },
     });
+
+    if (!confirmed) return;
+
+    setActionLoadingId(farmer.id);
+    try {
+      await adminApi.approveFarmer(farmer.id);
+      setPendingFarmers((prev) => prev.filter((f) => f.id !== farmer.id));
+      showAlert({
+        title: 'Stall Approved!',
+        message: `"${stallName}" has been approved. The farmer can now log in and link market stalls.`,
+        type: 'success',
+        autoCloseMs: 2500,
+      });
+    } catch (err) {
+      showAlert({
+        title: 'Approval Failed',
+        message: err?.response?.data?.message || 'Could not approve farmer application.',
+        type: 'danger',
+      });
+    } finally {
+      setActionLoadingId(null);
+    }
   };
 
   const openRejectModal = (farmer) => {

@@ -83,6 +83,8 @@ export function ModalProvider({ children }) {
       confirmText = 'Confirm',
       cancelText = 'Cancel',
       showCloseButton = true,
+      onConfirm = null,
+      onCancel = null,
     }) => {
       clearTimer();
       return new Promise((resolve) => {
@@ -102,8 +104,26 @@ export function ModalProvider({ children }) {
               message={message}
               confirmText={confirmText}
               cancelText={cancelText}
-              onConfirm={() => closeModal(true)}
-              onCancel={() => closeModal(false)}
+              onConfirm={async () => {
+                closeModal(true);
+                if (typeof onConfirm === 'function') {
+                  try {
+                    await onConfirm();
+                  } catch (e) {
+                    console.error('Error in showConfirm onConfirm:', e);
+                  }
+                }
+              }}
+              onCancel={async () => {
+                closeModal(false);
+                if (typeof onCancel === 'function') {
+                  try {
+                    await onCancel();
+                  } catch (e) {
+                    console.error('Error in showConfirm onCancel:', e);
+                  }
+                }
+              }}
             />
           ),
         });
@@ -153,6 +173,8 @@ export function ModalProvider({ children }) {
         showConfirm,
         showCustomModal,
         closeModal,
+        alert: showAlert,
+        confirm: showConfirm,
       }}
     >
       {children}

@@ -103,37 +103,38 @@ export function useFarmerMarkets() {
     }
   };
 
-  const handleUnlinkMarket = (farmerMarket) => {
+  const handleUnlinkMarket = async (farmerMarket) => {
     const marketName = farmerMarket.market?.name || 'this market';
     const marketId = farmerMarket.market_id || farmerMarket.market?.id;
 
-    showConfirm({
+    const confirmed = await showConfirm({
       title: 'Withdraw Stall From Market?',
       message: `Are you sure you want to withdraw your stall from ${marketName}? Customers will no longer be able to select this pickup location.`,
       confirmText: 'Yes, Withdraw Stall',
       cancelText: 'Cancel',
       type: 'danger',
-      onConfirm: async () => {
-        try {
-          await farmerApi.unlinkMarket(marketId);
-          setFarmerMarkets((prev) =>
-            prev.filter((item) => item.market_id !== marketId && item.market?.id !== marketId)
-          );
-          showAlert({
-            title: 'Stall Withdrawn',
-            message: `Your stall has been removed from ${marketName}.`,
-            type: 'success',
-            autoCloseMs: 2000,
-          });
-        } catch (err) {
-          showAlert({
-            title: 'Withdraw Failed',
-            message: err?.response?.data?.message || 'Could not withdraw stall from market.',
-            type: 'danger',
-          });
-        }
-      },
     });
+
+    if (!confirmed) return;
+
+    try {
+      await farmerApi.unlinkMarket(marketId);
+      setFarmerMarkets((prev) =>
+        prev.filter((item) => item.market_id !== marketId && item.market?.id !== marketId)
+      );
+      showAlert({
+        title: 'Stall Withdrawn',
+        message: `Your stall has been removed from ${marketName}.`,
+        type: 'success',
+        autoCloseMs: 2000,
+      });
+    } catch (err) {
+      showAlert({
+        title: 'Withdraw Failed',
+        message: err?.response?.data?.message || 'Could not withdraw stall from market.',
+        type: 'danger',
+      });
+    }
   };
 
   return {

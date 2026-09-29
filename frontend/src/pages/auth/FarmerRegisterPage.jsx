@@ -73,7 +73,7 @@ export default function FarmerRegisterPage() {
       if (result.success) {
         setSubmittedSuccess(true);
       } else {
-        setError(result.error || 'Submission failed. Please verify your stall information.');
+        setError(result.message || result.error || 'Submission failed. Please verify your stall information.');
       }
     } catch (err) {
       setError(err?.response?.data?.message || err.message || 'An unexpected error occurred.');
